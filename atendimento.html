@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Atendimento ELO - RCA 61</title>
+  <title id="tituloPagina">Atendimento ELO - RCA 61</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,7 +12,6 @@
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
   <link rel="stylesheet" href="style.css">
-  <script src="rca-config.js"></script>
   <style>
     .elo-badge { display:inline-block; padding:2px 8px; border-radius:6px; font-size:0.7rem; font-weight:600; }
     .elo-cell-locked { color: var(--text-secondary); background: rgba(255,255,255,0.02); }
@@ -93,7 +92,7 @@
 
     <header class="main-header">
       <div class="header-title">
-        <h1 id="tituloEloRCA">Atendimento ELO - RCA 61</h1>
+        <h1 id="tituloElo">Atendimento ELO - RCA 61</h1>
         <p>Registro mensal de contato com a carteira - Set/Out/Nov 2026</p>
       </div>
       <div class="header-controls">
@@ -103,14 +102,6 @@
         <a href="clientes.html" class="btn-upload" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px; background-color:var(--accent-indigo);">
           <i data-lucide="users" style="width:16px;height:16px;"></i> Base & SLAs
         </a>
-        <div class="filter-group">
-          <i data-lucide="users" class="filter-icon"></i>
-          <select id="selectRCA" onchange="selecionarRCA(this.value)">
-            <option value="61">RCA 61</option>
-            <option value="66">RCA 66</option>
-          </select>
-        </div>
-
         <div class="status-badge active" id="statusBadge">
           <span class="status-dot"></span>
           <span id="statusText">Carregando...</span>
@@ -166,23 +157,39 @@
   <script>
     if (typeof lucide !== 'undefined') lucide.createIcons();
 
-    const selRCAElo = document.getElementById('selectRCA');
-    if (selRCAElo) selRCAElo.value = RCA_ATUAL;
-    const tituloEloRCA = document.getElementById('tituloEloRCA');
-    if (tituloEloRCA) tituloEloRCA.textContent = `Atendimento ELO - RCA ${RCA_ATUAL}`;
-    const tituloCarteiraElo = document.getElementById('tituloCarteiraElo');
-    if (tituloCarteiraElo) tituloCarteiraElo.textContent = `Minha Carteira - ${RCA_ATUAL === '66' ? 'RCA 66' : '270 Clientes'}`;
-
     // ============================================================
     // CONFIGURAÇÃO
     // ============================================================
-    const DRIVE_FILE_ID = '1yr12JeKO-5ipBrzbqrcWFnYXhkfkQvH7tkRicbcogps';
+    // Mantém toda a estrutura original do Atendimento ELO.
+    // A única diferença é que a base e o Apps Script são escolhidos
+    // pelo parâmetro ?rca=61 ou ?rca=66 da URL.
+    const rcaSelecionado =
+      new URLSearchParams(window.location.search).get('rca') === '66'
+        ? '66'
+        : '61';
 
-    // Depois de implantar o Apps Script (arquivo AppsScript_AtendimentoELO.js),
-    // cole aqui a URL que termina em /exec. Enquanto estiver vazio, a
-    // tabela funciona só para VISUALIZAR — o botão Salvar avisa que a
-    // gravação ainda não foi configurada.
-    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw-s10eMg-8ajimxH3lK1vwo5dK_o43SLHtQa4H0sN5oHQ8VrewthA-iBxx32_RVfns/exec';
+    const CONFIG_RCA = {
+      '61': {
+        nome: 'RCA 61',
+        driveFileId: '1yr12JeKO-5ipBrzbqrcWFnYXhkfkQvH7tkRicbcogps',
+        appsScriptUrl: 'https://script.google.com/macros/s/AKfycbw-s10eMg-8ajimxH3lK1vwo5dK_o43SLHtQa4H0sN5oHQ8VrewthA-iBxx32_RVfns/exec',
+        snapshotUrl: 'atendimento_elo.json'
+      },
+      '66': {
+        nome: 'RCA 66',
+        driveFileId: '12ZoIQhoWn9MDPWqz-EiPMIAfoL6MiB1DAmhDLB_AaLo',
+        appsScriptUrl: 'https://script.google.com/macros/s/AKfycbzCO-yjaRfKZd-W56n1BbFTJbyQFJVZls-k3DyjESSDJVTwtKDfJV71PkQ91UUKrTsI/exec',
+        snapshotUrl: 'atendimento_elo.json'
+      }
+    };
+
+    const CONFIG_ATUAL = CONFIG_RCA[rcaSelecionado];
+    const DRIVE_FILE_ID = CONFIG_ATUAL.driveFileId;
+    const APPS_SCRIPT_URL = CONFIG_ATUAL.appsScriptUrl;
+
+    document.title = `Atendimento ELO - ${CONFIG_ATUAL.nome}`;
+    const tituloElo = document.getElementById('tituloElo');
+    if (tituloElo) tituloElo.textContent = `Atendimento ELO - ${CONFIG_ATUAL.nome}`;
 
     const ASSUNTO_OPCOES = [
       'Apresentação da carteira', 'Oferta de gravação', 'Acompanhamento de pedido',
@@ -215,7 +222,7 @@
       } catch (err) {
         console.warn('[Atendimento ELO] Não consegui buscar do Drive, usando snapshot local.', err);
         try {
-          const r = await fetch('atendimento_elo.json');
+          const r = await fetch(CONFIG_ATUAL.snapshotUrl);
           baseElo = await r.json();
           setStatus(false, `Snapshot local (${baseElo.length} clientes) — sem conexão com o Drive`);
         } catch (err2) {
@@ -241,47 +248,6 @@
     }
 
     function extrairDoWorkbook(wb) {
-
-      if (RCA_ATUAL === '66') {
-        const nomeAba = wb.SheetNames.includes('Minha Carteira') ? 'Minha Carteira' : wb.SheetNames[0];
-        const raw = XLSX.utils.sheet_to_json(wb.Sheets[nomeAba], { header:1, defval:null });
-        let headerRow = 0;
-        for (let i=0;i<Math.min(raw.length,10);i++) {
-          const h = (raw[i]||[]).map(x => String(x ?? '').trim().toLowerCase());
-          if (h.some(x => x.includes('código cliente') || x === 'código') && h.some(x => x === 'cliente')) { headerRow=i; break; }
-        }
-        const h = (raw[headerRow]||[]).map(x => String(x ?? '').trim());
-        const col = name => { const i=h.findIndex(x => x.toLowerCase()===name.toLowerCase()); return i; };
-        const colAny = names => { for (const n of names) { const i=col(n); if(i>=0) return i; } return -1; };
-        const idxCode=colAny(['Código Cliente','Código','Cod']);
-        const idxCliente=colAny(['Cliente','Cliente / Razão Social']);
-        const idxCidade=colAny(['Cidade','Cidade / UF']);
-        const idxVar=colAny(['Var%','Variação','Variação %']);
-        const idxPedidos=colAny(['Ped. 26','Qtd Notas','Pedidos 26']);
-        const idxGrava=colAny(['Grava?','Grava']);
-        const idxPonto=colAny(['Ponto de Atenção','Ponto de atencao','Status']);
-        const idxSetC=colAny(['SET contato','Set contato']); const idxSetA=colAny(['SET assunto','Set assunto']);
-        const idxOutC=colAny(['OUT contato','Out contato']); const idxOutA=colAny(['OUT assunto','Out assunto']);
-        const idxNovC=colAny(['NOV contato','Nov contato']); const idxNovA=colAny(['NOV assunto','Nov assunto']);
-        const idxDisse=colAny(['O que o cliente disse']); const idxEnc=colAny(['Encaminhado para']);
-        const clientes=[];
-        for(let i=headerRow+1;i<raw.length;i++){
-          const r=raw[i]||[]; if(!r.length) continue;
-          const code=idxCode>=0?r[idxCode]:null; const cliente=idxCliente>=0?r[idxCliente]:null;
-          if(code===null || code===undefined || code==='' || !cliente) continue;
-          const numCode=Number(code); if(!Number.isFinite(numCode)) continue;
-          const get=(ix)=>ix>=0?r[ix]:''; const fmt=v=>v instanceof Date?v.toISOString().slice(0,10):(v?String(v):'');
-          const varRaw=get(idxVar); let varPct=null; if(typeof varRaw==='number') varPct=varRaw>1?varRaw/100:varRaw;
-          clientes.push({
-            codigo:Math.trunc(numCode), cliente:String(cliente).trim(), cidade:idxCidade>=0?String(get(idxCidade)||'').trim():'',
-            janAgo25:0, janAgo26:0, varPct, pedidos26:Number(get(idxPedidos))||0, grava:get(idxGrava)||'', pontoAtencao:get(idxPonto)||'',
-            setContato:fmt(get(idxSetC)), setAssunto:get(idxSetA)||'', outContato:fmt(get(idxOutC)), outAssunto:get(idxOutA)||'',
-            novContato:fmt(get(idxNovC)), novAssunto:get(idxNovA)||'', clienteDisse:get(idxDisse)||'', encaminhadoPara:get(idxEnc)||''
-          });
-        }
-        return clientes;
-      }
-
       const aba = wb.Sheets['Minha Carteira'];
       const linhas = XLSX.utils.sheet_to_json(aba, { header: 1, defval: null });
       const clientes = [];
