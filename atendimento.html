@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title id="tituloPagina">Atendimento ELO - RCA 61</title>
+  <title id="tituloPaginaElo">Atendimento ELO - RCA 61</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -160,26 +160,33 @@
     // ============================================================
     // CONFIGURAÇÃO
     // ============================================================
-    // Mantém toda a estrutura original do Atendimento ELO.
-    // A única diferença é que a base e o Apps Script são escolhidos
-    // pelo parâmetro ?rca=61 ou ?rca=66 da URL.
+    // ============================================================
+    // RCA SELECIONADO
+    // ============================================================
+    // Primeiro usa ?rca=61 ou ?rca=66.
+    // Se a tela anterior não passar o parâmetro, usa o RCA salvo
+    // pelo seletor do Dashboard. Sem informação, mantém RCA 61.
+    const rcaDaUrl = new URLSearchParams(window.location.search).get('rca');
+    const rcaSalvo = localStorage.getItem('rcaSelecionado');
     const rcaSelecionado =
-      new URLSearchParams(window.location.search).get('rca') === '66'
-        ? '66'
-        : '61';
+      rcaDaUrl === '66' || rcaDaUrl === '61'
+        ? rcaDaUrl
+        : (rcaSalvo === '66' || rcaSalvo === '61' ? rcaSalvo : '61');
+
+    if (rcaDaUrl === '61' || rcaDaUrl === '66') {
+      localStorage.setItem('rcaSelecionado', rcaDaUrl);
+    }
 
     const CONFIG_RCA = {
       '61': {
         nome: 'RCA 61',
         driveFileId: '1yr12JeKO-5ipBrzbqrcWFnYXhkfkQvH7tkRicbcogps',
-        appsScriptUrl: 'https://script.google.com/macros/s/AKfycbw-s10eMg-8ajimxH3lK1vwo5dK_o43SLHtQa4H0sN5oHQ8VrewthA-iBxx32_RVfns/exec',
-        snapshotUrl: 'atendimento_elo.json'
+        appsScriptUrl: 'https://script.google.com/macros/s/AKfycbw-s10eMg-8ajimxH3lK1vwo5dK_o43SLHtQa4H0sN5oHQ8VrewthA-iBxx32_RVfns/exec'
       },
       '66': {
         nome: 'RCA 66',
         driveFileId: '12ZoIQhoWn9MDPWqz-EiPMIAfoL6MiB1DAmhDLB_AaLo',
-        appsScriptUrl: 'https://script.google.com/macros/s/AKfycbzCO-yjaRfKZd-W56n1BbFTJbyQFJVZls-k3DyjESSDJVTwtKDfJV71PkQ91UUKrTsI/exec',
-        snapshotUrl: 'atendimento_elo.json'
+        appsScriptUrl: 'https://script.google.com/macros/s/AKfycbzCO-yjaRfKZd-W56n1BbFTJbyQFJVZls-k3DyjESSDJVTwtKDfJV71PkQ91UUKrTsI/exec'
       }
     };
 
@@ -222,9 +229,9 @@
       } catch (err) {
         console.warn('[Atendimento ELO] Não consegui buscar do Drive, usando snapshot local.', err);
         try {
-          const r = await fetch(CONFIG_ATUAL.snapshotUrl);
+          const r = await fetch(rcaSelecionado === '66' ? 'rca66_clientes.json' : 'atendimento_elo.json');
           baseElo = await r.json();
-          setStatus(false, `Snapshot local (${baseElo.length} clientes) — sem conexão com o Drive`);
+          setStatus(false, `Snapshot local RCA ${rcaSelecionado} (${baseElo.length} clientes) — sem conexão com o Drive`);
         } catch (err2) {
           document.getElementById('tbElo').innerHTML = '<tr><td colspan="9" class="empty-row" style="color:#ef4444;">Não foi possível carregar os dados.</td></tr>';
           setStatus(false, 'Erro ao carregar');
