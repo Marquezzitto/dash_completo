@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Base de Clientes & SLAs</title>
+  <title>Base de Clientes & SLAs - RCA 61</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/lucide@latest"></script>
-  <script src="rca-config.js"></script>
   
   <link rel="stylesheet" href="style.css">
+  <script src="rca-config.js"></script>
 </head>
 <body>
 
@@ -19,7 +19,7 @@
     
     <header class="main-header">
       <div class="header-title">
-        <h1>Base de Clientes & SLAs - <span data-rca-title>RCA 61</span></h1>
+        <h1 id="tituloBaseRCA">Base de Clientes & SLAs - RCA 61</h1>
         <p>Consulta unificada da carteira completa e prazos de entrega por cidade</p>
       </div>
 
@@ -32,7 +32,13 @@
           <i data-lucide="phone-call" style="width:16px;height:16px;"></i> Atendimento ELO
         </a>
 
-        <div id="seletorRcaClientes"></div>
+        <div class="filter-group">
+          <i data-lucide="users" class="filter-icon"></i>
+          <select id="selectRCA" onchange="selecionarRCA(this.value)">
+            <option value="61">RCA 61</option>
+            <option value="66">RCA 66</option>
+          </select>
+        </div>
 
         <div class="status-badge active" id="statusBadge">
           <span class="status-dot"></span>
@@ -474,7 +480,7 @@
 
     function carregarDadosVivos() {
       try {
-        const raw = localStorage.getItem(obterConfigRca().storageKey);
+        const raw = localStorage.getItem(`rca${RCA_ATUAL}_dadosVivos`);
         dadosVivosGlobal = raw ? JSON.parse(raw) : null;
       } catch (e) {
         dadosVivosGlobal = null;
@@ -621,12 +627,8 @@
 
       if (!transportadora) {
 
-        const rcaAtual = obterConfigRca().id;
-
         transportadora =
-          rcaAtual === '66'
-            ? 'Não definida'
-            : 'Paulinéris';
+          'Paulinéris';
 
         regiao =
           uf === 'SP'
@@ -634,9 +636,7 @@
             : 'Fora de SP';
 
         fonte =
-          rcaAtual === '66'
-            ? 'Cidade sem regra cadastrada para o RCA 66'
-            : 'Base do cliente (fallback)';
+          'Base do cliente (fallback)';
 
 
         if (
@@ -666,9 +666,7 @@
           'SLA não informado';
 
         fonte =
-          obterConfigRca().id === '66'
-            ? 'SLA não cadastrado para esta cidade no RCA 66'
-            : 'SLA não informado na base';
+          'SLA não informado na base';
       }
 
 
@@ -685,27 +683,62 @@
     // CARREGAMENTO DOS CLIENTES
     // ============================================================
 
-    document.addEventListener('DOMContentLoaded', async () => {
-      carregarDadosVivos();
+    const selRCA = document.getElementById('selectRCA');
+    if (selRCA) selRCA.value = RCA_ATUAL;
+    const tituloBaseRCA = document.getElementById('tituloBaseRCA');
+    if (tituloBaseRCA) tituloBaseRCA.textContent = `Base de Clientes & SLAs - RCA ${RCA_ATUAL}`;
 
-      const config = obterConfigRca();
-      document.getElementById('seletorRcaClientes').innerHTML = criarSeletorRcaHtml();
-      instalarSeletorRca();
-      document.querySelector('[data-rca-title]').textContent = config.nome;
-      document.title = `Base de Clientes & SLAs - ${config.nome}`;
+    document.addEventListener(
+      'DOMContentLoaded',
+      () => {
 
-      try {
-        baseClientesGlobal = await carregarClientesDaRca();
-        renderizarTabelaClientes(baseClientesGlobal);
-        document.getElementById('contadorClientes').innerText =
-          `Base Completa (${baseClientesGlobal.length} Clientes)`;
-      } catch (error) {
-        console.error(error);
-        document.getElementById('tbClientesSLA').innerHTML =
-          `<tr><td colspan="6" class="empty-row" style="color:#ef4444;">Erro ao carregar a base do ${config.nome}. Verifique o arquivo ${config.clientesJson}.</td></tr>`;
-        document.getElementById('contadorClientes').innerText = 'Erro na base';
+        carregarDadosVivos();
+
+        fetch(RCA_ATIVO.clientesUrl, { cache: 'no-store' })
+
+          .then(response => {
+
+            if (!response.ok) {
+
+              throw new Error(
+                'Não foi possível carregar o arquivo de clientes.'
+              );
+            }
+
+            return response.json();
+          })
+
+          .then(data => {
+
+            baseClientesGlobal =
+              data;
+
+            renderizarTabelaClientes(
+              baseClientesGlobal
+            );
+
+            document
+              .getElementById('contadorClientes')
+              .innerText =
+              `Base Completa (${baseClientesGlobal.length} Clientes)`;
+          })
+
+          .catch(error => {
+
+            console.error(error);
+
+            document
+              .getElementById('tbClientesSLA')
+              .innerHTML =
+              '<tr><td colspan="6" class="empty-row" style="color:#ef4444;">Erro ao carregar a base fixa de clientes. Verifique o arquivo da carteira selecionada.</td></tr>';
+
+            document
+              .getElementById('contadorClientes')
+              .innerText =
+              'Erro na base';
+          });
       }
-    });
+    );
 
 
     // ============================================================
@@ -1163,7 +1196,7 @@
                 gap:8px;
               "
             >
-              🏢 Detalhes do Cliente (${obterConfigRca().nome})
+              🏢 Detalhes do Cliente (RCA ${RCA_ATUAL})
             </h3>
 
 

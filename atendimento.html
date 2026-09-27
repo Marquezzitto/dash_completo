@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Atendimento ELO</title>
+  <title>Atendimento ELO - RCA 61</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-  <script src="rca-config.js"></script>
 
   <link rel="stylesheet" href="style.css">
+  <script src="rca-config.js"></script>
   <style>
     .elo-badge { display:inline-block; padding:2px 8px; border-radius:6px; font-size:0.7rem; font-weight:600; }
     .elo-cell-locked { color: var(--text-secondary); background: rgba(255,255,255,0.02); }
@@ -28,6 +28,41 @@
     .elo-panel-card .lbl { font-size:0.7rem; color: var(--text-secondary); text-transform:uppercase; }
     .elo-panel-card .val { font-size:1.3rem; font-weight:700; margin-top:4px; }
     .elo-panel-card .var { font-size:0.75rem; margin-top:2px; }
+    .elo-progress-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; margin-top:14px; }
+    .elo-progress-card { background:var(--bg-card); border:1px solid var(--border-color); border-radius:var(--radius); padding:16px; }
+    .elo-progress-head { display:flex; justify-content:space-between; align-items:flex-start; gap:12px; }
+    .elo-progress-month { font-size:0.78rem; color:var(--text-secondary); text-transform:uppercase; letter-spacing:.04em; }
+    .elo-progress-pct { font-size:1.45rem; font-weight:700; line-height:1; }
+    .elo-progress-main { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:14px; }
+    .elo-progress-kpi { background:#0f172a; border-radius:8px; padding:10px; }
+    .elo-progress-kpi .lbl { display:block; font-size:0.68rem; color:#64748b; text-transform:uppercase; }
+    .elo-progress-kpi .num { display:block; margin-top:3px; font-size:1rem; font-weight:700; color:#f8fafc; }
+    .elo-progress-bar { height:8px; background:#1e293b; border-radius:999px; overflow:hidden; margin-top:14px; }
+    .elo-progress-fill { height:100%; border-radius:999px; background:#10b981; transition:width .25s ease; }
+    .elo-progress-status { margin-top:9px; font-size:0.75rem; color:#94a3b8; line-height:1.35; }
+    .elo-progress-footer {
+      display:grid !important;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:8px;
+      margin-top:12px;
+      padding-top:11px;
+      border-top:1px solid var(--border-color);
+      min-height:48px;
+      visibility:visible;
+    }
+    .elo-progress-footer-item {
+      text-align:center;
+      font-size:0.72rem;
+      color:#94a3b8;
+      line-height:1.25;
+    }
+    .elo-progress-footer-item strong {
+      display:block;
+      margin-top:3px;
+      font-size:0.95rem;
+      color:#f8fafc;
+    }
+    @media (max-width:900px) { .elo-progress-grid { grid-template-columns:1fr; } }
     .elo-modal-month { background:#0f172a; border-radius:8px; padding:12px; display:flex; flex-direction:column; gap:8px; }
     .elo-modal-month h4 { font-size:0.8rem; color:#94a3b8; text-transform:uppercase; }
     .elo-field label { display:block; font-size:0.7rem; color:#64748b; margin-bottom:3px; }
@@ -58,8 +93,8 @@
 
     <header class="main-header">
       <div class="header-title">
-        <h1>Atendimento ELO - <span data-rca-title>RCA 61</span></h1>
-        <p id="eloSubtitulo">Registro mensal de contato com a carteira - Set/Out/Nov 2026</p>
+        <h1 id="tituloEloRCA">Atendimento ELO - RCA 61</h1>
+        <p>Registro mensal de contato com a carteira - Set/Out/Nov 2026</p>
       </div>
       <div class="header-controls">
         <a href="index.html" class="btn-upload" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
@@ -68,13 +103,14 @@
         <a href="clientes.html" class="btn-upload" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px; background-color:var(--accent-indigo);">
           <i data-lucide="users" style="width:16px;height:16px;"></i> Base & SLAs
         </a>
-        <div class="filter-group rca-selector-group" style="display:flex;align-items:center;gap:8px;min-width:170px;">
-          <span style="font-size:.75rem;color:#94a3b8;font-weight:700;">RCA</span>
-          <select id="seletorRcaElo" data-rca-selector aria-label="Selecionar RCA" style="min-width:110px;padding:7px 10px;border-radius:7px;border:1px solid #334155;background:#1e293b;color:#f8fafc;font-weight:700;cursor:pointer;">
+        <div class="filter-group">
+          <i data-lucide="users" class="filter-icon"></i>
+          <select id="selectRCA" onchange="selecionarRCA(this.value)">
             <option value="61">RCA 61</option>
             <option value="66">RCA 66</option>
           </select>
         </div>
+
         <div class="status-badge active" id="statusBadge">
           <span class="status-dot"></span>
           <span id="statusText">Carregando...</span>
@@ -85,6 +121,10 @@
     <!-- Painel resumo (comparativo Jan-Ago 25 x 26, direto da aba "Painel") -->
     <section class="elo-panel-grid" id="painelGrid"></section>
 
+    <!-- Progresso do atendimento ELO: cada cliente só conta no mês
+         correspondente quando houver data válida do mês/ano e assunto. -->
+    <section class="elo-progress-grid" id="eloProgressGrid"></section>
+
     <!-- Guia rápido (aba "Fluxo de Atendimento") -->
     <details class="elo-guide">
       <summary>Como funciona esse atendimento (clique para abrir)</summary>
@@ -94,7 +134,7 @@
     <!-- Tabela principal -->
     <section class="table-card" style="margin-top:10px;">
       <div class="card-header space-between">
-        <h3>Minha Carteira - <span id="eloQtdClientes">270</span> Clientes</h3>
+        <h3>Minha Carteira - 270 Clientes</h3>
         <input type="text" id="searchElo" placeholder="Pesquisar por cliente, cidade ou código..." class="table-search" style="width:300px;">
       </div>
       <div class="table-wrapper" style="max-height:600px;">
@@ -126,17 +166,23 @@
   <script>
     if (typeof lucide !== 'undefined') lucide.createIcons();
 
+    const selRCAElo = document.getElementById('selectRCA');
+    if (selRCAElo) selRCAElo.value = RCA_ATUAL;
+    const tituloEloRCA = document.getElementById('tituloEloRCA');
+    if (tituloEloRCA) tituloEloRCA.textContent = `Atendimento ELO - RCA ${RCA_ATUAL}`;
+    const tituloCarteiraElo = document.getElementById('tituloCarteiraElo');
+    if (tituloCarteiraElo) tituloCarteiraElo.textContent = `Minha Carteira - ${RCA_ATUAL === '66' ? 'RCA 66' : '270 Clientes'}`;
+
     // ============================================================
     // CONFIGURAÇÃO
     // ============================================================
-    const RCA_CONFIG_ATUAL = obterConfigRca();
-    const DRIVE_FILE_ID = RCA_CONFIG_ATUAL.driveSpreadsheetId;
+    const DRIVE_FILE_ID = '1yr12JeKO-5ipBrzbqrcWFnYXhkfkQvH7tkRicbcogps';
 
     // Depois de implantar o Apps Script (arquivo AppsScript_AtendimentoELO.js),
     // cole aqui a URL que termina em /exec. Enquanto estiver vazio, a
     // tabela funciona só para VISUALIZAR — o botão Salvar avisa que a
     // gravação ainda não foi configurada.
-    const APPS_SCRIPT_URL = RCA_CONFIG_ATUAL.appsScriptUrl;
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw-s10eMg-8ajimxH3lK1vwo5dK_o43SLHtQa4H0sN5oHQ8VrewthA-iBxx32_RVfns/exec';
 
     const ASSUNTO_OPCOES = [
       'Apresentação da carteira', 'Oferta de gravação', 'Acompanhamento de pedido',
@@ -156,46 +202,22 @@
     // (permissão, CORS, sem internet), cai pro snapshot fixo local.
     // ============================================================
     async function carregarDados() {
-      const cfg = obterConfigRca();
-      document.querySelector('[data-rca-title]').textContent = cfg.nome;
-      document.title = `Atendimento ELO - ${cfg.nome}`;
-      const subtitulo = document.getElementById('eloSubtitulo');
-      if (subtitulo) {
-        subtitulo.textContent = cfg.id === '66'
-          ? 'Atendimento ELO - RCA 66'
-          : 'Registro mensal de contato com a carteira - Set/Out/Nov 2026';
-      }
-      const seletor = document.getElementById('seletorRcaElo');
-      if (seletor) {
-        seletor.value = cfg.id;
-        seletor.onchange = () => definirRcaSelecionado(seletor.value);
-      }
-
       try {
-        if (cfg.id === '66') {
-          const r = await fetch(cfg.eloJson, { cache: 'no-store' });
-          if (!r.ok) throw new Error('Snapshot RCA 66 indisponível');
-          baseElo = await r.json();
-          baseElo = aplicarAtendimentosLocais(baseElo);
-          setStatus(false, `RCA 66 — ${baseElo.length} clientes`);
-        } else {
-          const url = `https://docs.google.com/spreadsheets/d/${DRIVE_FILE_ID}/export?format=xlsx`;
-          const res = await fetch(url);
-          if (!res.ok) throw new Error('HTTP ' + res.status);
-          const buf = await res.arrayBuffer();
-          const wb = XLSX.read(new Uint8Array(buf), { type: 'array', cellDates: true });
-          baseElo = extrairDoWorkbook(wb);
-          renderizarPainel(wb);
-          renderizarGuia(wb);
-          setStatus(true, `Sincronizado do Drive (${baseElo.length} clientes)`);
-        }
+        const url = `https://docs.google.com/spreadsheets/d/${DRIVE_FILE_ID}/export?format=xlsx`;
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const buf = await res.arrayBuffer();
+        const wb = XLSX.read(new Uint8Array(buf), { type: 'array', cellDates: true });
+        baseElo = extrairDoWorkbook(wb);
+        renderizarPainel(wb);
+        renderizarGuia(wb);
+        setStatus(true, `Sincronizado do Drive (${baseElo.length} clientes)`);
       } catch (err) {
-        console.warn('[Atendimento ELO] Falha no carregamento principal.', err);
+        console.warn('[Atendimento ELO] Não consegui buscar do Drive, usando snapshot local.', err);
         try {
-          const r = await fetch(cfg.eloJson, { cache: 'no-store' });
-          if (!r.ok) throw new Error('HTTP ' + r.status);
-          baseElo = aplicarAtendimentosLocais(await r.json());
-          setStatus(false, `Snapshot local (${baseElo.length} clientes)`);
+          const r = await fetch('atendimento_elo.json');
+          baseElo = await r.json();
+          setStatus(false, `Snapshot local (${baseElo.length} clientes) — sem conexão com o Drive`);
         } catch (err2) {
           document.getElementById('tbElo').innerHTML = '<tr><td colspan="9" class="empty-row" style="color:#ef4444;">Não foi possível carregar os dados.</td></tr>';
           setStatus(false, 'Erro ao carregar');
@@ -219,6 +241,47 @@
     }
 
     function extrairDoWorkbook(wb) {
+
+      if (RCA_ATUAL === '66') {
+        const nomeAba = wb.SheetNames.includes('Minha Carteira') ? 'Minha Carteira' : wb.SheetNames[0];
+        const raw = XLSX.utils.sheet_to_json(wb.Sheets[nomeAba], { header:1, defval:null });
+        let headerRow = 0;
+        for (let i=0;i<Math.min(raw.length,10);i++) {
+          const h = (raw[i]||[]).map(x => String(x ?? '').trim().toLowerCase());
+          if (h.some(x => x.includes('código cliente') || x === 'código') && h.some(x => x === 'cliente')) { headerRow=i; break; }
+        }
+        const h = (raw[headerRow]||[]).map(x => String(x ?? '').trim());
+        const col = name => { const i=h.findIndex(x => x.toLowerCase()===name.toLowerCase()); return i; };
+        const colAny = names => { for (const n of names) { const i=col(n); if(i>=0) return i; } return -1; };
+        const idxCode=colAny(['Código Cliente','Código','Cod']);
+        const idxCliente=colAny(['Cliente','Cliente / Razão Social']);
+        const idxCidade=colAny(['Cidade','Cidade / UF']);
+        const idxVar=colAny(['Var%','Variação','Variação %']);
+        const idxPedidos=colAny(['Ped. 26','Qtd Notas','Pedidos 26']);
+        const idxGrava=colAny(['Grava?','Grava']);
+        const idxPonto=colAny(['Ponto de Atenção','Ponto de atencao','Status']);
+        const idxSetC=colAny(['SET contato','Set contato']); const idxSetA=colAny(['SET assunto','Set assunto']);
+        const idxOutC=colAny(['OUT contato','Out contato']); const idxOutA=colAny(['OUT assunto','Out assunto']);
+        const idxNovC=colAny(['NOV contato','Nov contato']); const idxNovA=colAny(['NOV assunto','Nov assunto']);
+        const idxDisse=colAny(['O que o cliente disse']); const idxEnc=colAny(['Encaminhado para']);
+        const clientes=[];
+        for(let i=headerRow+1;i<raw.length;i++){
+          const r=raw[i]||[]; if(!r.length) continue;
+          const code=idxCode>=0?r[idxCode]:null; const cliente=idxCliente>=0?r[idxCliente]:null;
+          if(code===null || code===undefined || code==='' || !cliente) continue;
+          const numCode=Number(code); if(!Number.isFinite(numCode)) continue;
+          const get=(ix)=>ix>=0?r[ix]:''; const fmt=v=>v instanceof Date?v.toISOString().slice(0,10):(v?String(v):'');
+          const varRaw=get(idxVar); let varPct=null; if(typeof varRaw==='number') varPct=varRaw>1?varRaw/100:varRaw;
+          clientes.push({
+            codigo:Math.trunc(numCode), cliente:String(cliente).trim(), cidade:idxCidade>=0?String(get(idxCidade)||'').trim():'',
+            janAgo25:0, janAgo26:0, varPct, pedidos26:Number(get(idxPedidos))||0, grava:get(idxGrava)||'', pontoAtencao:get(idxPonto)||'',
+            setContato:fmt(get(idxSetC)), setAssunto:get(idxSetA)||'', outContato:fmt(get(idxOutC)), outAssunto:get(idxOutA)||'',
+            novContato:fmt(get(idxNovC)), novAssunto:get(idxNovA)||'', clienteDisse:get(idxDisse)||'', encaminhadoPara:get(idxEnc)||''
+          });
+        }
+        return clientes;
+      }
+
       const aba = wb.Sheets['Minha Carteira'];
       const linhas = XLSX.utils.sheet_to_json(aba, { header: 1, defval: null });
       const clientes = [];
@@ -294,6 +357,416 @@
     }
 
     // ============================================================
+    // PROGRESSO DO ATENDIMENTO ELO
+    // ============================================================
+    //
+    // Um cliente só é considerado FEITO no mês quando:
+    // - existe uma data de contato;
+    // - a data pertence ao mês/ano de referência;
+    // - existe um assunto preenchido.
+    //
+    // A mesma regra é usada para a bolinha verde da tabela.
+    // ============================================================
+
+    const MESES_ELO = [
+      { numero: 9, nome: 'Setembro', contato: 'setContato', assunto: 'setAssunto' },
+      { numero: 10, nome: 'Outubro', contato: 'outContato', assunto: 'outAssunto' },
+      { numero: 11, nome: 'Novembro', contato: 'novContato', assunto: 'novAssunto' }
+    ];
+
+    const FERIADOS_NACIONAIS_ELO_2026 = new Set([
+      '2026-10-12',
+      '2026-11-02',
+      '2026-11-20'
+    ]);
+
+    function dataContatoValidaParaMes(valor, mes) {
+      if (!valor) return false;
+
+      const s = String(valor).trim();
+      const m = s.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+
+      if (!m) return false;
+
+      const ano = Number(m[1]);
+      const mesNumero = Number(m[2]);
+
+      return ano === 2026 && mesNumero === mes;
+    }
+
+    function clienteFeitoNoMes(c, cfg) {
+      const temData =
+        dataContatoValidaParaMes(c[cfg.contato], cfg.numero);
+
+      const temAssunto =
+        String(c[cfg.assunto] || '').trim() !== '';
+
+      return temData && temAssunto;
+    }
+
+    function normalizarAssuntoElo(valor) {
+      return String(valor || '')
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .trim()
+        .toLowerCase();
+    }
+
+    function classificarAtendimentoNoMes(c, cfg) {
+      const temData =
+        dataContatoValidaParaMes(c[cfg.contato], cfg.numero);
+
+      const assunto =
+        normalizarAssuntoElo(c[cfg.assunto]);
+
+      const temAssunto =
+        assunto !== '';
+
+      // Sem data válida do mês = ainda não liguei para esse cliente neste mês.
+      // Mesmo que exista texto no assunto, sem a data do mês ele não entra
+      // como contato realizado.
+      if (!temData) {
+        return 'naoLigou';
+      }
+
+      // Data válida + assunto "Sem retorno" ou "Cliente não localizado"
+      // = houve tentativa de contato, mas não houve retorno do cliente.
+      if (
+        temAssunto &&
+        (
+          assunto === 'sem retorno' ||
+          assunto === 'cliente nao localizado'
+        )
+      ) {
+        return 'semRetorno';
+      }
+
+      // Data válida + qualquer outro assunto = tive retorno / contato efetivo.
+      // Data sem assunto continua fora do atendimento concluído.
+      if (temAssunto) {
+        return 'teveRetorno';
+      }
+
+      return 'naoLigou';
+    }
+
+    function contarStatusAtendimentoMes(cfg) {
+      const status = {
+        teveRetorno: 0,
+        semRetorno: 0,
+        naoLigou: 0
+      };
+
+      baseElo.forEach(c => {
+        const categoria =
+          classificarAtendimentoNoMes(c, cfg);
+
+        status[categoria]++;
+      });
+
+      return status;
+    }
+
+    function contarConcluidosMes(cfg) {
+      return baseElo.filter(c =>
+        clienteFeitoNoMes(c, cfg)
+      ).length;
+    }
+
+    function dataLocalHoje() {
+      const agora = new Date();
+
+      return new Date(
+        agora.getFullYear(),
+        agora.getMonth(),
+        agora.getDate()
+      );
+    }
+
+    function primeiroDiaMes(ano, mesNumero) {
+      return new Date(
+        ano,
+        mesNumero - 1,
+        1
+      );
+    }
+
+    function ultimoDiaMes(ano, mesNumero) {
+      return new Date(
+        ano,
+        mesNumero,
+        0
+      );
+    }
+
+    function formatarDataCurta(data) {
+      return data.toLocaleDateString(
+        'pt-BR',
+        {
+          day: '2-digit',
+          month: '2-digit'
+        }
+      );
+    }
+
+    function ehDiaUtilElo(data) {
+      const diaSemana = data.getDay();
+
+      if (diaSemana === 0 || diaSemana === 6) {
+        return false;
+      }
+
+      const iso =
+        `${data.getFullYear()}-${String(data.getMonth() + 1).padStart(2, '0')}-${String(data.getDate()).padStart(2, '0')}`;
+
+      return !FERIADOS_NACIONAIS_ELO_2026.has(iso);
+    }
+
+    function diasUteisRestantesMes(mesNumero) {
+      const hoje = dataLocalHoje();
+      const inicioMes = primeiroDiaMes(2026, mesNumero);
+      const fimMes = ultimoDiaMes(2026, mesNumero);
+
+      let inicioContagem;
+
+      if (hoje < inicioMes) {
+        // Mês futuro: conta todos os dias úteis do mês.
+        inicioContagem = inicioMes;
+      } else if (hoje > fimMes) {
+        // Mês passado: não há dias úteis restantes.
+        return 0;
+      } else {
+        // Mês atual: conta a partir de amanhã.
+        inicioContagem = new Date(hoje);
+        inicioContagem.setDate(
+          inicioContagem.getDate() + 1
+        );
+      }
+
+      let total = 0;
+      const cursor = new Date(inicioContagem);
+
+      while (cursor <= fimMes) {
+        if (ehDiaUtilElo(cursor)) {
+          total++;
+        }
+
+        cursor.setDate(
+          cursor.getDate() + 1
+        );
+      }
+
+      return total;
+    }
+
+    function dataInicioContatosPossivel(mesNumero) {
+      const hoje = dataLocalHoje();
+      const primeiro = primeiroDiaMes(
+        2026,
+        mesNumero
+      );
+      const ultimo = ultimoDiaMes(
+        2026,
+        mesNumero
+      );
+
+      if (hoje > ultimo) {
+        return 'Mês finalizado';
+      }
+
+      if (hoje < primeiro) {
+        return `Inicia em ${formatarDataCurta(primeiro)}`;
+      }
+
+      return 'Mês em andamento';
+    }
+
+    function renderizarProgressoAtendimento() {
+      const grid =
+        document.getElementById(
+          'eloProgressGrid'
+        );
+
+      if (!grid) return;
+
+      const totalClientes =
+        baseElo.length;
+
+      if (!totalClientes) {
+        grid.innerHTML = '';
+
+        return;
+      }
+
+      grid.innerHTML =
+        MESES_ELO.map(cfg => {
+          const feitos =
+            contarConcluidosMes(cfg);
+
+          const statusAtendimento =
+            contarStatusAtendimentoMes(cfg);
+
+          const faltam =
+            Math.max(
+              totalClientes - feitos,
+              0
+            );
+
+          const percentual =
+            totalClientes > 0
+              ? (feitos / totalClientes) * 100
+              : 0;
+
+          const diasRestantes =
+            diasUteisRestantesMes(
+              cfg.numero
+            );
+
+          const hoje =
+            dataLocalHoje();
+
+          const primeiro =
+            primeiroDiaMes(
+              2026,
+              cfg.numero
+            );
+
+          const ultimo =
+            ultimoDiaMes(
+              2026,
+              cfg.numero
+            );
+
+          let statusTexto = '';
+
+          if (hoje > ultimo) {
+
+            statusTexto =
+              faltam === 0
+                ? '✅ Finalizado — todos os clientes foram feitos.'
+                : `⚠️ Mês finalizado — ainda faltam ${faltam} clientes.`;
+
+          } else if (hoje < primeiro) {
+
+            statusTexto =
+              `⏳ Ainda não iniciado — ${diasRestantes} dias úteis no mês.`;
+
+          } else {
+
+            statusTexto =
+              faltam === 0
+                ? '✅ Atendimento concluído — todos os clientes foram feitos.'
+                : `🔄 Em andamento — faltam ${faltam} clientes e ${diasRestantes} dias úteis para o fim do mês.`;
+          }
+
+          return `
+            <div class="elo-progress-card">
+
+              <div class="elo-progress-head">
+
+                <div>
+                  <div class="elo-progress-month">
+                    Atendimento ELO · ${cfg.nome}/2026
+                  </div>
+
+                  <div
+                    style="
+                      margin-top:5px;
+                      font-size:1rem;
+                      font-weight:700;
+                    "
+                  >
+                    ${feitos} de ${totalClientes} clientes
+                  </div>
+                </div>
+
+                <div
+                  class="elo-progress-pct"
+                  style="
+                    color:#10b981;
+                  "
+                >
+                  ${percentual.toFixed(1)}%
+                </div>
+
+              </div>
+
+              <div class="elo-progress-main">
+
+                <div class="elo-progress-kpi">
+                  <span class="lbl">
+                    Feitos
+                  </span>
+
+                  <span class="num">
+                    ${feitos}
+                  </span>
+                </div>
+
+                <div class="elo-progress-kpi">
+                  <span class="lbl">
+                    Faltam
+                  </span>
+
+                  <span class="num">
+                    ${faltam}
+                  </span>
+                </div>
+
+                <div class="elo-progress-kpi">
+                  <span class="lbl">
+                    Dias úteis
+                  </span>
+
+                  <span class="num">
+                    ${diasRestantes}
+                  </span>
+                </div>
+
+              </div>
+
+              <div class="elo-progress-bar">
+                <div
+                  class="elo-progress-fill"
+                  style="
+                    width:${Math.min(
+                      percentual,
+                      100
+                    )}%;
+                  "
+                ></div>
+              </div>
+
+              <div class="elo-progress-status">
+                ${statusTexto}
+              </div>
+
+              <div class="elo-progress-footer">
+
+                <div class="elo-progress-footer-item">
+                  Tive retorno
+                  <strong>${statusAtendimento.teveRetorno}</strong>
+                </div>
+
+                <div class="elo-progress-footer-item">
+                  Sem retorno
+                  <strong>${statusAtendimento.semRetorno}</strong>
+                </div>
+
+                <div class="elo-progress-footer-item">
+                  Não liguei
+                  <strong>${statusAtendimento.naoLigou}</strong>
+                </div>
+
+              </div>
+
+            </div>
+          `;
+        }).join('');
+    }
+
+
+    // ============================================================
     // TABELA
     // ============================================================
     function badgePonto(texto) {
@@ -307,41 +780,9 @@
       return `<span class="elo-badge" style="background:${cor}22; color:${cor};">${texto}</span>`;
     }
 
-    function chaveAtendimentoLocal() {
-      return `elo_atendimentos_${obterConfigRca().id}`;
-    }
-
-    function carregarAtendimentosLocais() {
-      try { return JSON.parse(localStorage.getItem(chaveAtendimentoLocal()) || '{}'); } catch (_) { return {}; }
-    }
-
-    function aplicarAtendimentosLocais(lista) {
-      const salvos = carregarAtendimentosLocais();
-      return lista.map(c => salvos[String(c.codigo)] ? { ...c, ...salvos[String(c.codigo)] } : c);
-    }
-
-    function salvarAtendimentoLocal(codigo, dados) {
-      const salvos = carregarAtendimentosLocais();
-      salvos[String(codigo)] = dados;
-      localStorage.setItem(chaveAtendimentoLocal(), JSON.stringify(salvos));
-    }
-
-    function ajustarCabecalhoElo() {
-      const cfg = obterConfigRca();
-      const ths = document.querySelectorAll('#tbElo');
-      const thead = document.querySelector('#tbElo')?.closest('table')?.querySelector('thead tr');
-      if (!thead) return;
-      if (cfg.id === '66') {
-        thead.innerHTML = '<th>Código</th><th>Cliente</th><th>Cidade</th><th>Status</th><th>Rank</th><th>Valor Total</th><th>Última Venda</th><th>Contatos</th><th style="text-align:center;">Ações</th>';
-      } else {
-        thead.innerHTML = '<th>Código</th><th>Cliente</th><th>Cidade</th><th>Var%</th><th>Ped. 26</th><th>Grava?</th><th>Ponto de Atenção</th><th>Contatos (S/O/N)</th><th style="text-align:center;">Ações</th>';
-      }
-    }
-
     function renderizarTabela(dados) {
-      ajustarCabecalhoElo();
-      const qtd = document.getElementById('eloQtdClientes');
-      if (qtd) qtd.textContent = dados.length;
+      renderizarProgressoAtendimento();
+
       const tbody = document.getElementById('tbElo');
       if (dados.length === 0) {
         tbody.innerHTML = '<tr><td colspan="9" class="empty-row">Nenhum cliente encontrado.</td></tr>';
@@ -353,35 +794,34 @@
         const varTxt = typeof c.varPct === 'number' ? `${(c.varPct * 100).toFixed(0)}%` : '-';
         const corVar = typeof c.varPct === 'number' ? (c.varPct >= 0 ? '#10b981' : '#ef4444') : '#64748b';
         const dots = `
-          <span class="elo-dot ${c.setContato ? 'on' : 'off'}" title="Setembro"></span>
-          <span class="elo-dot ${c.outContato ? 'on' : 'off'}" title="Outubro"></span>
-          <span class="elo-dot ${c.novContato ? 'on' : 'off'}" title="Novembro"></span>`;
+          <span
+            class="elo-dot ${clienteFeitoNoMes(c, MESES_ELO[0]) ? 'on' : 'off'}"
+            title="Setembro: ${clienteFeitoNoMes(c, MESES_ELO[0]) ? 'Feito' : 'Pendente'}"
+          ></span>
+
+          <span
+            class="elo-dot ${clienteFeitoNoMes(c, MESES_ELO[1]) ? 'on' : 'off'}"
+            title="Outubro: ${clienteFeitoNoMes(c, MESES_ELO[1]) ? 'Feito' : 'Pendente'}"
+          ></span>
+
+          <span
+            class="elo-dot ${clienteFeitoNoMes(c, MESES_ELO[2]) ? 'on' : 'off'}"
+            title="Novembro: ${clienteFeitoNoMes(c, MESES_ELO[2]) ? 'Feito' : 'Pendente'}"
+          ></span>`;
         const tr = document.createElement('tr');
         tr.className = 'clickable-row';
-        const cfg = obterConfigRca();
-        if (cfg.id === '66') {
-          tr.innerHTML = `
-            <td>${c.codigo}</td>
-            <td><strong>${c.cliente}</strong></td>
-            <td>${c.cidade || '-'}</td>
-            <td>${c.status || '-'}</td>
-            <td>${c.rank ?? '-'}</td>
-            <td>${Number(c.valorTotal || 0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}</td>
-            <td>${c.ultimaVenda || '-'}</td>
-            <td>${dots}</td>
-            <td style="text-align:center;"><button class="btn-upload" style="padding:4px 10px;font-size:0.75rem;">Registrar Atendimento</button></td>`;
-        } else {
-          tr.innerHTML = `
-            <td>${c.codigo}</td>
-            <td><strong>${c.cliente}</strong></td>
-            <td>${c.cidade}</td>
-            <td style="color:${corVar}; font-weight:600;">${varTxt}</td>
-            <td>${c.pedidos26}</td>
-            <td>${c.grava || '-'}</td>
-            <td>${badgePonto(c.pontoAtencao)}</td>
-            <td>${dots}</td>
-            <td style="text-align:center;"><button class="btn-upload" style="padding:4px 10px;font-size:0.75rem;">Registrar Atendimento</button></td>`;
-        }
+        tr.innerHTML = `
+          <td>${c.codigo}</td>
+          <td><strong>${c.cliente}</strong></td>
+          <td>${c.cidade}</td>
+          <td style="color:${corVar}; font-weight:600;">${varTxt}</td>
+          <td>${c.pedidos26}</td>
+          <td>${c.grava || '-'}</td>
+          <td>${badgePonto(c.pontoAtencao)}</td>
+          <td>${dots}</td>
+          <td style="text-align:center;">
+            <button class="btn-upload" style="padding:4px 10px;font-size:0.75rem;">Registrar Atendimento</button>
+          </td>`;
         tr.querySelector('button').addEventListener('click', () => abrirModal(c));
         frag.appendChild(tr);
       });
@@ -470,7 +910,6 @@
     }
 
     async function salvarAtendimento(c, modal) {
-      const cfg = obterConfigRca();
       const novo = {
         setContato: document.getElementById('eloSetContato').value,
         setAssunto: document.getElementById('eloSetAssunto').value,
@@ -482,6 +921,11 @@
         encaminhadoPara: document.getElementById('eloEncaminhado').value
       };
 
+      if (!APPS_SCRIPT_URL) {
+        mostrarToast('Configure a URL do Apps Script antes de salvar (veja o README).', false);
+        return;
+      }
+
       const mapaColunas = {
         setContato: 'SET contato', setAssunto: 'SET assunto',
         outContato: 'OUT contato', outAssunto: 'OUT assunto',
@@ -489,44 +933,37 @@
         clienteDisse: 'O que o cliente disse', encaminhadoPara: 'Encaminhado para'
       };
       const mudancas = Object.keys(novo)
-        .filter(k => novo[k] !== (c[k] || ''))
+        .filter(k => novo[k] !== c[k])
         .map(k => ({ codigo: c.codigo, coluna: mapaColunas[k], valor: novo[k] }));
 
-      if (!mudancas.length) { modal.style.display = 'none'; return; }
+      if (mudancas.length === 0) {
+        modal.style.display = 'none';
+        return;
+      }
 
       const btn = document.getElementById('eloSalvar');
-      btn.disabled = true; btn.textContent = 'Salvando...';
+      btn.disabled = true;
+      btn.textContent = 'Salvando...';
 
       try {
-        if (!APPS_SCRIPT_URL) {
-          throw new Error(`Apps Script do ${cfg.nome} não configurado`);
-        }
-
-        const res = await fetch(APPS_SCRIPT_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({
-            rca: cfg.id,
-            mudancas
-          })
-        });
-
+        // Sem headers customizados de propósito: assim o navegador manda
+        // como "text/plain", o que evita o preflight de CORS que o Apps
+        // Script não responde bem.
+        const res = await fetch(APPS_SCRIPT_URL, { method: 'POST', body: JSON.stringify({ mudancas }) });
         const json = await res.json();
-
-        if (!json.ok) {
-          throw new Error(json.erro || (json.erros || []).join(', ') || 'O Apps Script recusou a gravação.');
-        }
+        if (!json.ok) throw new Error(json.erro || (json.erros || []).join(', '));
 
         Object.assign(c, novo);
         const idx = baseElo.findIndex(x => x.codigo === c.codigo);
         if (idx > -1) baseElo[idx] = c;
         renderizarTabela(baseElo);
-        mostrarToast(`Atendimento do ${cfg.nome} salvo diretamente na planilha!`, true);
+        mostrarToast('Atendimento salvo no Drive com sucesso!', true);
         modal.style.display = 'none';
       } catch (err) {
         console.error(err);
-        mostrarToast(`Não consegui salvar o atendimento: ${err.message}`, false);
-        btn.disabled = false; btn.textContent = 'Salvar no Drive';
+        mostrarToast('Não consegui salvar no Drive. Suas respostas continuam no formulário — tente de novo.', false);
+        btn.disabled = false;
+        btn.textContent = 'Salvar no Drive';
       }
     }
 

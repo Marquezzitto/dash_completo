@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard de Vendas & Carteira</title>
+  <title>Dashboard de Vendas & Carteira - RCA 61</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,9 +19,8 @@
 
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
-  <script src="rca-config.js"></script>
-
   <link rel="stylesheet" href="style.css">
+  <script src="rca-config.js"></script>
 </head>
 
 <body>
@@ -33,7 +32,7 @@
       <div class="header-title">
 
         <h1>
-          Dashboard de Performance - <span data-rca-title>RCA 61</span>
+          Dashboard de Performance - RCA 61
         </h1>
 
         <p>
@@ -54,7 +53,7 @@
             style="width:16px;height:16px;"
           ></i>
 
-          Base & SLAs
+          Base & SLAs (RCA 61)
         </a>
 
         <a
@@ -70,7 +69,19 @@
           Atendimento ELO
         </a>
 
-        <div id="seletorRcaDashboard"></div>
+        <div class="filter-group">
+
+          <i
+            data-lucide="users"
+            class="filter-icon"
+          ></i>
+
+          <select id="selectRCA" onchange="selecionarRCA(this.value)">
+            <option value="61">RCA 61</option>
+            <option value="66">RCA 66</option>
+          </select>
+
+        </div>
 
         <div class="filter-group">
 
