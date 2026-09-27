@@ -4369,14 +4369,80 @@ if (searchInput) {
 
 function aplicarRCAInterfaceIndex() {
   const sel = document.getElementById('selectRCA');
-  if (sel) sel.value = RCA_ID_ATUAL;
-  const titulo = document.querySelector('.header-title h1');
-  if (titulo) titulo.textContent = `Dashboard de Performance - RCA ${RCA_ID_ATUAL}`;
-  const baseLink = document.querySelector('a[href="clientes.html"]');
-  if (baseLink) baseLink.textContent = `Base & SLAs (RCA ${RCA_ID_ATUAL})`;
+
+  if (sel) {
+    sel.value = RCA_ID_ATUAL;
+
+    sel.addEventListener('change', () => {
+      const rcaSelecionado =
+        sel.value === '66' ? '66' : '61';
+
+      try {
+        localStorage.setItem(
+          'rcaSelecionado',
+          rcaSelecionado
+        );
+      } catch (e) {}
+
+      const atendimentoLink =
+        document.querySelector(
+          'a[href^="atendimento.html"]'
+        );
+
+      if (atendimentoLink) {
+        atendimentoLink.href =
+          `atendimento.html?rca=${rcaSelecionado}`;
+      }
+    });
+  }
+
+  const titulo =
+    document.querySelector(
+      '.header-title h1'
+    );
+
+  if (titulo) {
+    titulo.textContent =
+      `Dashboard de Performance - RCA ${RCA_ID_ATUAL}`;
+  }
+
+  const baseLink =
+    document.querySelector(
+      'a[href="clientes.html"]'
+    );
+
+  if (baseLink) {
+    baseLink.textContent =
+      `Base & SLAs (RCA ${RCA_ID_ATUAL})`;
+  }
+
+  const atendimentoLink =
+    document.querySelector(
+      'a[href^="atendimento.html"]'
+    );
+
+  if (atendimentoLink) {
+    atendimentoLink.href =
+      `atendimento.html?rca=${RCA_ID_ATUAL}`;
+  }
+
+  try {
+    localStorage.setItem(
+      'rcaSelecionado',
+      String(RCA_ID_ATUAL)
+    );
+  } catch (e) {}
+
   if (RCA_ID_ATUAL === '66') {
-    const sub = document.querySelector('.header-title p');
-    if (sub) sub.textContent = 'Análise Integrada da Carteira';
+    const sub =
+      document.querySelector(
+        '.header-title p'
+      );
+
+    if (sub) {
+      sub.textContent =
+        'Análise Integrada da Carteira';
+    }
   }
 }
 
