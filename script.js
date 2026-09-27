@@ -2242,13 +2242,6 @@ function renderKPIs() {
         ]
       );
 
-    const faltaOficial =
-      parseCurrency(
-        rowPos[
-          'Qtd_Falta'
-        ]
-      );
-
     const pctOficial =
       parsePct(
         rowPos[
@@ -2286,14 +2279,17 @@ function renderKPIs() {
               : 0
           );
 
+    // IMPORTANTE:
+    // A falta é calculada diretamente pela diferença
+    // entre a META e o REALIZADO.
+    // Não utilizar Qtd_Falta da planilha.
+
     const falta =
-      faltaOficial >= 0
-        ? faltaOficial
-        : Math.max(
-            meta -
-              positivados,
-            0
-          );
+      Math.max(
+        meta -
+          positivados,
+        0
+      );
 
     const faltaPct =
       Math.max(
@@ -2308,6 +2304,7 @@ function renderKPIs() {
         10;
 
     if (elPos) {
+
       elPos.textContent =
         `${positivados} / ${carteira}`;
 
@@ -2351,6 +2348,7 @@ function renderKPIs() {
     }
 
     if (posCard) {
+
       posCard.style.borderColor =
         alerta
           ? '#ef4444'
