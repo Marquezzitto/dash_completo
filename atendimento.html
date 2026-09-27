@@ -13,8 +13,7 @@
 
   <link rel="stylesheet" href="style.css">
   <script src="rca-config.js"></script>
-  <script src="sla-config.js"></script>
-  <style>
+    <style>
     .elo-badge { display:inline-block; padding:2px 8px; border-radius:6px; font-size:0.7rem; font-weight:600; }
     .elo-cell-locked { color: var(--text-secondary); background: rgba(255,255,255,0.02); }
     .elo-dot { display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:4px; }
@@ -24,6 +23,24 @@
     .elo-guide summary { cursor: pointer; font-weight: 600; }
     .elo-guide-row { display:flex; gap:10px; margin-top:10px; font-size:0.85rem; }
     .elo-guide-row b { min-width: 120px; color: var(--accent-indigo); flex-shrink:0; }
+    .elo-resumo-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; margin-bottom:12px; }
+    .elo-resumo-card { background:#1e293b; border:1px solid #334155; border-radius:18px; padding:22px 24px 18px; box-shadow:0 8px 24px rgba(0,0,0,.10); }
+    .elo-resumo-top { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
+    .elo-resumo-title { color:#9db4d1; font-size:.95rem; letter-spacing:.04em; text-transform:uppercase; }
+    .elo-resumo-pct { color:#10b981; font-size:2.05rem; line-height:1; font-weight:700; }
+    .elo-resumo-main { margin-top:8px; font-size:1.45rem; font-weight:700; color:#f8fafc; }
+    .elo-resumo-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:20px; }
+    .elo-resumo-stat { background:#0f172a; border-radius:12px; padding:13px 14px; min-width:0; }
+    .elo-resumo-stat span { display:block; color:#7890ae; font-size:.75rem; text-transform:uppercase; letter-spacing:.03em; }
+    .elo-resumo-stat strong { display:block; color:#f8fafc; font-size:1.45rem; margin-top:3px; }
+    .elo-resumo-bar { height:12px; background:#0f172a; border-radius:999px; overflow:hidden; margin-top:20px; }
+    .elo-resumo-bar > div { height:100%; background:#10b981; border-radius:999px; transition:width .25s; }
+    .elo-resumo-status { color:#9db4d1; font-size:.88rem; margin-top:14px; line-height:1.45; min-height:38px; }
+    .elo-resumo-bottom { border-top:1px solid #334155; margin-top:14px; padding-top:14px; display:grid; grid-template-columns:repeat(3,1fr); text-align:center; gap:8px; }
+    .elo-resumo-bottom span { display:block; color:#9db4d1; font-size:.82rem; }
+    .elo-resumo-bottom strong { display:block; color:#f8fafc; font-size:1.25rem; margin-top:2px; }
+    @media(max-width:1100px){ .elo-resumo-grid{grid-template-columns:1fr;} }
+
     .elo-panel-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap:14px; }
     .elo-panel-card { background: var(--bg-card); border:1px solid var(--border-color); border-radius: var(--radius); padding:14px 16px; }
     .elo-panel-card .lbl { font-size:0.7rem; color: var(--text-secondary); text-transform:uppercase; }
@@ -77,8 +94,11 @@
       </div>
     </header>
 
-    <!-- Painel resumo (comparativo Jan-Ago 25 x 26, direto da aba "Painel") -->
-    <section class="elo-panel-grid" id="painelGrid"></section>
+    <!-- Resumo do Atendimento ELO: calculado diretamente pelos contatos da carteira -->
+    <section class="elo-resumo-grid" id="eloResumoGrid"></section>
+
+    <!-- Indicadores da planilha RCA 61, quando existirem na aba Painel -->
+    <section class="elo-panel-grid" id="painelGrid" style="display:none;"></section>
 
     <!-- Guia rápido (aba "Fluxo de Atendimento") -->
     <details class="elo-guide">
@@ -89,7 +109,7 @@
     <!-- Tabela principal -->
     <section class="table-card" style="margin-top:10px;">
       <div class="card-header space-between">
-        <h3>Minha Carteira - 270 Clientes</h3>
+        <h3 id="tituloCarteiraElo">Minha Carteira</h3>
         <input type="text" id="searchElo" placeholder="Pesquisar por cliente, cidade ou código..." class="table-search" style="width:300px;">
       </div>
       <div class="table-wrapper" style="max-height:600px;">
@@ -99,7 +119,6 @@
               <th>Código</th>
               <th>Cliente</th>
               <th>Cidade</th>
-              <th>Transportadora / SLA</th>
               <th>Var%</th>
               <th>Ped. 26</th>
               <th>Grava?</th>
@@ -109,7 +128,7 @@
             </tr>
           </thead>
           <tbody id="tbElo">
-            <tr><td colspan="10" class="empty-row">Carregando planilha do Drive...</td></tr>
+            <tr><td colspan="9" class="empty-row">Carregando planilha do Drive...</td></tr>
           </tbody>
         </table>
       </div>
@@ -154,71 +173,81 @@
     async function carregarDados() {
       const cfg = obterConfigRca();
       document.getElementById('tituloRca').textContent = cfg.nome;
+      document.getElementById('tituloCarteiraElo').textContent = `Minha Carteira - ${cfg.id === '66' ? 'RCA 66' : 'RCA 61'} · ${cfg.id === '66' ? '309' : '270'} Clientes`;
       document.title = `Atendimento ELO - ${cfg.nome}`;
       document.getElementById('seletorRcaAtendimento').innerHTML = criarSeletorRcaHtml();
       instalarSeletorRca();
 
-      // RCA 66: carteira vem do JSON próprio; histórico mensal não é usado.
+      // RCA 66: carteira própria do Drive + registros de atendimento
+      // armazenados na aba "Atendimento ELO" do Apps Script do RCA 66.
       if (cfg.id === '66') {
         try {
-          const r = await fetch(`${cfg.clientesUrl}?v=${Date.now()}`);
-          if (!r.ok) throw new Error('Falha ao carregar a carteira RCA 66');
-          const clientes = await r.json();
+          let clientes = [];
+          try {
+            const url66 = `https://docs.google.com/spreadsheets/d/${cfg.driveSpreadsheetId}/export?format=xlsx`;
+            const res66 = await fetch(url66);
+            if (!res66.ok) throw new Error('HTTP ' + res66.status);
+            const buf66 = await res66.arrayBuffer();
+            const wb66 = XLSX.read(new Uint8Array(buf66), { type: 'array', cellDates: true });
+            clientes = extrairCarteiraRca66DoWorkbook(wb66);
+          } catch (eDrive66) {
+            console.warn('[Atendimento ELO RCA 66] Drive indisponível, usando rca66_clientes.json.', eDrive66);
+            const r = await fetch(`${cfg.clientesUrl}?v=${Date.now()}`);
+            if (!r.ok) throw new Error('Falha ao carregar a carteira RCA 66');
+            clientes = await r.json();
+          }
 
           baseElo = clientes.map(c => ({
-            codigo: c.codigo,
-            cliente: c.cliente,
+            codigo: normalizarCodigoElo(c.codigo),
+            cliente: c.cliente || '',
             cidade: c.cidade || '',
             janAgo25: 0,
             janAgo26: 0,
             varPct: null,
-            pedidos26: c.quantidadeNotas || 0,
+            pedidos26: Number(c.quantidadeNotas || c.qtdNotas || 0) || 0,
             grava: '',
             pontoAtencao: c.status || '',
-            setContato: '',
-            setAssunto: '',
-            outContato: '',
-            outAssunto: '',
-            novContato: '',
-            novAssunto: '',
-            clienteDisse: '',
-            encaminhadoPara: '',
-            slaInfo: calcularInfoSLA(c, '66')
+            setContato: '', setAssunto: '', outContato: '', outAssunto: '',
+            novContato: '', novAssunto: '', clienteDisse: '', encaminhadoPara: ''
           }));
 
-          // Carrega os atendimentos já salvos no Apps Script do RCA 66.
+          // Os registros do ELO do RCA 66 ficam na aba própria criada pelo Apps Script.
           try {
             const eloRes = await fetch(`${cfg.appsScriptUrl}?v=${Date.now()}`);
             if (eloRes.ok) {
               const eloJson = await eloRes.json();
               const salvos = Array.isArray(eloJson.dados) ? eloJson.dados : [];
               const porCodigo = {};
-              salvos.forEach(s => porCodigo[String(s['Código'])] = s);
+              salvos.forEach(s => porCodigo[normalizarCodigoElo(s['Código'])] = s);
 
               baseElo.forEach(c => {
-                const s = porCodigo[String(c.codigo)];
+                const s = porCodigo[normalizarCodigoElo(c.codigo)];
                 if (!s) return;
-                c.setContato = s['SET contato'] || '';
+                c.setContato = normalizarDataAtendimento(s['SET contato']);
                 c.setAssunto = s['SET assunto'] || '';
-                c.outContato = s['OUT contato'] || '';
+                c.outContato = normalizarDataAtendimento(s['OUT contato']);
                 c.outAssunto = s['OUT assunto'] || '';
-                c.novContato = s['NOV contato'] || '';
+                c.novContato = normalizarDataAtendimento(s['NOV contato']);
                 c.novAssunto = s['NOV assunto'] || '';
                 c.clienteDisse = s['O que o cliente disse'] || '';
                 c.encaminhadoPara = s['Encaminhado para'] || '';
               });
+              setStatus(true, `RCA 66 — Drive + ELO (${baseElo.length} clientes)`);
+            } else {
+              setStatus(true, `RCA 66 — Drive (${baseElo.length} clientes)`);
             }
           } catch (e) {
             console.warn('Não foi possível ler os atendimentos salvos do RCA 66.', e);
+            setStatus(true, `RCA 66 — Drive (${baseElo.length} clientes)`);
           }
 
-          setStatus(true, `RCA 66 — ${baseElo.length} clientes`);
+          atualizarResumoElo();
           renderizarTabela(baseElo);
           return;
         } catch (err) {
           console.error(err);
           document.getElementById('tbElo').innerHTML =
-            '<tr><td colspan="10" class="empty-row" style="color:#ef4444;">Não foi possível carregar a base do RCA 66.</td></tr>';
+            '<tr><td colspan="9" class="empty-row" style="color:#ef4444;">Não foi possível carregar a base do RCA 66.</td></tr>';
           setStatus(false, 'Erro ao carregar RCA 66');
           return;
         }
@@ -243,11 +272,12 @@
           setStatus(false, `Snapshot local (${baseElo.length} clientes)`);
         } catch (err2) {
           document.getElementById('tbElo').innerHTML =
-            '<tr><td colspan="10" class="empty-row" style="color:#ef4444;">Não foi possível carregar os dados.</td></tr>';
+            '<tr><td colspan="9" class="empty-row" style="color:#ef4444;">Não foi possível carregar os dados.</td></tr>';
           setStatus(false, 'Erro ao carregar');
           return;
         }
       }
+      atualizarResumoElo();
       renderizarTabela(baseElo);
     }
 
@@ -256,6 +286,153 @@
       const txt = document.getElementById('statusText');
       txt.textContent = texto;
       badge.classList.toggle('active', ok);
+    }
+
+    function normalizarCodigoElo(v) {
+      if (v === null || v === undefined) return '';
+      return String(v).trim().replace(/\.0$/, '');
+    }
+
+    function normalizarDataAtendimento(v) {
+      if (!v) return '';
+      if (v instanceof Date) return v.toISOString().slice(0,10);
+      const s = String(v).trim();
+      // Apps Script RCA 66 devolve dd/MM/yyyy HH:mm:ss.
+      const m = s.match(/^(\d{2})\/(\d{2})\/(\d{4})/);
+      if (m) return `${m[3]}-${m[2]}-${m[1]}`;
+      const iso = s.match(/^(\d{4}-\d{2}-\d{2})/);
+      return iso ? iso[1] : s;
+    }
+
+    function extrairCarteiraRca66DoWorkbook(wb) {
+      const nomeAba = wb.SheetNames[0];
+      const aba = wb.Sheets[nomeAba];
+      const linhas = XLSX.utils.sheet_to_json(aba, { header: 1, defval: null });
+      if (!linhas.length) return [];
+      let cab = linhas[0].map(v => String(v || '').trim().toLowerCase());
+      // Algumas exportações repetem o cabeçalho na primeira linha.
+      let inicio = 1;
+      if (linhas[1] && String(linhas[1][0] || '').toLowerCase().includes('código')) inicio = 2;
+      const idx = nome => cab.findIndex(x => x === nome || x.includes(nome));
+      const iCod = idx('código cliente') >= 0 ? idx('código cliente') : idx('código');
+      const iCli = idx('cliente');
+      const iFant = idx('fantasia');
+      const iCidade = idx('cidade');
+      const iUf = idx('uf');
+      const iStatus = idx('status');
+      const iQtd = idx('qtd notas') >= 0 ? idx('qtd notas') : idx('quantidade de notas');
+      return linhas.slice(inicio).filter(r => r && r[iCod] != null && String(r[iCod]).trim() !== '').map(r => ({
+        codigo: normalizarCodigoElo(r[iCod]),
+        cliente: String(r[iCli] || '').trim(),
+        fantasia: String(r[iFant] || '').trim(),
+        cidade: String(r[iCidade] || '').trim(),
+        uf: String(r[iUf] || '').trim(),
+        status: String(r[iStatus] || '').trim(),
+        quantidadeNotas: Number(r[iQtd]) || 0
+      }));
+    }
+
+    function ehFimDeSemana(data) {
+      const d = data.getDay();
+      return d === 0 || d === 6;
+    }
+
+    function chaveData(data) {
+      return `${data.getFullYear()}-${String(data.getMonth()+1).padStart(2,'0')}-${String(data.getDate()).padStart(2,'0')}`;
+    }
+
+    // Feriados nacionais relevantes para Set/Out/Nov de 2026.
+    const FERIADOS_ELO_2026 = new Set([
+      '2026-09-07', // Independência do Brasil
+      '2026-10-12', // Nossa Senhora Aparecida
+      '2026-11-02', // Finados
+      '2026-11-15'  // Proclamação da República
+    ]);
+
+    function diasUteisNoMes(ano, mesZero) {
+      const ultimo = new Date(ano, mesZero + 1, 0);
+      let total = 0;
+      for (let d = 1; d <= ultimo.getDate(); d++) {
+        const dt = new Date(ano, mesZero, d);
+        if (!ehFimDeSemana(dt) && !FERIADOS_ELO_2026.has(chaveData(dt))) total++;
+      }
+      return total;
+    }
+
+    function diasUteisRestantes(ano, mesZero, hoje) {
+      const primeiro = new Date(ano, mesZero, 1);
+      const ultimo = new Date(ano, mesZero + 1, 0);
+      let total = 0;
+      const inicio = (hoje.getFullYear() === ano && hoje.getMonth() === mesZero) ? hoje.getDate() + 1 : 1;
+      for (let d = inicio; d <= ultimo.getDate(); d++) {
+        const dt = new Date(ano, mesZero, d);
+        if (!ehFimDeSemana(dt) && !FERIADOS_ELO_2026.has(chaveData(dt))) total++;
+      }
+      return total;
+    }
+
+    function contatoDoMes(c, mes) {
+      const campo = mes === 9 ? c.setContato : mes === 10 ? c.outContato : c.novContato;
+      if (!campo) return false;
+      const s = String(campo);
+      return s.startsWith(`2026-${String(mes).padStart(2,'0')}-`);
+    }
+
+    function formatarMesElo(mes) {
+      return new Intl.DateTimeFormat('pt-BR', { month:'long' }).format(new Date(2026, mes-1, 1)).toUpperCase();
+    }
+
+    function montarResumoMesElo(mes, totalClientes, hoje) {
+      const feitos = baseElo.filter(c => contatoDoMes(c, mes)).length;
+      const faltam = Math.max(totalClientes - feitos, 0);
+      const pct = totalClientes ? (feitos / totalClientes) * 100 : 0;
+      const retornos = baseElo.filter(c => contatoDoMes(c, mes) && String(c.clienteDisse || '').trim() !== '').length;
+      const semRetorno = Math.max(feitos - retornos, 0);
+      const naoLiguei = faltam;
+      const mesZero = mes - 1;
+      const totalUteis = diasUteisNoMes(2026, mesZero);
+      const mesmaCompetencia = hoje.getFullYear() === 2026 && hoje.getMonth() === mesZero;
+      const diasExibir = mesmaCompetencia ? diasUteisRestantes(2026, mesZero, hoje) : (hoje.getFullYear() < 2026 || (hoje.getFullYear() === 2026 && hoje.getMonth() < mesZero) ? totalUteis : 0);
+      let status = '';
+      if (hoje.getFullYear() < 2026 || (hoje.getFullYear() === 2026 && hoje.getMonth() < mesZero)) {
+        status = `⌛ Ainda não iniciado — ${totalUteis} dias úteis no mês.`;
+      } else if (hoje.getFullYear() === 2026 && hoje.getMonth() === mesZero) {
+        const restantes = diasUteisRestantes(2026, mesZero, hoje);
+        status = `📅 Em andamento — faltam ${faltam} clientes e ${restantes} dias úteis para o fim do mês.`;
+      } else {
+        status = `✓ Mês encerrado — ${feitos} de ${totalClientes} clientes atendidos.`;
+      }
+      return { mes, nome: formatarMesElo(mes), feitos, faltam, pct, retornos, semRetorno, naoLiguei, totalUteis, diasExibir, status };
+    }
+
+    function atualizarResumoElo() {
+      const grid = document.getElementById('eloResumoGrid');
+      if (!grid) return;
+      const hoje = new Date();
+      const total = baseElo.length;
+      const cards = [9,10,11].map(m => montarResumoMesElo(m, total, hoje));
+      grid.innerHTML = cards.map(r => `
+        <div class="elo-resumo-card">
+          <div class="elo-resumo-top">
+            <div>
+              <div class="elo-resumo-title">ATENDIMENTO ELO · ${r.nome}/2026</div>
+              <div class="elo-resumo-main">${r.feitos} de ${total} clientes</div>
+            </div>
+            <div class="elo-resumo-pct">${r.pct.toFixed(1).replace('.', ',')}%</div>
+          </div>
+          <div class="elo-resumo-stats">
+            <div class="elo-resumo-stat"><span>Feitos</span><strong>${r.feitos}</strong></div>
+            <div class="elo-resumo-stat"><span>Faltam</span><strong>${r.faltam}</strong></div>
+            <div class="elo-resumo-stat"><span>Dias úteis</span><strong>${r.diasExibir}</strong></div>
+          </div>
+          <div class="elo-resumo-bar"><div style="width:${Math.min(100, r.pct)}%;"></div></div>
+          <div class="elo-resumo-status">${r.status}</div>
+          <div class="elo-resumo-bottom">
+            <div><span>Tive retorno</span><strong>${r.retornos}</strong></div>
+            <div><span>Sem retorno</span><strong>${r.semRetorno}</strong></div>
+            <div><span>Não liguei</span><strong>${r.naoLiguei}</strong></div>
+          </div>
+        </div>`).join('');
     }
 
     function fmtDataCell(v) {
@@ -356,7 +533,7 @@
     function renderizarTabela(dados) {
       const tbody = document.getElementById('tbElo');
       if (dados.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="10" class="empty-row">Nenhum cliente encontrado.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="9" class="empty-row">Nenhum cliente encontrado.</td></tr>';
         return;
       }
       tbody.innerHTML = '';
@@ -370,16 +547,10 @@
           <span class="elo-dot ${c.novContato ? 'on' : 'off'}" title="Novembro"></span>`;
         const tr = document.createElement('tr');
         tr.className = 'clickable-row';
-        const slaInfo = c.slaInfo || calcularInfoSLA(c, obterConfigRca().id);
-        const slaCor = slaInfo.informado ? '#10b981' : '#f59e0b';
         tr.innerHTML = `
           <td>${c.codigo}</td>
           <td><strong>${c.cliente}</strong></td>
           <td>${c.cidade}</td>
-          <td>
-            <strong style="color:${slaCor};">${slaInfo.transportadora}</strong>
-            <span style="display:block;font-size:.72rem;color:#94a3b8;">${slaInfo.sla}</span>
-          </td>
           <td style="color:${corVar}; font-weight:600;">${varTxt}</td>
           <td>${c.pedidos26}</td>
           <td>${c.grava || '-'}</td>
@@ -428,14 +599,6 @@
             <div>
               <h3 style="margin:0;font-size:1.1rem;color:#6366f1;">📞 ${c.codigo} - ${c.cliente}</h3>
               <span style="font-size:0.8rem;color:#94a3b8;">${c.cidade} · ${badgePonto(c.pontoAtencao)}</span>
-              <div style="margin-top:8px;padding:8px 10px;background:#0f172a;border-radius:7px;font-size:.78rem;">
-                <strong style="color:${(c.slaInfo || calcularInfoSLA(c, obterConfigRca().id)).informado ? '#10b981' : '#f59e0b'};">
-                  SLA: ${(c.slaInfo || calcularInfoSLA(c, obterConfigRca().id)).sla}
-                </strong>
-                <span style="margin-left:10px;color:#94a3b8;">
-                  ${(c.slaInfo || calcularInfoSLA(c, obterConfigRca().id)).transportadora}
-                </span>
-              </div>
             </div>
             <button id="eloFechar" style="background:transparent;border:none;color:#94a3b8;font-size:1.5rem;cursor:pointer;">&times;</button>
           </div>

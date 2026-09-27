@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   
   <link rel="stylesheet" href="style.css">
   <script src="rca-config.js"></script>
@@ -685,52 +686,88 @@
 
         carregarDadosVivos();
 
-        fetch(cfg.clientesUrl)
+        try {
+          let data = [];
 
-          .then(response => {
+          // Cada RCA usa a sua própria planilha do Drive.
+          // O JSON local permanece apenas como fallback caso o Drive não esteja acessível.
+          try {
+            const driveUrl = `https://docs.google.com/spreadsheets/d/${cfg.driveSpreadsheetId}/export?format=xlsx`;
+            const driveRes = await fetch(driveUrl);
+            if (!driveRes.ok) throw new Error('HTTP ' + driveRes.status);
+            const buf = await driveRes.arrayBuffer();
+            const wb = XLSX.read(new Uint8Array(buf), { type:'array', cellDates:true });
+            data = extrairBaseClientesDoDrive(wb, cfg.id);
+            if (!data.length) throw new Error('A planilha do Drive não retornou clientes.');
+          } catch (driveError) {
+            console.warn(`[Base ${cfg.nome}] Drive indisponível. Usando JSON local.`, driveError);
+            const response = await fetch(`${cfg.clientesUrl}?v=${Date.now()}`);
+            if (!response.ok) throw new Error('Não foi possível carregar o arquivo de clientes.');
+            data = await response.json();
+          }
 
-            if (!response.ok) {
-
-              throw new Error(
-                'Não foi possível carregar o arquivo de clientes.'
-              );
-            }
-
-            return response.json();
-          })
-
-          .then(data => {
-
-            baseClientesGlobal =
-              data;
-
-            renderizarTabelaClientes(
-              baseClientesGlobal
-            );
-
-            document
-              .getElementById('contadorClientes')
-              .innerText =
-              `Base Completa (${baseClientesGlobal.length} Clientes)`;
-          })
-
-          .catch(error => {
-
-            console.error(error);
-
-            document
-              .getElementById('tbClientesSLA')
-              .innerHTML =
-              '<tr><td colspan="6" class="empty-row" style="color:#ef4444;">Erro ao carregar a base fixa de clientes. Verifique o arquivo clientes.json.</td></tr>';
-
-            document
-              .getElementById('contadorClientes')
-              .innerText =
-              'Erro na base';
-          });
+          baseClientesGlobal = data;
+          renderizarTabelaClientes(baseClientesGlobal);
+          document.getElementById('contadorClientes').innerText =
+            `Base Completa (${baseClientesGlobal.length} Clientes)`;
+        } catch (error) {
+          console.error(error);
+          document.getElementById('tbClientesSLA').innerHTML =
+            '<tr><td colspan="6" class="empty-row" style="color:#ef4444;">Erro ao carregar a base de clientes do RCA selecionado.</td></tr>';
+          document.getElementById('contadorClientes').innerText = 'Erro na base';
+        }
       }
     );
 
+
+    // ============================================================
+    // LEITURA DA PLANILHA DO DRIVE DE CADA RCA
+    // ============================================================
+    function extrairBaseClientesDoDrive(wb, rcaId) {
+      const nomeAba = wb.SheetNames[0];
+      const aba = wb.Sheets[nomeAba];
+      const linhas = XLSX.utils.sheet_to_json(aba, { header:1, defval:null });
+      if (!linhas.length) return [];
+
+      if (String(rcaId) === '61') {
+        // A planilha do RCA 61 usa a aba Minha Carteira e cabeçalho na linha 4.
+        const aba61 = wb.Sheets['Minha Carteira'] || aba;
+        const ls = XLSX.utils.sheet_to_json(aba61, { header:1, defval:null });
+        const out = [];
+        for (let i=3; i<ls.length; i++) {
+          const r=ls[i];
+          if(!r || !r[0] || !r[1]) continue;
+          out.push({
+            codigo:String(r[0]).replace(/\.0$/,''), cliente:String(r[1]).trim(),
+            fantasia:String(r[1]).trim(), cidade:String(r[2]||'').trim(), uf:'SP',
+            valor:Number(r[4])||0, status:String(r[8]||''),
+            slaDias:'', sla:''
+          });
+        }
+        return out;
+      }
+
+      // RCA 66: Carteira Josi RCA 66, cabeçalho na primeira linha.
+      const cab = linhas[0].map(v=>String(v||'').trim().toLowerCase());
+      const find = n => cab.findIndex(x=>x===n || x.includes(n));
+      const iCod = find('código cliente')>=0 ? find('código cliente') : find('código');
+      const iCli = find('cliente');
+      const iFant = find('fantasia');
+      const iCidade = find('cidade');
+      const iUf = find('uf');
+      const iStatus = find('status');
+      const iValor = find('valor total venda');
+      const iQtd = find('qtd notas')>=0 ? find('qtd notas') : find('quantidade de notas');
+      const iUlt = find('última venda');
+      const iCad = find('data cadastro');
+      let inicio=1;
+      if(linhas[1] && String(linhas[1][0]||'').toLowerCase().includes('código')) inicio=2;
+      return linhas.slice(inicio).filter(r=>r && r[iCod]!=null && String(r[iCod]).trim()!=='').map(r=>({
+        codigo:String(r[iCod]).replace(/\.0$/,''), cliente:String(r[iCli]||'').trim(), fantasia:String(r[iFant]||'').trim(),
+        cidade:String(r[iCidade]||'').trim(), uf:String(r[iUf]||'').trim(), status:String(r[iStatus]||'').trim(),
+        valor:Number(r[iValor])||0, quantidadeNotas:Number(r[iQtd])||0, ultimaVenda:r[iUlt]||'', dataCadastro:r[iCad]||''
+      }));
+    }
 
     // ============================================================
     // RENDERIZAÇÃO DA TABELA
