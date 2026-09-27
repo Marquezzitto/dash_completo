@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard de Vendas & Carteira - RCA 61</title>
+  <title>Dashboard de Vendas & Carteira</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,8 +19,9 @@
 
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
-  <link rel="stylesheet" href="style.css">
   <script src="rca-config.js"></script>
+
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -32,7 +33,7 @@
       <div class="header-title">
 
         <h1>
-          Dashboard de Performance - RCA 61
+          Dashboard de Performance - <span data-rca-title>RCA 61</span>
         </h1>
 
         <p>
@@ -42,7 +43,6 @@
       </div>
 
       <div class="header-controls">
-        <div id="seletorRcaDashboard"></div>
 
         <a
           href="clientes.html"
@@ -69,6 +69,8 @@
 
           Atendimento ELO
         </a>
+
+        <div id="seletorRcaDashboard"></div>
 
         <div class="filter-group">
 
@@ -676,20 +678,6 @@
   </div>
 
   <script src="script.js"></script>
-
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  const cfg = obterConfigRca();
-  const t = document.getElementById('tituloRca');
-  if (t) t.textContent = cfg.nome;
-  const s = document.getElementById('seletorRcaDashboard');
-  if (s) { s.innerHTML = criarSeletorRcaHtml(); instalarSeletorRca(); }
-  // O histórico mensal continua exclusivo do RCA 61.
-  if (cfg.id === '66') {
-    document.querySelectorAll('[data-historico-mensal]').forEach(el => el.style.display='none');
-  }
-});
-</script>
 
 </body>
 </html>

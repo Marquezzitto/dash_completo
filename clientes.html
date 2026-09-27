@@ -3,17 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Base de Clientes & SLAs - RCA 61</title>
+  <title>Base de Clientes & SLAs</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/lucide@latest"></script>
-  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="rca-config.js"></script>
   
   <link rel="stylesheet" href="style.css">
-  <script src="rca-config.js"></script>
-  <script src="sla-config.js"></script>
 </head>
 <body>
 
@@ -21,12 +19,11 @@
     
     <header class="main-header">
       <div class="header-title">
-        <h1>Base de Clientes & SLAs - <span id="tituloRca">RCA 61</span></h1>
+        <h1>Base de Clientes & SLAs - <span data-rca-title>RCA 61</span></h1>
         <p>Consulta unificada da carteira completa e prazos de entrega por cidade</p>
       </div>
 
       <div class="header-controls">
-        <div id="seletorRcaClientes"></div>
         <a href="index.html" class="btn-upload" style="text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
           <i data-lucide="arrow-left" style="width:16px;height:16px;"></i> Voltar ao Dashboard
         </a>
@@ -34,6 +31,8 @@
         <a href="atendimento.html" class="btn-upload" style="text-decoration: none; display: inline-flex; align-items: center; gap: 6px; background-color: #f59e0b;">
           <i data-lucide="phone-call" style="width:16px;height:16px;"></i> Atendimento ELO
         </a>
+
+        <div id="seletorRcaClientes"></div>
 
         <div class="status-badge active" id="statusBadge">
           <span class="status-dot"></span>
@@ -475,7 +474,7 @@
 
     function carregarDadosVivos() {
       try {
-        const raw = localStorage.getItem(`rca${obterConfigRca().id}_dadosVivos`);
+        const raw = localStorage.getItem(obterConfigRca().storageKey);
         dadosVivosGlobal = raw ? JSON.parse(raw) : null;
       } catch (e) {
         dadosVivosGlobal = null;
@@ -561,14 +560,17 @@
     function determinarTransportadoraESLA(c) {
       const cidade = normalizarNome(c.cidade);
       const uf = normalizarNome(c.uf);
-      const rcaAtual = obterConfigRca().id;
 
-      const compartilhado = calcularInfoSLA(c, rcaAtual);
+      let transportadora =
+        transportadoraPorCidade[cidade];
 
-      let transportadora = compartilhado.transportadora;
-      let sla = compartilhado.sla;
-      let regiao = compartilhado.regiao;
-      let fonte = compartilhado.fonte;
+      let sla =
+        slaPorCidade[cidade];
+
+      let regiao =
+        regiaoPorCidade[cidade];
+
+      let fonte = '';
 
 
       // ----------------------------------------------------------
@@ -617,17 +619,24 @@
       // Mantém o SLA já existente no clientes.json.
       // ----------------------------------------------------------
 
-      if (!transportadora || transportadora === 'Não informado') {
+      if (!transportadora) {
 
-        if (rcaAtual === '66') {
-          transportadora = 'Não informado';
-          regiao = uf === 'SP' ? 'Interior de SP' : 'Fora de SP';
-          fonte = 'Cidade sem regra cadastrada para RCA 66';
-        } else {
-          transportadora = 'Paulinéris';
-          regiao = uf === 'SP' ? 'Interior de SP' : 'Fora de SP';
-          fonte = 'Base do cliente (fallback)';
-        }
+        const rcaAtual = obterConfigRca().id;
+
+        transportadora =
+          rcaAtual === '66'
+            ? 'Não definida'
+            : 'Paulinéris';
+
+        regiao =
+          uf === 'SP'
+            ? 'Interior de SP'
+            : 'Fora de SP';
+
+        fonte =
+          rcaAtual === '66'
+            ? 'Cidade sem regra cadastrada para o RCA 66'
+            : 'Base do cliente (fallback)';
 
 
         if (
@@ -657,7 +666,9 @@
           'SLA não informado';
 
         fonte =
-          'SLA não informado na base';
+          obterConfigRca().id === '66'
+            ? 'SLA não cadastrado para esta cidade no RCA 66'
+            : 'SLA não informado na base';
       }
 
 
@@ -674,100 +685,28 @@
     // CARREGAMENTO DOS CLIENTES
     // ============================================================
 
-    document.addEventListener(
-      'DOMContentLoaded',
-      async () => {
+    document.addEventListener('DOMContentLoaded', async () => {
+      carregarDadosVivos();
 
-        const cfg = obterConfigRca();
-        document.getElementById('tituloRca').textContent = cfg.nome;
-        document.title = `Base de Clientes & SLAs - ${cfg.nome}`;
-        document.getElementById('seletorRcaClientes').innerHTML = criarSeletorRcaHtml();
-        instalarSeletorRca();
+      const config = obterConfigRca();
+      document.getElementById('seletorRcaClientes').innerHTML = criarSeletorRcaHtml();
+      instalarSeletorRca();
+      document.querySelector('[data-rca-title]').textContent = config.nome;
+      document.title = `Base de Clientes & SLAs - ${config.nome}`;
 
-        carregarDadosVivos();
-
-        try {
-          let data = [];
-
-          // Cada RCA usa a sua própria planilha do Drive.
-          // O JSON local permanece apenas como fallback caso o Drive não esteja acessível.
-          try {
-            const driveUrl = `https://docs.google.com/spreadsheets/d/${cfg.driveSpreadsheetId}/export?format=xlsx`;
-            const driveRes = await fetch(driveUrl);
-            if (!driveRes.ok) throw new Error('HTTP ' + driveRes.status);
-            const buf = await driveRes.arrayBuffer();
-            const wb = XLSX.read(new Uint8Array(buf), { type:'array', cellDates:true });
-            data = extrairBaseClientesDoDrive(wb, cfg.id);
-            if (!data.length) throw new Error('A planilha do Drive não retornou clientes.');
-          } catch (driveError) {
-            console.warn(`[Base ${cfg.nome}] Drive indisponível. Usando JSON local.`, driveError);
-            const response = await fetch(`${cfg.clientesUrl}?v=${Date.now()}`);
-            if (!response.ok) throw new Error('Não foi possível carregar o arquivo de clientes.');
-            data = await response.json();
-          }
-
-          baseClientesGlobal = data;
-          renderizarTabelaClientes(baseClientesGlobal);
-          document.getElementById('contadorClientes').innerText =
-            `Base Completa (${baseClientesGlobal.length} Clientes)`;
-        } catch (error) {
-          console.error(error);
-          document.getElementById('tbClientesSLA').innerHTML =
-            '<tr><td colspan="6" class="empty-row" style="color:#ef4444;">Erro ao carregar a base de clientes do RCA selecionado.</td></tr>';
-          document.getElementById('contadorClientes').innerText = 'Erro na base';
-        }
+      try {
+        baseClientesGlobal = await carregarClientesDaRca();
+        renderizarTabelaClientes(baseClientesGlobal);
+        document.getElementById('contadorClientes').innerText =
+          `Base Completa (${baseClientesGlobal.length} Clientes)`;
+      } catch (error) {
+        console.error(error);
+        document.getElementById('tbClientesSLA').innerHTML =
+          `<tr><td colspan="6" class="empty-row" style="color:#ef4444;">Erro ao carregar a base do ${config.nome}. Verifique o arquivo ${config.clientesJson}.</td></tr>`;
+        document.getElementById('contadorClientes').innerText = 'Erro na base';
       }
-    );
+    });
 
-
-    // ============================================================
-    // LEITURA DA PLANILHA DO DRIVE DE CADA RCA
-    // ============================================================
-    function extrairBaseClientesDoDrive(wb, rcaId) {
-      const nomeAba = wb.SheetNames[0];
-      const aba = wb.Sheets[nomeAba];
-      const linhas = XLSX.utils.sheet_to_json(aba, { header:1, defval:null });
-      if (!linhas.length) return [];
-
-      if (String(rcaId) === '61') {
-        // A planilha do RCA 61 usa a aba Minha Carteira e cabeçalho na linha 4.
-        const aba61 = wb.Sheets['Minha Carteira'] || aba;
-        const ls = XLSX.utils.sheet_to_json(aba61, { header:1, defval:null });
-        const out = [];
-        for (let i=3; i<ls.length; i++) {
-          const r=ls[i];
-          if(!r || !r[0] || !r[1]) continue;
-          out.push({
-            codigo:String(r[0]).replace(/\.0$/,''), cliente:String(r[1]).trim(),
-            fantasia:String(r[1]).trim(), cidade:String(r[2]||'').trim(), uf:'SP',
-            valor:Number(r[4])||0, status:String(r[8]||''),
-            slaDias:'', sla:''
-          });
-        }
-        return out;
-      }
-
-      // RCA 66: Carteira Josi RCA 66, cabeçalho na primeira linha.
-      const cab = linhas[0].map(v=>String(v||'').trim().toLowerCase());
-      const find = n => cab.findIndex(x=>x===n || x.includes(n));
-      const iCod = find('código cliente')>=0 ? find('código cliente') : find('código');
-      const iCli = find('cliente');
-      const iFant = find('fantasia');
-      const iCidade = find('cidade');
-      const iUf = find('uf');
-      const iStatus = find('status');
-      const iValor = find('valor total venda');
-      const iQtd = find('qtd notas')>=0 ? find('qtd notas') : find('quantidade de notas');
-      const iUlt = find('última venda');
-      const iCad = find('data cadastro');
-      let inicio=1;
-      if(linhas[1] && String(linhas[1][0]||'').toLowerCase().includes('código')) inicio=2;
-      return linhas.slice(inicio).filter(r=>r && r[iCod]!=null && String(r[iCod]).trim()!=='').map(r=>({
-        codigo:String(r[iCod]).replace(/\.0$/,''), cliente:String(r[iCli]||'').trim(), fantasia:String(r[iFant]||'').trim(),
-        cidade:String(r[iCidade]||'').trim(), uf:String(r[iUf]||'').trim(), status:String(r[iStatus]||'').trim(),
-        valor:Number(r[iValor])||0, quantidadeNotas:Number(r[iQtd])||0, ultimaVenda:r[iUlt]||'', dataCadastro:r[iCad]||''
-      }));
-    }
 
     // ============================================================
     // RENDERIZAÇÃO DA TABELA

@@ -457,3 +457,33 @@ td {
 .modal-kpi-row strong {
   font-size: 0.95rem;
 }
+/* ============================================================
+   Seletor global de RCA
+   ============================================================ */
+.rca-selector-group {
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  padding:6px 9px;
+  border:1px solid var(--border-color);
+  border-radius:8px;
+  background:var(--bg-card);
+}
+
+.rca-selector-group select {
+  min-width:90px;
+  font-weight:700;
+}
+
+.rca-chart-notice {
+  border:1px dashed var(--border-color);
+  border-radius:10px;
+  background:rgba(255,255,255,.015);
+}
+
+@media (max-width:900px) {
+  .rca-selector-group {
+    width:100%;
+    justify-content:space-between;
+  }
+}
