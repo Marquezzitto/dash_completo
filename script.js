@@ -1,2119 +1,285 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Atendimento ELO - RCA 61</title>
+/* ============================================================
+   DASHBOARD PRINCIPAL — RCA 61 + RCA 66
+   O RCA selecionado é compartilhado entre as telas por localStorage.
+   ============================================================ */
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+let dashboardClientes = [];
+let historicoRca61 = null;
+let charts = {};
+let dadosUpload1 = null;
+let dadosUpload2 = null;
 
-  <link rel="stylesheet" href="style.css">
-  <style>
-    .elo-badge { display:inline-block; padding:2px 8px; border-radius:6px; font-size:0.7rem; font-weight:600; }
-    .elo-cell-locked { color: var(--text-secondary); background: rgba(255,255,255,0.02); }
-    .elo-dot { display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:4px; }
-    .elo-dot.on { background: var(--accent-green); }
-    .elo-dot.off { background: #334155; }
-    .elo-guide { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 16px 20px; }
-    .elo-guide summary { cursor: pointer; font-weight: 600; }
-    .elo-guide-row { display:flex; gap:10px; margin-top:10px; font-size:0.85rem; }
-    .elo-guide-row b { min-width: 120px; color: var(--accent-indigo); flex-shrink:0; }
-    .elo-panel-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap:14px; }
-    .elo-panel-card { background: var(--bg-card); border:1px solid var(--border-color); border-radius: var(--radius); padding:14px 16px; }
-    .elo-panel-card .lbl { font-size:0.7rem; color: var(--text-secondary); text-transform:uppercase; }
-    .elo-panel-card .val { font-size:1.3rem; font-weight:700; margin-top:4px; }
-    .elo-panel-card .var { font-size:0.75rem; margin-top:2px; }
+const fmtBRL = value => Number(value || 0).toLocaleString('pt-BR', {
+  style: 'currency', currency: 'BRL', maximumFractionDigits: 2
+});
+const fmtPct = value => `${(Number(value || 0) * 100).toFixed(1).replace('.', ',')}%`;
+const esc = value => String(value ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
 
-    .elo-progress-grid {
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:14px;
-      margin-top:14px;
+function destroyChart(id) {
+  if (charts[id]) {
+    charts[id].destroy();
+    charts[id] = null;
+  }
+}
+
+function showChartNotice(canvasId, message) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  destroyChart(canvasId);
+  const parent = canvas.parentElement;
+  let notice = parent.querySelector('.rca-chart-notice');
+  if (!notice) {
+    notice = document.createElement('div');
+    notice.className = 'rca-chart-notice';
+    notice.style.cssText = 'height:100%;min-height:220px;display:flex;align-items:center;justify-content:center;text-align:center;color:#94a3b8;padding:20px;line-height:1.5;';
+    parent.appendChild(notice);
+  }
+  notice.textContent = message;
+  canvas.style.display = 'none';
+}
+
+function restoreChartCanvas(canvasId) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  canvas.style.display = '';
+  const notice = canvas.parentElement.querySelector('.rca-chart-notice');
+  if (notice) notice.remove();
+}
+
+function montarSeletorDashboard() {
+  const el = document.getElementById('seletorRcaDashboard');
+  if (!el) return;
+  el.innerHTML = criarSeletorRcaHtml();
+  const select = el.querySelector('[data-rca-selector]');
+  if (select) select.onchange = () => definirRcaSelecionado(select.value);
+}
+
+function atualizarCabecalhoDashboard() {
+  const cfg = obterConfigRca();
+  const title = document.querySelector('[data-rca-title]');
+  if (title) title.textContent = cfg.nome;
+  document.title = `Dashboard de Vendas & Carteira - ${cfg.nome}`;
+  const status = document.getElementById('badgeText');
+  if (status) status.textContent = `Base ${cfg.nome}`;
+}
+
+async function carregarBaseDashboard() {
+  dashboardClientes = await carregarClientesDaRca();
+  const cfg = obterConfigRca();
+  historicoRca61 = null;
+  if (cfg.temHistoricoMensal && cfg.historicoJson) {
+    try {
+      const r = await fetch(cfg.historicoJson, { cache: 'no-store' });
+      if (r.ok) historicoRca61 = await r.json();
+    } catch (e) {
+      console.warn('Histórico fixo não carregado:', e);
     }
+  }
+}
 
-    .elo-progress-card {
-      background:var(--bg-card);
-      border:1px solid var(--border-color);
-      border-radius:var(--radius);
-      padding:16px;
+function preencherFiltroClientes() {
+  const select = document.getElementById('selectCliente');
+  if (!select) return;
+  select.innerHTML = '<option value="ALL">Todos os Clientes</option>';
+  [...dashboardClientes]
+    .sort((a,b) => a.cliente.localeCompare(b.cliente, 'pt-BR'))
+    .forEach(c => {
+      const opt = document.createElement('option');
+      opt.value = String(c.codigo);
+      opt.textContent = `${c.codigo} - ${c.cliente}`;
+      select.appendChild(opt);
+    });
+}
+
+function clientesFiltrados() {
+  const codigo = document.getElementById('selectCliente')?.value || 'ALL';
+  return codigo === 'ALL' ? dashboardClientes : dashboardClientes.filter(c => String(c.codigo) === String(codigo));
+}
+
+function dataBRParaDate(s) {
+  if (!s) return null;
+  if (s instanceof Date) return s;
+  const m = String(s).match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+  if (m) return new Date(Number(m[3]), Number(m[2]) - 1, Number(m[1]));
+  const d = new Date(s);
+  return Number.isNaN(d.getTime()) ? null : d;
+}
+
+function diasDesdeUltimaVenda(data) {
+  const d = dataBRParaDate(data);
+  if (!d) return null;
+  const hoje = new Date();
+  const diff = hoje.getTime() - d.getTime();
+  return Math.max(0, Math.floor(diff / 86400000));
+}
+
+function renderizarKpis() {
+  const cfg = obterConfigRca();
+  const clientes = clientesFiltrados();
+  const mes = document.getElementById('selectMes')?.value || 'ALL';
+
+  let valor = clientes.reduce((s,c) => s + Number(c.valor || 0), 0);
+  let positivos = clientes.filter(c => Number(c.valor || 0) > 0).length;
+  let budget = 0;
+  let gravadas = 0;
+
+  if (cfg.id === '61' && historicoRca61) {
+    const meses = mes === 'ALL' ? historicoRca61.meses_disponiveis : [Number(mes)];
+    const porCliente = historicoRca61.porCliente || {};
+    const rows = meses.flatMap(m => porCliente[String(m)] || []);
+    const codigoSelecionado = document.getElementById('selectCliente')?.value || 'ALL';
+    const rowsFiltradas = codigoSelecionado === 'ALL' ? rows : rows.filter(r => String(r.Cliente_Pai || '').startsWith(`${codigoSelecionado}-`));
+    if (rowsFiltradas.length) {
+      valor = rowsFiltradas.reduce((s,r) => s + Number(r['Valor de venda (R$)'] || 0), 0);
+      positivos = new Set(rowsFiltradas.map(r => r.Cliente_Pai)).size;
     }
-
-    .elo-progress-head {
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-start;
-      gap:12px;
-    }
-
-    .elo-progress-month {
-      font-size:0.78rem;
-      color:var(--text-secondary);
-      text-transform:uppercase;
-      letter-spacing:.04em;
-    }
-
-    .elo-progress-pct {
-      font-size:1.45rem;
-      font-weight:700;
-      line-height:1;
-    }
-
-    .elo-progress-main {
-      display:grid;
-      grid-template-columns:repeat(3,1fr);
-      gap:8px;
-      margin-top:14px;
-    }
-
-    .elo-progress-kpi {
-      background:#0f172a;
-      border-radius:8px;
-      padding:10px;
-    }
-
-    .elo-progress-kpi .lbl {
-      display:block;
-      font-size:0.68rem;
-      color:#64748b;
-      text-transform:uppercase;
-    }
-
-    .elo-progress-kpi .num {
-      display:block;
-      margin-top:3px;
-      font-size:1rem;
-      font-weight:700;
-      color:#f8fafc;
-    }
-
-    .elo-progress-bar {
-      height:8px;
-      background:#1e293b;
-      border-radius:999px;
-      overflow:hidden;
-      margin-top:14px;
-    }
-
-    .elo-progress-fill {
-      height:100%;
-      border-radius:999px;
-      background:#10b981;
-      transition:width .25s ease;
-    }
-
-    .elo-progress-status {
-      margin-top:9px;
-      font-size:0.75rem;
-      color:#94a3b8;
-      line-height:1.35;
-    }
-
-    .elo-progress-footer {
-      display:grid;
-      grid-template-columns:repeat(3,1fr);
-      gap:8px;
-      margin-top:12px;
-      padding-top:11px;
-      border-top:1px solid var(--border-color);
-    }
-
-    .elo-progress-footer-item {
-      text-align:center;
-      font-size:0.72rem;
-      color:#94a3b8;
-      line-height:1.25;
-    }
-
-    .elo-progress-footer-item strong {
-      display:block;
-      margin-top:3px;
-      font-size:0.95rem;
-      color:#f8fafc;
-    }
-
-    @media (max-width:900px) {
-      .elo-progress-grid {
-        grid-template-columns:1fr;
-      }
-    }
-
-    .elo-modal-month {
-      background:#0f172a;
-      border-radius:8px;
-      padding:12px;
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-    }
-
-    .elo-modal-month h4 {
-      font-size:0.8rem;
-      color:#94a3b8;
-      text-transform:uppercase;
-    }
-
-    .elo-field label {
-      display:block;
-      font-size:0.7rem;
-      color:#64748b;
-      margin-bottom:3px;
-    }
-
-    .elo-field input,
-    .elo-field select,
-    .elo-field textarea {
-      width:100%;
-      background:#1e293b;
-      border:1px solid #334155;
-      color:#f8fafc;
-      padding:7px 8px;
-      border-radius:6px;
-      font-size:0.85rem;
-      font-family:inherit;
-    }
-
-    .elo-field textarea {
-      resize:vertical;
-      min-height:70px;
-    }
-
-    .elo-dirty {
-      border-color:#f59e0b !important;
-      box-shadow:0 0 0 1px rgba(245,158,11,0.4);
-    }
-
-    .elo-toast {
-      position:fixed;
-      bottom:20px;
-      right:20px;
-      z-index:100000;
-      padding:12px 18px;
-      border-radius:8px;
-      font-size:0.875rem;
-      font-weight:600;
-      color:#fff;
-      opacity:0;
-      transform:translateY(10px);
-      transition:all .25s;
-    }
-
-    .elo-toast.show {
-      opacity:1;
-      transform:translateY(0);
-    }
-
-    .elo-toast.ok {
-      background:#10b981;
-    }
-
-    .elo-toast.err {
-      background:#ef4444;
-    }
-
-    .elo-btn-save-modal {
-      background:#10b981;
-      color:#fff;
-      border:none;
-      padding:10px 20px;
-      border-radius:6px;
-      font-weight:600;
-      cursor:pointer;
-      font-size:0.9rem;
-    }
-
-    .elo-btn-save-modal:disabled {
-      opacity:0.5;
-      cursor:not-allowed;
-    }
-  </style>
-</head>
-<body>
-
-  <div class="app-container">
-
-    <header class="main-header">
-      <div class="header-title">
-        <h1>Atendimento ELO - RCA 61</h1>
-        <p>Registro mensal de contato com a carteira - Set/Out/Nov 2026</p>
-      </div>
-
-      <div class="header-controls">
-        <a
-          href="index.html"
-          class="btn-upload"
-          style="text-decoration:none; display:inline-flex; align-items:center; gap:6px;"
-        >
-          <i data-lucide="arrow-left" style="width:16px;height:16px;"></i>
-          Dashboard
-        </a>
-
-        <a
-          href="clientes.html"
-          class="btn-upload"
-          style="text-decoration:none; display:inline-flex; align-items:center; gap:6px; background-color:var(--accent-indigo);"
-        >
-          <i data-lucide="users" style="width:16px;height:16px;"></i>
-          Base & SLAs
-        </a>
-
-        <div class="status-badge active" id="statusBadge">
-          <span class="status-dot"></span>
-          <span id="statusText">Carregando...</span>
-        </div>
-      </div>
-    </header>
-
-    <!-- Painel resumo -->
-    <section class="elo-panel-grid" id="painelGrid"></section>
-
-    <!-- Progresso do atendimento ELO -->
-    <section class="elo-progress-grid" id="eloProgressGrid"></section>
-
-    <!-- Guia rápido -->
-    <details class="elo-guide">
-      <summary>Como funciona esse atendimento (clique para abrir)</summary>
-      <div id="guiaConteudo"></div>
-    </details>
-
-    <!-- Tabela principal -->
-    <section class="table-card" style="margin-top:10px;">
-      <div class="card-header space-between">
-        <h3>Minha Carteira - 270 Clientes</h3>
-
-        <input
-          type="text"
-          id="searchElo"
-          placeholder="Pesquisar por cliente, cidade ou código..."
-          class="table-search"
-          style="width:300px;"
-        >
-      </div>
-
-      <div class="table-wrapper" style="max-height:600px;">
-        <table>
-          <thead>
-            <tr>
-              <th>Código</th>
-              <th>Cliente</th>
-              <th>Cidade</th>
-              <th>Var%</th>
-              <th>Ped. 26</th>
-              <th>Grava?</th>
-              <th>Ponto de Atenção</th>
-              <th>Contatos (S/O/N)</th>
-              <th style="text-align:center;">Ações</th>
-            </tr>
-          </thead>
-
-          <tbody id="tbElo">
-            <tr>
-              <td colspan="9" class="empty-row">
-                Carregando planilha do Drive...
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-  </div>
-
-  <div id="eloToast" class="elo-toast"></div>
-
-  <script>
-
-    if (typeof lucide !== 'undefined') {
-      lucide.createIcons();
-    }
-
-    // ============================================================
-    // CONFIGURAÇÃO
-    // ============================================================
-
-    const DRIVE_FILE_ID =
-      '1yr12JeKO-5ipBrzbqrcWFnYXhkfkQvH7tkRicbcogps';
-
-    const APPS_SCRIPT_URL =
-      'https://script.google.com/macros/s/AKfycbw-s10eMg-8ajimxH3lK1vwo5dK_o43SLHtQa4H0sN5oHQ8VrewthA-iBxx32_RVfns/exec';
-
-    const ASSUNTO_OPCOES = [
-      'Apresentação da carteira',
-      'Oferta de gravação',
-      'Acompanhamento de pedido',
-      'Ocorrência ou devolução',
-      'Cliente sem compra',
-      'entender motivo',
-      'Dúvida de produto ou processo',
-      'Atualização de cadastro',
-      'Sem retorno',
-      'Cliente não localizado'
-    ];
-
-    const ENCAMINHADO_OPCOES = [
-      'Nada a encaminhar',
-      'Reunião com a Aline Almeida',
-      'Mesa de negociação',
-      'Crédito e limite',
-      'Logística',
-      'Fiscal',
-      'Qualidade ou gravação',
-      'Cadastro'
-    ];
-
-    let baseElo = [];
-
-    // ============================================================
-    // CARREGAMENTO
-    // ============================================================
-
-    async function carregarDados() {
-
-      try {
-
-        const url =
-          `https://docs.google.com/spreadsheets/d/${DRIVE_FILE_ID}/export?format=xlsx`;
-
-        const res = await fetch(url);
-
-        if (!res.ok) {
-          throw new Error('HTTP ' + res.status);
-        }
-
-        const buf = await res.arrayBuffer();
-
-        const wb = XLSX.read(
-          new Uint8Array(buf),
-          {
-            type:'array',
-            cellDates:true
-          }
-        );
-
-        baseElo = extrairDoWorkbook(wb);
-
-        renderizarPainel(wb);
-        renderizarGuia(wb);
-
-        setStatus(
-          true,
-          `Sincronizado do Drive (${baseElo.length} clientes)`
-        );
-
-      } catch (err) {
-
-        console.warn(
-          '[Atendimento ELO] Não consegui buscar do Drive, usando snapshot local.',
-          err
-        );
-
-        try {
-
-          const r =
-            await fetch('atendimento_elo.json');
-
-          baseElo =
-            await r.json();
-
-          setStatus(
-            false,
-            `Snapshot local (${baseElo.length} clientes) — sem conexão com o Drive`
-          );
-
-        } catch (err2) {
-
-          document.getElementById('tbElo').innerHTML =
-            '<tr><td colspan="9" class="empty-row" style="color:#ef4444;">Não foi possível carregar os dados.</td></tr>';
-
-          setStatus(
-            false,
-            'Erro ao carregar'
-          );
-
-          return;
-        }
-      }
-
-      renderizarTabela(baseElo);
-    }
-
-    function setStatus(ok, texto) {
-
-      const badge =
-        document.getElementById('statusBadge');
-
-      const txt =
-        document.getElementById('statusText');
-
-      txt.textContent = texto;
-
-      badge.classList.toggle(
-        'active',
-        ok
-      );
-    }
-
-    function fmtDataCell(v) {
-
-      if (v instanceof Date) {
-        return v.toISOString().slice(0, 10);
-      }
-
-      if (typeof v === 'string' && v) {
-        return v;
-      }
-
-      return '';
-    }
-
-    function extrairDoWorkbook(wb) {
-
-      const aba =
-        wb.Sheets['Minha Carteira'];
-
-      const linhas =
-        XLSX.utils.sheet_to_json(
-          aba,
-          {
-            header:1,
-            defval:null
-          }
-        );
-
-      const clientes = [];
-
-      for (let i = 3; i < linhas.length; i++) {
-
-        const r = linhas[i];
-
-        if (
-          !r ||
-          r.every(c => c === null || c === '')
-        ) {
-          continue;
-        }
-
-        const [
-          cod,
-          cliente,
-          cidade,
-          janAgo25,
-          janAgo26,
-          varPct,
-          pedidos26,
-          grava,
-          ponto,
-          setContato,
-          setAssunto,
-          outContato,
-          outAssunto,
-          novContato,
-          novAssunto,
-          clienteDisse,
-          encaminhado
-        ] = r;
-
-        if (!cod || !cliente) {
-          continue;
-        }
-
-        clientes.push({
-
-          codigo:Math.trunc(Number(cod)),
-
-          cliente:String(cliente).trim(),
-
-          cidade:
-            cidade
-              ? String(cidade).trim()
-              : '',
-
-          janAgo25:
-            Number(janAgo25) || 0,
-
-          janAgo26:
-            Number(janAgo26) || 0,
-
-          varPct:
-            typeof varPct === 'number'
-              ? varPct
-              : null,
-
-          pedidos26:
-            Number(pedidos26) || 0,
-
-          grava:
-            grava || '',
-
-          pontoAtencao:
-            ponto || '',
-
-          setContato:
-            fmtDataCell(setContato),
-
-          setAssunto:
-            setAssunto || '',
-
-          outContato:
-            fmtDataCell(outContato),
-
-          outAssunto:
-            outAssunto || '',
-
-          novContato:
-            fmtDataCell(novContato),
-
-          novAssunto:
-            novAssunto || '',
-
-          clienteDisse:
-            clienteDisse || '',
-
-          encaminhadoPara:
-            encaminhado || ''
-        });
-      }
-
-      return clientes;
-    }
-
-    // ============================================================
-    // PAINEL
-    // ============================================================
-
-    function renderizarPainel(wb) {
-
-      const grid =
-        document.getElementById('painelGrid');
-
-      try {
-
-        const aba =
-          wb.Sheets['Painel'];
-
-        const linhas =
-          XLSX.utils.sheet_to_json(
-            aba,
-            {
-              header:1,
-              defval:null
-            }
-          );
-
-        const indicadores =
-          linhas
-            .slice(3,8)
-            .filter(
-              r =>
-                r &&
-                r[0] &&
-                typeof r[1] === 'number'
-            );
-
-        grid.innerHTML =
-          indicadores
-            .map(r => {
-
-              const [
-                nome,
-                v25,
-                v26,
-                variacao
-              ] = r;
-
-              const ehMoeda =
-                String(nome)
-                  .toLowerCase()
-                  .includes('faturamento');
-
-              const fmt =
-                n =>
-                  ehMoeda
-                    ? n.toLocaleString(
-                        'pt-BR',
-                        {
-                          style:'currency',
-                          currency:'BRL',
-                          maximumFractionDigits:0
-                        }
-                      )
-                    : n.toLocaleString(
-                        'pt-BR',
-                        {
-                          maximumFractionDigits:1
-                        }
-                      );
-
-              const corVar =
-                variacao >= 0
-                  ? '#10b981'
-                  : '#ef4444';
-
-              const varTxt =
-                typeof variacao === 'number'
-                  ? `${variacao >= 0 ? '+' : ''}${(variacao * 100).toFixed(1)}%`
-                  : '-';
-
-              return `
-                <div class="elo-panel-card">
-                  <div class="lbl">${nome}</div>
-                  <div class="val">${fmt(v26)}</div>
-                  <div
-                    class="var"
-                    style="color:${corVar};"
-                  >
-                    ${varTxt} vs Jan-Ago/25 (${fmt(v25)})
-                  </div>
-                </div>
-              `;
-            })
-            .join('');
-
-      } catch (e) {
-
-        grid.innerHTML = '';
-      }
-    }
-
-    function renderizarGuia(wb) {
-
-      const el =
-        document.getElementById('guiaConteudo');
-
-      try {
-
-        const aba =
-          wb.Sheets['Fluxo de Atendimento'];
-
-        const linhas =
-          XLSX.utils.sheet_to_json(
-            aba,
-            {
-              header:1,
-              defval:null
-            }
-          );
-
-        const pares =
-          linhas
-            .slice(3)
-            .filter(
-              r =>
-                r &&
-                r[0] &&
-                r[1]
-            );
-
-        el.innerHTML =
-          pares
-            .map(
-              r =>
-                `<div class="elo-guide-row"><b>${r[0]}</b><span>${r[1]}</span></div>`
-            )
-            .join('');
-
-      } catch (e) {
-
-        el.innerHTML =
-          '<p style="color:#64748b;font-size:0.85rem;">Guia não disponível.</p>';
-      }
-    }
-
-    // ============================================================
-    // PROGRESSO DO ATENDIMENTO ELO
-    // ============================================================
-
-    const MESES_ELO = [
-
-      {
-        numero:9,
-        nome:'Setembro',
-        contato:'setContato',
-        assunto:'setAssunto'
-      },
-
-      {
-        numero:10,
-        nome:'Outubro',
-        contato:'outContato',
-        assunto:'outAssunto'
-      },
-
-      {
-        numero:11,
-        nome:'Novembro',
-        contato:'novContato',
-        assunto:'novAssunto'
-      }
-
-    ];
-
-    const FERIADOS_NACIONAIS_ELO_2026 =
-      new Set([
-        '2026-10-12',
-        '2026-11-02',
-        '2026-11-20'
-      ]);
-
-    function dataContatoValidaParaMes(
-      valor,
-      mes
-    ) {
-
-      if (!valor) {
-        return false;
-      }
-
-      const s =
-        String(valor).trim();
-
-      const m =
-        s.match(
-          /^(\d{4})-(\d{2})-(\d{2})$/
-        );
-
-      if (!m) {
-        return false;
-      }
-
-      const ano =
-        Number(m[1]);
-
-      const mesNumero =
-        Number(m[2]);
-
-      return (
-        ano === 2026 &&
-        mesNumero === mes
-      );
-    }
-
-    function clienteFeitoNoMes(
-      c,
-      cfg
-    ) {
-
-      const temData =
-        dataContatoValidaParaMes(
-          c[cfg.contato],
-          cfg.numero
-        );
-
-      const temAssunto =
-        String(
-          c[cfg.assunto] || ''
-        ).trim() !== '';
-
-      return (
-        temData &&
-        temAssunto
-      );
-    }
-
-    function normalizarAssuntoElo(valor) {
-
-      return String(
-        valor || ''
-      )
-      .normalize('NFD')
-      .replace(
-        /[\u0300-\u036f]/g,
-        ''
-      )
-      .trim()
-      .toLowerCase();
-    }
-
-    function classificarAtendimentoNoMes(
-      c,
-      cfg
-    ) {
-
-      const temData =
-        dataContatoValidaParaMes(
-          c[cfg.contato],
-          cfg.numero
-        );
-
-      const assunto =
-        normalizarAssuntoElo(
-          c[cfg.assunto]
-        );
-
-      const temAssunto =
-        assunto !== '';
-
-      // Sem registro completo:
-      // não há data válida do mês ou não há assunto.
-      if (
-        !temData ||
-        !temAssunto
-      ) {
-        return 'naoLigou';
-      }
-
-      // Não houve conversa efetiva.
-      if (
-        assunto === 'sem retorno' ||
-        assunto === 'cliente nao localizado'
-      ) {
-        return 'semRetorno';
-      }
-
-      // Qualquer outro assunto com data válida =
-      // contato realizado.
-      return 'falou';
-    }
-
-    function contarStatusAtendimentoMes(
-      cfg
-    ) {
-
-      const status = {
-        falou:0,
-        semRetorno:0,
-        naoLigou:0
-      };
-
-      baseElo.forEach(
-        c => {
-
-          const categoria =
-            classificarAtendimentoNoMes(
-              c,
-              cfg
-            );
-
-          status[categoria]++;
-        }
-      );
-
-      return status;
-    }
-
-    function contarConcluidosMes(
-      cfg
-    ) {
-
-      return baseElo.filter(
-        c =>
-          clienteFeitoNoMes(
-            c,
-            cfg
-          )
-      ).length;
-    }
-
-    function dataLocalHoje() {
-
-      const agora =
-        new Date();
-
-      return new Date(
-        agora.getFullYear(),
-        agora.getMonth(),
-        agora.getDate()
-      );
-    }
-
-    function primeiroDiaMes(
-      ano,
-      mesNumero
-    ) {
-
-      return new Date(
-        ano,
-        mesNumero - 1,
-        1
-      );
-    }
-
-    function ultimoDiaMes(
-      ano,
-      mesNumero
-    ) {
-
-      return new Date(
-        ano,
-        mesNumero,
-        0
-      );
-    }
-
-    function formatarDataCurta(
-      data
-    ) {
-
-      return data.toLocaleDateString(
-        'pt-BR',
-        {
-          day:'2-digit',
-          month:'2-digit'
-        }
-      );
-    }
-
-    function ehDiaUtilElo(
-      data
-    ) {
-
-      const diaSemana =
-        data.getDay();
-
-      if (
-        diaSemana === 0 ||
-        diaSemana === 6
-      ) {
-        return false;
-      }
-
-      const iso =
-        `${data.getFullYear()}-${String(data.getMonth() + 1).padStart(2,'0')}-${String(data.getDate()).padStart(2,'0')}`;
-
-      return !FERIADOS_NACIONAIS_ELO_2026.has(
-        iso
-      );
-    }
-
-    function diasUteisRestantesMes(
-      mesNumero
-    ) {
-
-      const hoje =
-        dataLocalHoje();
-
-      const inicioMes =
-        primeiroDiaMes(
-          2026,
-          mesNumero
-        );
-
-      const fimMes =
-        ultimoDiaMes(
-          2026,
-          mesNumero
-        );
-
-      let inicioContagem;
-
-      if (
-        hoje < inicioMes
-      ) {
-
-        inicioContagem =
-          inicioMes;
-
-      } else if (
-        hoje > fimMes
-      ) {
-
-        return 0;
-
-      } else {
-
-        inicioContagem =
-          new Date(hoje);
-
-        inicioContagem.setDate(
-          inicioContagem.getDate() + 1
-        );
-      }
-
-      let total = 0;
-
-      const cursor =
-        new Date(
-          inicioContagem
-        );
-
-      while (
-        cursor <= fimMes
-      ) {
-
-        if (
-          ehDiaUtilElo(cursor)
-        ) {
-          total++;
-        }
-
-        cursor.setDate(
-          cursor.getDate() + 1
-        );
-      }
-
-      return total;
-    }
-
-    function renderizarProgressoAtendimento() {
-
-      const grid =
-        document.getElementById(
-          'eloProgressGrid'
-        );
-
-      if (!grid) {
-        return;
-      }
-
-      const totalClientes =
-        baseElo.length;
-
-      if (!totalClientes) {
-
-        grid.innerHTML = '';
-
-        return;
-      }
-
-      grid.innerHTML =
-        MESES_ELO
-          .map(cfg => {
-
-            const feitos =
-              contarConcluidosMes(cfg);
-
-            const statusAtendimento =
-              contarStatusAtendimentoMes(
-                cfg
-              );
-
-            const faltam =
-              Math.max(
-                totalClientes - feitos,
-                0
-              );
-
-            const percentual =
-              totalClientes > 0
-                ? (feitos / totalClientes) * 100
-                : 0;
-
-            const diasRestantes =
-              diasUteisRestantesMes(
-                cfg.numero
-              );
-
-            const hoje =
-              dataLocalHoje();
-
-            const primeiro =
-              primeiroDiaMes(
-                2026,
-                cfg.numero
-              );
-
-            const ultimo =
-              ultimoDiaMes(
-                2026,
-                cfg.numero
-              );
-
-            let statusTexto = '';
-
-            if (
-              hoje > ultimo
-            ) {
-
-              statusTexto =
-                faltam === 0
-                  ? '✅ Finalizado — todos os clientes foram feitos.'
-                  : `⚠️ Mês finalizado — ainda faltam ${faltam} clientes.`;
-
-            } else if (
-              hoje < primeiro
-            ) {
-
-              statusTexto =
-                `⏳ Ainda não iniciado — ${diasRestantes} dias úteis no mês.`;
-
-            } else {
-
-              statusTexto =
-                faltam === 0
-                  ? '✅ Atendimento concluído — todos os clientes foram feitos.'
-                  : `🔄 Em andamento — faltam ${faltam} clientes e ${diasRestantes} dias úteis para o fim do mês.`;
-            }
-
-            return `
-              <div class="elo-progress-card">
-
-                <div class="elo-progress-head">
-
-                  <div>
-                    <div class="elo-progress-month">
-                      Atendimento ELO · ${cfg.nome}/2026
-                    </div>
-
-                    <div
-                      style="
-                        margin-top:5px;
-                        font-size:1rem;
-                        font-weight:700;
-                      "
-                    >
-                      ${feitos} de ${totalClientes} clientes
-                    </div>
-                  </div>
-
-                  <div
-                    class="elo-progress-pct"
-                    style="
-                      color:#10b981;
-                    "
-                  >
-                    ${percentual.toFixed(1)}%
-                  </div>
-
-                </div>
-
-                <div class="elo-progress-main">
-
-                  <div class="elo-progress-kpi">
-                    <span class="lbl">
-                      Feitos
-                    </span>
-
-                    <span class="num">
-                      ${feitos}
-                    </span>
-                  </div>
-
-                  <div class="elo-progress-kpi">
-                    <span class="lbl">
-                      Faltam
-                    </span>
-
-                    <span class="num">
-                      ${faltam}
-                    </span>
-                  </div>
-
-                  <div class="elo-progress-kpi">
-                    <span class="lbl">
-                      Dias úteis
-                    </span>
-
-                    <span class="num">
-                      ${diasRestantes}
-                    </span>
-                  </div>
-
-                </div>
-
-                <div class="elo-progress-bar">
-
-                  <div
-                    class="elo-progress-fill"
-                    style="
-                      width:${Math.min(
-                        percentual,
-                        100
-                      )}%;
-                    "
-                  ></div>
-
-                </div>
-
-                <div class="elo-progress-status">
-                  ${statusTexto}
-                </div>
-
-                <div class="elo-progress-footer">
-
-                  <div class="elo-progress-footer-item">
-                    Falei
-                    <strong>
-                      ${statusAtendimento.falou}
-                    </strong>
-                  </div>
-
-                  <div class="elo-progress-footer-item">
-                    Sem retorno
-                    <strong>
-                      ${statusAtendimento.semRetorno}
-                    </strong>
-                  </div>
-
-                  <div class="elo-progress-footer-item">
-                    Não liguei ainda
-                    <strong>
-                      ${statusAtendimento.naoLigou}
-                    </strong>
-                  </div>
-
-                </div>
-
-              </div>
-            `;
-          })
-          .join('');
-    }
-
-    // ============================================================
-    // TABELA
-    // ============================================================
-
-    function badgePonto(
-      texto
-    ) {
-
-      if (!texto) {
-        return '-';
-      }
-
-      const t =
-        texto.toLowerCase();
-
-      let cor =
-        '#64748b';
-
-      if (
-        t.includes('caiu')
-      ) {
-        cor = '#f59e0b';
-
-      } else if (
-        t.includes('não comprou') ||
-        t.includes('sem compra')
-      ) {
-        cor = '#ef4444';
-
-      } else if (
-        t.includes('nunca gravou')
-      ) {
-        cor = '#3b82f6';
-
-      } else if (
-        t.includes('manutenção')
-      ) {
-        cor = '#10b981';
-      }
-
-      return `
-        <span
-          class="elo-badge"
-          style="
-            background:${cor}22;
-            color:${cor};
-          "
-        >
-          ${texto}
-        </span>
-      `;
-    }
-
-    function renderizarTabela(
-      dados
-    ) {
-
-      renderizarProgressoAtendimento();
-
-      const tbody =
-        document.getElementById(
-          'tbElo'
-        );
-
-      if (
-        dados.length === 0
-      ) {
-
-        tbody.innerHTML =
-          '<tr><td colspan="9" class="empty-row">Nenhum cliente encontrado.</td></tr>';
-
-        return;
-      }
-
-      tbody.innerHTML = '';
-
-      const frag =
-        document.createDocumentFragment();
-
-      dados.forEach(
-        c => {
-
-          const varTxt =
-            typeof c.varPct === 'number'
-              ? `${(c.varPct * 100).toFixed(0)}%`
-              : '-';
-
-          const corVar =
-            typeof c.varPct === 'number'
-              ? (
-                  c.varPct >= 0
-                    ? '#10b981'
-                    : '#ef4444'
-                )
-              : '#64748b';
-
-          const dots = `
-
-            <span
-              class="elo-dot ${
-                clienteFeitoNoMes(
-                  c,
-                  MESES_ELO[0]
-                )
-                  ? 'on'
-                  : 'off'
-              }"
-              title="Setembro: ${
-                clienteFeitoNoMes(
-                  c,
-                  MESES_ELO[0]
-                )
-                  ? 'Feito'
-                  : 'Pendente'
-              }"
-            ></span>
-
-            <span
-              class="elo-dot ${
-                clienteFeitoNoMes(
-                  c,
-                  MESES_ELO[1]
-                )
-                  ? 'on'
-                  : 'off'
-              }"
-              title="Outubro: ${
-                clienteFeitoNoMes(
-                  c,
-                  MESES_ELO[1]
-                )
-                  ? 'Feito'
-                  : 'Pendente'
-              }"
-            ></span>
-
-            <span
-              class="elo-dot ${
-                clienteFeitoNoMes(
-                  c,
-                  MESES_ELO[2]
-                )
-                  ? 'on'
-                  : 'off'
-              }"
-              title="Novembro: ${
-                clienteFeitoNoMes(
-                  c,
-                  MESES_ELO[2]
-                )
-                  ? 'Feito'
-                  : 'Pendente'
-              }"
-            ></span>
-          `;
-
-          const tr =
-            document.createElement('tr');
-
-          tr.className =
-            'clickable-row';
-
-          tr.innerHTML = `
-
-            <td>
-              ${c.codigo}
-            </td>
-
-            <td>
-              <strong>
-                ${c.cliente}
-              </strong>
-            </td>
-
-            <td>
-              ${c.cidade}
-            </td>
-
-            <td
-              style="
-                color:${corVar};
-                font-weight:600;
-              "
-            >
-              ${varTxt}
-            </td>
-
-            <td>
-              ${c.pedidos26}
-            </td>
-
-            <td>
-              ${c.grava || '-'}
-            </td>
-
-            <td>
-              ${badgePonto(
-                c.pontoAtencao
-              )}
-            </td>
-
-            <td>
-              ${dots}
-            </td>
-
-            <td
-              style="text-align:center;"
-            >
-              <button
-                class="btn-upload"
-                style="
-                  padding:4px 10px;
-                  font-size:0.75rem;
-                "
-              >
-                Registrar Atendimento
-              </button>
-            </td>
-          `;
-
-          tr
-            .querySelector('button')
-            .addEventListener(
-              'click',
-              () => abrirModal(c)
-            );
-
-          frag.appendChild(tr);
-        }
-      );
-
-      tbody.appendChild(frag);
-    }
-
-    document
-      .getElementById('searchElo')
-      .addEventListener(
-        'input',
-        e => {
-
-          const termo =
-            e.target.value
-              .toLowerCase()
-              .trim();
-
-          const filtrados =
-            baseElo.filter(
-              c =>
-                c.cliente
-                  .toLowerCase()
-                  .includes(termo) ||
-
-                c.cidade
-                  .toLowerCase()
-                  .includes(termo) ||
-
-                String(c.codigo)
-                  .includes(termo)
-            );
-
-          renderizarTabela(
-            filtrados
-          );
-        }
-      );
-
-    // ============================================================
-    // MODAL DE REGISTRO
-    // ============================================================
-
-    function optionsHtml(
-      lista,
-      selecionado
-    ) {
-
-      return (
-        `<option value="">-</option>` +
-
-        lista
-          .map(
-            op =>
-              `<option value="${op}" ${
-                op === selecionado
-                  ? 'selected'
-                  : ''
-              }>${op}</option>`
-          )
-          .join('')
-      );
-    }
-
-    function abrirModal(c) {
-
-      let modal =
-        document.getElementById(
-          'eloModal'
-        );
-
-      if (!modal) {
-
-        modal =
-          document.createElement(
-            'div'
-          );
-
-        modal.id =
-          'eloModal';
-
-        modal.style.cssText =
-          `
-            position:fixed;
-            top:0;
-            left:0;
-            width:100vw;
-            height:100vh;
-            background:rgba(11,15,25,0.85);
-            backdrop-filter:blur(6px);
-            z-index:99999;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            overflow-y:auto;
-            padding:20px;
-          `;
-
-        document.body.appendChild(
-          modal
-        );
-      }
-
-      modal.innerHTML = `
-
-        <div
-          style="
-            background:#1e293b;
-            border:1px solid #334155;
-            border-radius:12px;
-            width:100%;
-            max-width:640px;
-            padding:24px;
-            box-shadow:0 20px 25px -5px rgba(0,0,0,0.5);
-            color:#f8fafc;
-          "
-        >
-
-          <div
-            style="
-              display:flex;
-              justify-content:space-between;
-              align-items:center;
-              border-bottom:1px solid #334155;
-              padding-bottom:12px;
-              margin-bottom:16px;
-            "
-          >
-
-            <div>
-
-              <h3
-                style="
-                  margin:0;
-                  font-size:1.1rem;
-                  color:#6366f1;
-                "
-              >
-                📞 ${c.codigo} - ${c.cliente}
-              </h3>
-
-              <span
-                style="
-                  font-size:0.8rem;
-                  color:#94a3b8;
-                "
-              >
-                ${c.cidade} · ${badgePonto(c.pontoAtencao)}
-              </span>
-
-            </div>
-
-            <button
-              id="eloFechar"
-              style="
-                background:transparent;
-                border:none;
-                color:#94a3b8;
-                font-size:1.5rem;
-                cursor:pointer;
-              "
-            >
-              &times;
-            </button>
-
-          </div>
-
-          <div
-            style="
-              display:grid;
-              grid-template-columns:repeat(3,1fr);
-              gap:10px;
-              margin-bottom:16px;
-            "
-          >
-
-            <div class="elo-modal-month">
-
-              <h4>
-                Setembro
-              </h4>
-
-              <div class="elo-field">
-
-                <label>
-                  Contato
-                </label>
-
-                <input
-                  type="date"
-                  id="eloSetContato"
-                  value="${c.setContato}"
-                >
-
-              </div>
-
-              <div class="elo-field">
-
-                <label>
-                  Assunto
-                </label>
-
-                <select id="eloSetAssunto">
-                  ${optionsHtml(
-                    ASSUNTO_OPCOES,
-                    c.setAssunto
-                  )}
-                </select>
-
-              </div>
-
-            </div>
-
-            <div class="elo-modal-month">
-
-              <h4>
-                Outubro
-              </h4>
-
-              <div class="elo-field">
-
-                <label>
-                  Contato
-                </label>
-
-                <input
-                  type="date"
-                  id="eloOutContato"
-                  value="${c.outContato}"
-                >
-
-              </div>
-
-              <div class="elo-field">
-
-                <label>
-                  Assunto
-                </label>
-
-                <select id="eloOutAssunto">
-                  ${optionsHtml(
-                    ASSUNTO_OPCOES,
-                    c.outAssunto
-                  )}
-                </select>
-
-              </div>
-
-            </div>
-
-            <div class="elo-modal-month">
-
-              <h4>
-                Novembro
-              </h4>
-
-              <div class="elo-field">
-
-                <label>
-                  Contato
-                </label>
-
-                <input
-                  type="date"
-                  id="eloNovContato"
-                  value="${c.novContato}"
-                >
-
-              </div>
-
-              <div class="elo-field">
-
-                <label>
-                  Assunto
-                </label>
-
-                <select id="eloNovAssunto">
-                  ${optionsHtml(
-                    ASSUNTO_OPCOES,
-                    c.novAssunto
-                  )}
-                </select>
-
-              </div>
-
-            </div>
-
-          </div>
-
-          <div
-            class="elo-field"
-            style="margin-bottom:12px;"
-          >
-
-            <label>
-              O que o cliente disse
-            </label>
-
-            <textarea
-              id="eloClienteDisse"
-            >${c.clienteDisse}</textarea>
-
-          </div>
-
-          <div
-            class="elo-field"
-            style="margin-bottom:16px;"
-          >
-
-            <label>
-              Encaminhado para
-            </label>
-
-            <select id="eloEncaminhado">
-              ${optionsHtml(
-                ENCAMINHADO_OPCOES,
-                c.encaminhadoPara
-              )}
-            </select>
-
-          </div>
-
-          <div
-            id="eloAvisoConfig"
-            style="
-              display:${
-                APPS_SCRIPT_URL
-                  ? 'none'
-                  : 'block'
-              };
-              background:rgba(245,158,11,0.1);
-              border:1px solid #f59e0b;
-              color:#f59e0b;
-              padding:10px;
-              border-radius:8px;
-              font-size:0.8rem;
-              margin-bottom:12px;
-            "
-          >
-            ⚠️ Gravação no Drive ainda não configurada.
-          </div>
-
-          <div
-            style="
-              display:flex;
-              justify-content:flex-end;
-              gap:10px;
-            "
-          >
-
-            <button
-              id="eloCancelar"
-              style="
-                background:transparent;
-                border:1px solid #334155;
-                color:#94a3b8;
-                padding:10px 18px;
-                border-radius:6px;
-                cursor:pointer;
-              "
-            >
-              Cancelar
-            </button>
-
-            <button
-              id="eloSalvar"
-              class="elo-btn-save-modal"
-            >
-              Salvar no Drive
-            </button>
-
-          </div>
-
-        </div>
-      `;
-
-      modal.style.display =
-        'flex';
-
-      document
-        .getElementById('eloFechar')
-        .onclick =
-          () =>
-            modal.style.display =
-              'none';
-
-      document
-        .getElementById('eloCancelar')
-        .onclick =
-          () =>
-            modal.style.display =
-              'none';
-
-      document
-        .getElementById('eloSalvar')
-        .onclick =
-          () =>
-            salvarAtendimento(
-              c,
-              modal
-            );
-    }
-
-    async function salvarAtendimento(
-      c,
-      modal
-    ) {
-
-      const novo = {
-
-        setContato:
-          document
-            .getElementById(
-              'eloSetContato'
-            )
-            .value,
-
-        setAssunto:
-          document
-            .getElementById(
-              'eloSetAssunto'
-            )
-            .value,
-
-        outContato:
-          document
-            .getElementById(
-              'eloOutContato'
-            )
-            .value,
-
-        outAssunto:
-          document
-            .getElementById(
-              'eloOutAssunto'
-            )
-            .value,
-
-        novContato:
-          document
-            .getElementById(
-              'eloNovContato'
-            )
-            .value,
-
-        novAssunto:
-          document
-            .getElementById(
-              'eloNovAssunto'
-            )
-            .value,
-
-        clienteDisse:
-          document
-            .getElementById(
-              'eloClienteDisse'
-            )
-            .value,
-
-        encaminhadoPara:
-          document
-            .getElementById(
-              'eloEncaminhado'
-            )
-            .value
-      };
-
-      if (!APPS_SCRIPT_URL) {
-
-        mostrarToast(
-          'Configure a URL do Apps Script antes de salvar.',
-          false
-        );
-
-        return;
-      }
-
-      const mapaColunas = {
-
-        setContato:'SET contato',
-        setAssunto:'SET assunto',
-
-        outContato:'OUT contato',
-        outAssunto:'OUT assunto',
-
-        novContato:'NOV contato',
-        novAssunto:'NOV assunto',
-
-        clienteDisse:
-          'O que o cliente disse',
-
-        encaminhadoPara:
-          'Encaminhado para'
-      };
-
-      const mudancas =
-        Object.keys(novo)
-
-          .filter(
-            k =>
-              novo[k] !== c[k]
-          )
-
-          .map(
-            k =>
-              ({
-                codigo:c.codigo,
-                coluna:mapaColunas[k],
-                valor:novo[k]
-              })
-          );
-
-      if (
-        mudancas.length === 0
-      ) {
-
-        modal.style.display =
-          'none';
-
-        return;
-      }
-
-      const btn =
-        document.getElementById(
-          'eloSalvar'
-        );
-
-      btn.disabled =
-        true;
-
-      btn.textContent =
-        'Salvando...';
-
-      try {
-
-        const res =
-          await fetch(
-            APPS_SCRIPT_URL,
-            {
-              method:'POST',
-              body:JSON.stringify({
-                mudancas
-              })
-            }
-          );
-
-        const json =
-          await res.json();
-
-        if (!json.ok) {
-
-          throw new Error(
-            json.erro ||
-            (json.erros || [])
-              .join(', ')
-          );
-        }
-
-        Object.assign(
-          c,
-          novo
-        );
-
-        const idx =
-          baseElo.findIndex(
-            x =>
-              x.codigo === c.codigo
-          );
-
-        if (idx > -1) {
-          baseElo[idx] = c;
-        }
-
-        renderizarTabela(
-          baseElo
-        );
-
-        mostrarToast(
-          'Atendimento salvo no Drive com sucesso!',
-          true
-        );
-
-        modal.style.display =
-          'none';
-
-      } catch (err) {
-
-        console.error(err);
-
-        mostrarToast(
-          'Não consegui salvar no Drive. Tente novamente.',
-          false
-        );
-
-        btn.disabled =
-          false;
-
-        btn.textContent =
-          'Salvar no Drive';
-      }
-    }
-
-    function mostrarToast(
-      msg,
-      ok
-    ) {
-
-      const t =
-        document.getElementById(
-          'eloToast'
-        );
-
-      t.textContent =
-        msg;
-
-      t.className =
-        'elo-toast show ' +
-        (
-          ok
-            ? 'ok'
-            : 'err'
-        );
-
-      setTimeout(
-        () => {
-          t.className =
-            'elo-toast';
-        },
-        4000
-      );
-    }
-
-    carregarDados();
-
-  </script>
-
-</body>
-</html>
+  }
+
+  const total = clientes.length;
+  const positivacao = total ? positivos / total : 0;
+  document.getElementById('kpiValorMensal').textContent = fmtBRL(valor);
+  document.getElementById('kpiBudgetAtingido').textContent = cfg.id === '66' ? '—' : `${budget.toFixed(1).replace('.', ',')}%`;
+  document.getElementById('kpiPositivacao').textContent = `${positivos} / ${total}`;
+  document.getElementById('kpiPositivacaoSub').textContent = `Real: ${fmtPct(positivacao)} | Base: ${cfg.nome}`;
+  document.getElementById('kpiPctGravadas').textContent = cfg.id === '66' ? '—' : `${gravadas.toFixed(1).replace('.', ',')}%`;
+  document.getElementById('kpiPctGravadasSub').textContent = cfg.id === '66' ? 'RCA 66 não possui histórico mensal nesta base' : 'Participação em Vendas';
+
+  let ytd = valor;
+  if (cfg.id === '61' && historicoRca61) {
+    const meses = historicoRca61.meses_disponiveis || [];
+    const porSegmento = historicoRca61.porSegmento || {};
+    ytd = meses.reduce((acc,m) => acc + (porSegmento[String(m)] || []).reduce((s,r) => s + Number(r.After_Tax_Amount || 0), 0), 0);
+  }
+  document.getElementById('kpiYtd').textContent = fmtBRL(ytd);
+  document.getElementById('kpiLytd').textContent = cfg.id === '66' ? '—' : 'R$ 0,00';
+  document.getElementById('kpiVariacao').textContent = cfg.id === '66' ? '—' : fmtBRL(ytd);
+}
+
+function renderizarHistorico() {
+  const cfg = obterConfigRca();
+  const id = 'chartHistoricoFaturamento';
+  if (!cfg.temHistoricoMensal || !historicoRca61) {
+    showChartNotice(id, 'RCA 66 não possui histórico mensal nesta base. A carteira é carregada pela planilha própria do RCA.');
+    return;
+  }
+  restoreChartCanvas(id);
+  const labels = (historicoRca61.meses_disponiveis || []).map(m => ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'][m-1]);
+  const vals = (historicoRca61.meses_disponiveis || []).map(m => (historicoRca61.porSegmento?.[String(m)] || []).reduce((s,r) => s + Number(r.After_Tax_Amount || 0), 0));
+  destroyChart(id);
+  charts[id] = new Chart(document.getElementById(id), {
+    type:'line', data:{labels, datasets:[{label:'Faturamento',data:vals,tension:.25,fill:false}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true}},scales:{y:{ticks:{callback:v=>fmtBRL(v)}}}}
+  });
+}
+
+function renderizarBudget() {
+  const cfg = obterConfigRca();
+  const id='chartBudget';
+  if (cfg.id === '66') { showChartNotice(id,'RCA 66 não possui histórico mensal/budget nesta base.'); return; }
+  restoreChartCanvas(id); destroyChart(id);
+  charts[id]=new Chart(document.getElementById(id),{type:'bar',data:{labels:['Dados disponíveis'],datasets:[{label:'Budget',data:[0]}]},options:{responsive:true,maintainAspectRatio:false,scales:{y:{beginAtZero:true}}}});
+}
+
+function renderizarTipoEncomenda() {
+  const cfg=obterConfigRca(); const id='chartTipoEncomenda';
+  if(cfg.id==='66'){showChartNotice(id,'A planilha do RCA 66 não traz a série de tipo de encomenda.');return;}
+  restoreChartCanvas(id); destroyChart(id);
+  charts[id]=new Chart(document.getElementById(id),{type:'doughnut',data:{labels:['Dados de encomenda'],datasets:[{data:[1]}]},options:{responsive:true,maintainAspectRatio:false}});
+}
+
+function renderizarSegmentos() {
+  const cfg=obterConfigRca(); const id='chartSegmentos';
+  if(cfg.id==='66'){showChartNotice(id,'RCA 66 não possui histórico por segmento nesta base.');return;}
+  restoreChartCanvas(id);
+  const mes=document.getElementById('selectMes')?.value || 'ALL';
+  const m=mes==='ALL' ? (historicoRca61?.meses_disponiveis || []).slice(-1)[0] : Number(mes);
+  const rows=historicoRca61?.porSegmento?.[String(m)] || [];
+  destroyChart(id);
+  charts[id]=new Chart(document.getElementById(id),{type:'bar',data:{labels:rows.map(r=>r.Separador),datasets:[{label:'Valor',data:rows.map(r=>Number(r.After_Tax_Amount||0))}]},options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',scales:{x:{ticks:{callback:v=>fmtBRL(v)}}}}});
+}
+
+function renderizarProdutos() {
+  const cfg=obterConfigRca(); const id='chartTopProdutos';
+  if(cfg.id==='66'){showChartNotice(id,'A planilha do RCA 66 não possui histórico de produtos.');return;}
+  restoreChartCanvas(id);
+  const mes=document.getElementById('selectMes')?.value || 'ALL';
+  const m=mes==='ALL' ? (historicoRca61?.meses_disponiveis || []).slice(-1)[0] : Number(mes);
+  const rows=(historicoRca61?.porProduto?.[String(m)] || []).slice().sort((a,b)=>Number(b['Valor de Venda']||0)-Number(a['Valor de Venda']||0)).slice(0,20);
+  destroyChart(id);
+  charts[id]=new Chart(document.getElementById(id),{type:'bar',data:{labels:rows.map(r=>r.Produto),datasets:[{label:'Valor',data:rows.map(r=>Number(r['Valor de Venda']||0))}]},options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',scales:{x:{ticks:{callback:v=>fmtBRL(v)}}}}});
+}
+
+function renderizarTabelaVendas() {
+  const tbody=document.getElementById('tbVendasCliente'); if(!tbody)return;
+  const cfg=obterConfigRca();
+  let rows=[];
+  if(cfg.id==='61' && historicoRca61){
+    const mes=document.getElementById('selectMes')?.value || 'ALL';
+    const meses=mes==='ALL'?historicoRca61.meses_disponiveis:[Number(mes)];
+    rows=meses.flatMap(m=>historicoRca61.porCliente?.[String(m)]||[]);
+    const by={}; rows.forEach(r=>{const k=r.Cliente_Pai;by[k]=(by[k]||0)+Number(r['Valor de venda (R$)']||0);});
+    rows=Object.entries(by).map(([k,v])=>({cliente:k.replace(/^\d+-/,''),valor:v})).sort((a,b)=>b.valor-a.valor).slice(0,100);
+  } else {
+    rows=clientesFiltrados().map(c=>({cliente:c.cliente,valor:Number(c.valor||0)})).sort((a,b)=>b.valor-a.valor).slice(0,100);
+  }
+  const total=rows.reduce((s,r)=>s+r.valor,0);
+  tbody.innerHTML=rows.length?rows.map((r,i)=>`<tr><td>${i<10?'Top '+(i+1):'Carteira'}</td><td>${esc(r.cliente)}</td><td>${fmtBRL(r.valor)}</td><td>${total?fmtPct(r.valor/total):'0,0%'}</td></tr>`).join(''):'<tr><td colspan="4" class="empty-row">Nenhum dado disponível.</td></tr>';
+}
+
+function renderizarInatividade() {
+  const tbody=document.getElementById('tbInatividade'); if(!tbody)return;
+  const rows=clientesFiltrados().map(c=>({c,dias:diasDesdeUltimaVenda(c.ultimaVenda)})).sort((a,b)=>(b.dias??-1)-(a.dias??-1)).slice(0,100);
+  tbody.innerHTML=rows.map(({c,dias})=>`<tr><td>${dias==null?'Sem data':dias>=90?'Inativo':dias>=60?'Atenção':'Ativo'}</td><td>${esc(c.cliente)}</td><td>${esc(c.ultimaVenda||'-')}</td><td>${dias==null?'-':dias}</td></tr>`).join('');
+}
+
+function renderizarDashboard() {
+  atualizarCabecalhoDashboard();
+  renderizarKpis();
+  renderizarHistorico(); renderizarBudget(); renderizarTipoEncomenda(); renderizarSegmentos(); renderizarProdutos();
+  renderizarTabelaVendas(); renderizarInatividade();
+  if (typeof lucide !== 'undefined') lucide.createIcons();
+}
+
+function configurarEventosDashboard() {
+  ['selectCliente','selectAno','selectMes'].forEach(id=>{
+    const el=document.getElementById(id); if(el)el.addEventListener('change',renderizarDashboard);
+  });
+  const search=document.getElementById('searchClientInput');
+  if(search) search.addEventListener('input',()=>{
+    const q=search.value.toLowerCase().trim();
+    document.querySelectorAll('#tbVendasCliente tr').forEach(tr=>{tr.style.display=tr.textContent.toLowerCase().includes(q)?'':'none';});
+  });
+}
+
+function configurarUploads(){
+  const bind=(inputId,labelId,dropId,which)=>{
+    const input=document.getElementById(inputId); const label=document.getElementById(labelId); const drop=document.getElementById(dropId);
+    if(!input)return;
+    input.addEventListener('change',async e=>{
+      const file=e.target.files?.[0]; if(!file)return;
+      label.textContent=file.name;
+      try{
+        const buf=await file.arrayBuffer();
+        const wb=XLSX.read(new Uint8Array(buf),{type:'array',cellDates:true});
+        if(which===1)dadosUpload1=wb; else dadosUpload2=wb;
+        const badge=document.getElementById('badgeText'); if(badge)badge.textContent=`Planilha carregada — ${obterConfigRca().nome}`;
+      }catch(err){console.error(err); label.textContent='Erro ao ler arquivo';}
+    });
+    if(drop){['dragenter','dragover'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add('drag-over');}));['dragleave','drop'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove('drag-over');}));drop.addEventListener('drop',e=>{if(e.dataTransfer.files?.[0]){input.files=e.dataTransfer.files;input.dispatchEvent(new Event('change'));}});}
+  };
+  bind('fileInput1','labelFile1','dropZone1',1); bind('fileInput2','labelFile2','dropZone2',2);
+}
+
+document.addEventListener('DOMContentLoaded',async()=>{
+  try{
+    montarSeletorDashboard();
+    await carregarBaseDashboard();
+    preencherFiltroClientes();
+    configurarEventosDashboard();
+    configurarUploads();
+    renderizarDashboard();
+  }catch(err){
+    console.error(err);
+    const badge=document.getElementById('badgeText'); if(badge)badge.textContent='Erro ao carregar a base';
+  }
+});
