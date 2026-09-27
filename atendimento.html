@@ -3,16 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Atendimento ELO</title>
+  <title>Atendimento ELO - RCA 61</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-  <script src="rca-config.js"></script>
 
   <link rel="stylesheet" href="style.css">
+  <script src="rca-config.js"></script>
+  <script src="sla-config.js"></script>
   <style>
     .elo-badge { display:inline-block; padding:2px 8px; border-radius:6px; font-size:0.7rem; font-weight:600; }
     .elo-cell-locked { color: var(--text-secondary); background: rgba(255,255,255,0.02); }
@@ -58,23 +59,17 @@
 
     <header class="main-header">
       <div class="header-title">
-        <h1>Atendimento ELO - <span data-rca-title>RCA 61</span></h1>
-        <p id="eloSubtitulo">Registro mensal de contato com a carteira - Set/Out/Nov 2026</p>
+        <h1>Atendimento ELO - <span id="tituloRca">RCA 61</span></h1>
+        <p>Registro mensal de contato com a carteira - Set/Out/Nov 2026</p>
       </div>
       <div class="header-controls">
+        <div id="seletorRcaAtendimento"></div>
         <a href="index.html" class="btn-upload" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
           <i data-lucide="arrow-left" style="width:16px;height:16px;"></i> Dashboard
         </a>
         <a href="clientes.html" class="btn-upload" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px; background-color:var(--accent-indigo);">
           <i data-lucide="users" style="width:16px;height:16px;"></i> Base & SLAs
         </a>
-        <div class="filter-group rca-selector-group" style="display:flex;align-items:center;gap:8px;min-width:170px;">
-          <span style="font-size:.75rem;color:#94a3b8;font-weight:700;">RCA</span>
-          <select id="seletorRcaElo" data-rca-selector aria-label="Selecionar RCA" style="min-width:110px;padding:7px 10px;border-radius:7px;border:1px solid #334155;background:#1e293b;color:#f8fafc;font-weight:700;cursor:pointer;">
-            <option value="61">RCA 61</option>
-            <option value="66">RCA 66</option>
-          </select>
-        </div>
         <div class="status-badge active" id="statusBadge">
           <span class="status-dot"></span>
           <span id="statusText">Carregando...</span>
@@ -94,7 +89,7 @@
     <!-- Tabela principal -->
     <section class="table-card" style="margin-top:10px;">
       <div class="card-header space-between">
-        <h3>Minha Carteira - <span id="eloQtdClientes">270</span> Clientes</h3>
+        <h3>Minha Carteira - 270 Clientes</h3>
         <input type="text" id="searchElo" placeholder="Pesquisar por cliente, cidade ou código..." class="table-search" style="width:300px;">
       </div>
       <div class="table-wrapper" style="max-height:600px;">
@@ -104,6 +99,7 @@
               <th>Código</th>
               <th>Cliente</th>
               <th>Cidade</th>
+              <th>Transportadora / SLA</th>
               <th>Var%</th>
               <th>Ped. 26</th>
               <th>Grava?</th>
@@ -113,7 +109,7 @@
             </tr>
           </thead>
           <tbody id="tbElo">
-            <tr><td colspan="9" class="empty-row">Carregando planilha do Drive...</td></tr>
+            <tr><td colspan="10" class="empty-row">Carregando planilha do Drive...</td></tr>
           </tbody>
         </table>
       </div>
@@ -157,47 +153,97 @@
     // ============================================================
     async function carregarDados() {
       const cfg = obterConfigRca();
-      document.querySelector('[data-rca-title]').textContent = cfg.nome;
+      document.getElementById('tituloRca').textContent = cfg.nome;
       document.title = `Atendimento ELO - ${cfg.nome}`;
-      const subtitulo = document.getElementById('eloSubtitulo');
-      if (subtitulo) {
-        subtitulo.textContent = cfg.id === '66'
-          ? 'Atendimento ELO - RCA 66'
-          : 'Registro mensal de contato com a carteira - Set/Out/Nov 2026';
-      }
-      const seletor = document.getElementById('seletorRcaElo');
-      if (seletor) {
-        seletor.value = cfg.id;
-        seletor.onchange = () => definirRcaSelecionado(seletor.value);
+      document.getElementById('seletorRcaAtendimento').innerHTML = criarSeletorRcaHtml();
+      instalarSeletorRca();
+
+      // RCA 66: carteira vem do JSON próprio; histórico mensal não é usado.
+      if (cfg.id === '66') {
+        try {
+          const r = await fetch(`${cfg.clientesUrl}?v=${Date.now()}`);
+          if (!r.ok) throw new Error('Falha ao carregar a carteira RCA 66');
+          const clientes = await r.json();
+
+          baseElo = clientes.map(c => ({
+            codigo: c.codigo,
+            cliente: c.cliente,
+            cidade: c.cidade || '',
+            janAgo25: 0,
+            janAgo26: 0,
+            varPct: null,
+            pedidos26: c.quantidadeNotas || 0,
+            grava: '',
+            pontoAtencao: c.status || '',
+            setContato: '',
+            setAssunto: '',
+            outContato: '',
+            outAssunto: '',
+            novContato: '',
+            novAssunto: '',
+            clienteDisse: '',
+            encaminhadoPara: '',
+            slaInfo: calcularInfoSLA(c, '66')
+          }));
+
+          // Carrega os atendimentos já salvos no Apps Script do RCA 66.
+          try {
+            const eloRes = await fetch(`${cfg.appsScriptUrl}?v=${Date.now()}`);
+            if (eloRes.ok) {
+              const eloJson = await eloRes.json();
+              const salvos = Array.isArray(eloJson.dados) ? eloJson.dados : [];
+              const porCodigo = {};
+              salvos.forEach(s => porCodigo[String(s['Código'])] = s);
+
+              baseElo.forEach(c => {
+                const s = porCodigo[String(c.codigo)];
+                if (!s) return;
+                c.setContato = s['SET contato'] || '';
+                c.setAssunto = s['SET assunto'] || '';
+                c.outContato = s['OUT contato'] || '';
+                c.outAssunto = s['OUT assunto'] || '';
+                c.novContato = s['NOV contato'] || '';
+                c.novAssunto = s['NOV assunto'] || '';
+                c.clienteDisse = s['O que o cliente disse'] || '';
+                c.encaminhadoPara = s['Encaminhado para'] || '';
+              });
+            }
+          } catch (e) {
+            console.warn('Não foi possível ler os atendimentos salvos do RCA 66.', e);
+          }
+
+          setStatus(true, `RCA 66 — ${baseElo.length} clientes`);
+          renderizarTabela(baseElo);
+          return;
+        } catch (err) {
+          console.error(err);
+          document.getElementById('tbElo').innerHTML =
+            '<tr><td colspan="10" class="empty-row" style="color:#ef4444;">Não foi possível carregar a base do RCA 66.</td></tr>';
+          setStatus(false, 'Erro ao carregar RCA 66');
+          return;
+        }
       }
 
+      // RCA 61: preserva exatamente o fluxo original.
       try {
-        if (cfg.id === '66') {
-          const r = await fetch(cfg.eloJson, { cache: 'no-store' });
-          if (!r.ok) throw new Error('Snapshot RCA 66 indisponível');
-          baseElo = await r.json();
-          baseElo = aplicarAtendimentosLocais(baseElo);
-          setStatus(false, `RCA 66 — ${baseElo.length} clientes`);
-        } else {
-          const url = `https://docs.google.com/spreadsheets/d/${DRIVE_FILE_ID}/export?format=xlsx`;
-          const res = await fetch(url);
-          if (!res.ok) throw new Error('HTTP ' + res.status);
-          const buf = await res.arrayBuffer();
-          const wb = XLSX.read(new Uint8Array(buf), { type: 'array', cellDates: true });
-          baseElo = extrairDoWorkbook(wb);
-          renderizarPainel(wb);
-          renderizarGuia(wb);
-          setStatus(true, `Sincronizado do Drive (${baseElo.length} clientes)`);
-        }
+        const url = `https://docs.google.com/spreadsheets/d/${DRIVE_FILE_ID}/export?format=xlsx`;
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const buf = await res.arrayBuffer();
+        const wb = XLSX.read(new Uint8Array(buf), { type: 'array', cellDates: true });
+        baseElo = extrairDoWorkbook(wb);
+        renderizarPainel(wb);
+        renderizarGuia(wb);
+        setStatus(true, `Sincronizado do Drive (${baseElo.length} clientes)`);
       } catch (err) {
-        console.warn('[Atendimento ELO] Falha no carregamento principal.', err);
+        console.warn('[Atendimento ELO RCA 61] Drive indisponível, usando snapshot local.', err);
         try {
-          const r = await fetch(cfg.eloJson, { cache: 'no-store' });
-          if (!r.ok) throw new Error('HTTP ' + r.status);
-          baseElo = aplicarAtendimentosLocais(await r.json());
+          const r = await fetch('atendimento_elo.json');
+          baseElo = await r.json();
           setStatus(false, `Snapshot local (${baseElo.length} clientes)`);
         } catch (err2) {
-          document.getElementById('tbElo').innerHTML = '<tr><td colspan="9" class="empty-row" style="color:#ef4444;">Não foi possível carregar os dados.</td></tr>';
+          document.getElementById('tbElo').innerHTML =
+            '<tr><td colspan="10" class="empty-row" style="color:#ef4444;">Não foi possível carregar os dados.</td></tr>';
           setStatus(false, 'Erro ao carregar');
           return;
         }
@@ -307,44 +353,10 @@
       return `<span class="elo-badge" style="background:${cor}22; color:${cor};">${texto}</span>`;
     }
 
-    function chaveAtendimentoLocal() {
-      return `elo_atendimentos_${obterConfigRca().id}`;
-    }
-
-    function carregarAtendimentosLocais() {
-      try { return JSON.parse(localStorage.getItem(chaveAtendimentoLocal()) || '{}'); } catch (_) { return {}; }
-    }
-
-    function aplicarAtendimentosLocais(lista) {
-      const salvos = carregarAtendimentosLocais();
-      return lista.map(c => salvos[String(c.codigo)] ? { ...c, ...salvos[String(c.codigo)] } : c);
-    }
-
-    function salvarAtendimentoLocal(codigo, dados) {
-      const salvos = carregarAtendimentosLocais();
-      salvos[String(codigo)] = dados;
-      localStorage.setItem(chaveAtendimentoLocal(), JSON.stringify(salvos));
-    }
-
-    function ajustarCabecalhoElo() {
-      const cfg = obterConfigRca();
-      const ths = document.querySelectorAll('#tbElo');
-      const thead = document.querySelector('#tbElo')?.closest('table')?.querySelector('thead tr');
-      if (!thead) return;
-      if (cfg.id === '66') {
-        thead.innerHTML = '<th>Código</th><th>Cliente</th><th>Cidade</th><th>Status</th><th>Rank</th><th>Valor Total</th><th>Última Venda</th><th>Contatos</th><th style="text-align:center;">Ações</th>';
-      } else {
-        thead.innerHTML = '<th>Código</th><th>Cliente</th><th>Cidade</th><th>Var%</th><th>Ped. 26</th><th>Grava?</th><th>Ponto de Atenção</th><th>Contatos (S/O/N)</th><th style="text-align:center;">Ações</th>';
-      }
-    }
-
     function renderizarTabela(dados) {
-      ajustarCabecalhoElo();
-      const qtd = document.getElementById('eloQtdClientes');
-      if (qtd) qtd.textContent = dados.length;
       const tbody = document.getElementById('tbElo');
       if (dados.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="9" class="empty-row">Nenhum cliente encontrado.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="10" class="empty-row">Nenhum cliente encontrado.</td></tr>';
         return;
       }
       tbody.innerHTML = '';
@@ -358,30 +370,24 @@
           <span class="elo-dot ${c.novContato ? 'on' : 'off'}" title="Novembro"></span>`;
         const tr = document.createElement('tr');
         tr.className = 'clickable-row';
-        const cfg = obterConfigRca();
-        if (cfg.id === '66') {
-          tr.innerHTML = `
-            <td>${c.codigo}</td>
-            <td><strong>${c.cliente}</strong></td>
-            <td>${c.cidade || '-'}</td>
-            <td>${c.status || '-'}</td>
-            <td>${c.rank ?? '-'}</td>
-            <td>${Number(c.valorTotal || 0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}</td>
-            <td>${c.ultimaVenda || '-'}</td>
-            <td>${dots}</td>
-            <td style="text-align:center;"><button class="btn-upload" style="padding:4px 10px;font-size:0.75rem;">Registrar Atendimento</button></td>`;
-        } else {
-          tr.innerHTML = `
-            <td>${c.codigo}</td>
-            <td><strong>${c.cliente}</strong></td>
-            <td>${c.cidade}</td>
-            <td style="color:${corVar}; font-weight:600;">${varTxt}</td>
-            <td>${c.pedidos26}</td>
-            <td>${c.grava || '-'}</td>
-            <td>${badgePonto(c.pontoAtencao)}</td>
-            <td>${dots}</td>
-            <td style="text-align:center;"><button class="btn-upload" style="padding:4px 10px;font-size:0.75rem;">Registrar Atendimento</button></td>`;
-        }
+        const slaInfo = c.slaInfo || calcularInfoSLA(c, obterConfigRca().id);
+        const slaCor = slaInfo.informado ? '#10b981' : '#f59e0b';
+        tr.innerHTML = `
+          <td>${c.codigo}</td>
+          <td><strong>${c.cliente}</strong></td>
+          <td>${c.cidade}</td>
+          <td>
+            <strong style="color:${slaCor};">${slaInfo.transportadora}</strong>
+            <span style="display:block;font-size:.72rem;color:#94a3b8;">${slaInfo.sla}</span>
+          </td>
+          <td style="color:${corVar}; font-weight:600;">${varTxt}</td>
+          <td>${c.pedidos26}</td>
+          <td>${c.grava || '-'}</td>
+          <td>${badgePonto(c.pontoAtencao)}</td>
+          <td>${dots}</td>
+          <td style="text-align:center;">
+            <button class="btn-upload" style="padding:4px 10px;font-size:0.75rem;">Registrar Atendimento</button>
+          </td>`;
         tr.querySelector('button').addEventListener('click', () => abrirModal(c));
         frag.appendChild(tr);
       });
@@ -422,6 +428,14 @@
             <div>
               <h3 style="margin:0;font-size:1.1rem;color:#6366f1;">📞 ${c.codigo} - ${c.cliente}</h3>
               <span style="font-size:0.8rem;color:#94a3b8;">${c.cidade} · ${badgePonto(c.pontoAtencao)}</span>
+              <div style="margin-top:8px;padding:8px 10px;background:#0f172a;border-radius:7px;font-size:.78rem;">
+                <strong style="color:${(c.slaInfo || calcularInfoSLA(c, obterConfigRca().id)).informado ? '#10b981' : '#f59e0b'};">
+                  SLA: ${(c.slaInfo || calcularInfoSLA(c, obterConfigRca().id)).sla}
+                </strong>
+                <span style="margin-left:10px;color:#94a3b8;">
+                  ${(c.slaInfo || calcularInfoSLA(c, obterConfigRca().id)).transportadora}
+                </span>
+              </div>
             </div>
             <button id="eloFechar" style="background:transparent;border:none;color:#94a3b8;font-size:1.5rem;cursor:pointer;">&times;</button>
           </div>
@@ -459,7 +473,7 @@
 
           <div style="display:flex;justify-content:flex-end;gap:10px;">
             <button id="eloCancelar" style="background:transparent;border:1px solid #334155;color:#94a3b8;padding:10px 18px;border-radius:6px;cursor:pointer;">Cancelar</button>
-            <button id="eloSalvar" class="elo-btn-save-modal">Salvar no Drive</button>
+            <button id="eloSalvar" class="elo-btn-save-modal">Salvar atendimento</button>
           </div>
         </div>`;
 
@@ -470,7 +484,6 @@
     }
 
     async function salvarAtendimento(c, modal) {
-      const cfg = obterConfigRca();
       const novo = {
         setContato: document.getElementById('eloSetContato').value,
         setAssunto: document.getElementById('eloSetAssunto').value,
@@ -482,6 +495,11 @@
         encaminhadoPara: document.getElementById('eloEncaminhado').value
       };
 
+      if (!APPS_SCRIPT_URL) {
+        mostrarToast('Configure a URL do Apps Script antes de salvar (veja o README).', false);
+        return;
+      }
+
       const mapaColunas = {
         setContato: 'SET contato', setAssunto: 'SET assunto',
         outContato: 'OUT contato', outAssunto: 'OUT assunto',
@@ -489,44 +507,37 @@
         clienteDisse: 'O que o cliente disse', encaminhadoPara: 'Encaminhado para'
       };
       const mudancas = Object.keys(novo)
-        .filter(k => novo[k] !== (c[k] || ''))
+        .filter(k => novo[k] !== c[k])
         .map(k => ({ codigo: c.codigo, coluna: mapaColunas[k], valor: novo[k] }));
 
-      if (!mudancas.length) { modal.style.display = 'none'; return; }
+      if (mudancas.length === 0) {
+        modal.style.display = 'none';
+        return;
+      }
 
       const btn = document.getElementById('eloSalvar');
-      btn.disabled = true; btn.textContent = 'Salvando...';
+      btn.disabled = true;
+      btn.textContent = 'Salvando...';
 
       try {
-        if (!APPS_SCRIPT_URL) {
-          throw new Error(`Apps Script do ${cfg.nome} não configurado`);
-        }
-
-        const res = await fetch(APPS_SCRIPT_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({
-            rca: cfg.id,
-            mudancas
-          })
-        });
-
+        // Sem headers customizados de propósito: assim o navegador manda
+        // como "text/plain", o que evita o preflight de CORS que o Apps
+        // Script não responde bem.
+        const res = await fetch(APPS_SCRIPT_URL, { method: 'POST', body: JSON.stringify({ rca: obterConfigRca().id, mudancas }) });
         const json = await res.json();
-
-        if (!json.ok) {
-          throw new Error(json.erro || (json.erros || []).join(', ') || 'O Apps Script recusou a gravação.');
-        }
+        if (!json.ok) throw new Error(json.erro || (json.erros || []).join(', '));
 
         Object.assign(c, novo);
         const idx = baseElo.findIndex(x => x.codigo === c.codigo);
         if (idx > -1) baseElo[idx] = c;
         renderizarTabela(baseElo);
-        mostrarToast(`Atendimento do ${cfg.nome} salvo diretamente na planilha!`, true);
+        mostrarToast('Atendimento salvo no Drive com sucesso!', true);
         modal.style.display = 'none';
       } catch (err) {
         console.error(err);
-        mostrarToast(`Não consegui salvar o atendimento: ${err.message}`, false);
-        btn.disabled = false; btn.textContent = 'Salvar no Drive';
+        mostrarToast('Não consegui salvar no Drive. Suas respostas continuam no formulário — tente de novo.', false);
+        btn.disabled = false;
+        btn.textContent = 'Salvar no Drive';
       }
     }
 
