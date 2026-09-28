@@ -29,6 +29,9 @@
         <a href="atendimento.html" id="linkAtendimento" class="btn-upload" style="text-decoration: none; display: inline-flex; align-items: center; gap: 6px; background-color: #f59e0b;">
           <i data-lucide="phone-call" style="width:16px;height:16px;"></i> Atendimento ELO
         </a>
+        <a href="retira.html" id="linkRetira" class="btn-upload" style="text-decoration: none; display: inline-flex; align-items: center; gap: 6px; background-color: #0ea5e9;">
+          <i data-lucide="package-search" style="width:16px;height:16px;"></i> Retira
+        </a>
         <div class="status-badge active" id="statusBadge">
           <span class="status-dot"></span>
           <span id="contadorClientes">Carregando base...</span>
@@ -81,16 +84,17 @@
     //   nas cidades que NÃO estão na lista Paulinéris.
     // - Fora dessas situações, mantém-se Paulinéris.
     //
-    // O SLA é buscado primeiro na planilha correspondente.
-    // Quando a planilha da Barilog não possui uma determinada cidade
-    // metropolitana, o código preserva o SLA já existente no clientes.json
-    // e identifica no detalhe que houve fallback.
+    // Paulinéris: o SLA vem da planilha SLA PAULINERIS.
+    // Barilog: o SLA é SEMPRE D+1 (regra fixa, ver SLA_BARILOG_FIXO).
     // ============================================================
 
     const SLA_DRIVE_URL =
       'https://docs.google.com/spreadsheets/d/1phgqg2JLT4PQ4FTKIipY0_2v4zpx5tB4/edit';
 
     // Dados extraídos da aba "SLA BARILOG" da planilha.
+    // Prazo fixo de toda a Barilog (vale para RCA 61 e RCA 66).
+    const SLA_BARILOG_FIXO = 'D+1';
+
     const slaBarilogPorCidade = {
   "AGUAS DE SAO PEDRO": "D+7",
   "ALTAMIRA": "D+20",
@@ -1480,36 +1484,10 @@
           ? 'Capital de SP'
           : regiaoMetro.nome;
 
-        if (slaBarilogPorCidade[cidade]) {
-          sla = slaBarilogPorCidade[cidade];
-          fonte = 'Planilha SLA BARILOG';
-
-        } else if (slaBaseClienteFallback[cidade]) {
-          // Algumas cidades da capital/RMs não possuem linha própria
-          // na aba BARILOG recebida. Nesse caso, mantém-se o SLA que
-          // já está cadastrado na base do cliente, sem inventar prazo.
-          sla = slaBaseClienteFallback[cidade];
-          fonte = 'Base do cliente (fallback)';
-
-        } else if (
-          c.slaDias !== undefined &&
-          c.slaDias !== null &&
-          c.slaDias !== ''
-        ) {
-          sla = `D+${c.slaDias}`;
-          fonte = 'Base do cliente (fallback)';
-        } else if (c.sla) {
-          const match = String(c.sla).match(/D\+\d+/i);
-          if (match) {
-            sla = match[0].toUpperCase();
-            fonte = 'Base do cliente (fallback)';
-          }
-        }
-
-        if (!sla) {
-          sla = 'SLA não informado';
-          fonte = 'Cidade sem linha na planilha';
-        }
+        // REGRA FIXA: toda entrega da Barilog tem prazo D+1,
+        // independentemente da cidade ou do que consta nas planilhas.
+        sla = SLA_BARILOG_FIXO;
+        fonte = 'Regra Barilog (D+1)';
 
       } else {
         // Interior de SP que não está no cadastro Paulinéris
@@ -1579,6 +1557,9 @@
 
     const linkDashboard = document.getElementById('linkDashboard');
     if (linkDashboard) linkDashboard.href = `index.html?rca=${rcaBaseAtual}`;
+
+    const linkRetira = document.getElementById('linkRetira');
+    if (linkRetira) linkRetira.href = `retira.html?rca=${rcaBaseAtual}`;
 
     const linkAtendimento = document.getElementById('linkAtendimento');
     if (linkAtendimento) linkAtendimento.href = `atendimento.html?rca=${rcaBaseAtual}`;
