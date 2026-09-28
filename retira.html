@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Retira - Consulta de Pedidos</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .status-badge.warn { background-color: rgba(245, 158, 11, 0.12); color: #f59e0b; }
+    .upload-card.dragover { border-color: var(--accent-indigo); background-color: var(--bg-hover); }
+    .btn-limpar { background: transparent; border: 1px solid var(--border-color); color: var(--text-secondary); }
+    .search-row { display: flex; gap: 10px; flex-wrap: wrap; }
+    .search-input {
+      flex: 1; min-width: 260px; background: var(--bg-main); border: 1px solid var(--border-color);
+      color: var(--text-primary); padding: 14px 16px; border-radius: 10px;
+      font-size: 1.2rem; letter-spacing: .05em; outline: none;
+    }
+    .search-input:focus { border-color: var(--accent-indigo); }
+    .btn-buscar {
+      border: none; background: var(--accent-indigo); color: #fff; padding: 0 28px; min-height: 50px;
+      border-radius: 10px; font-size: 1rem; font-weight: 600; cursor: pointer;
+    }
+    .search-hint { font-size: .78rem; color: var(--text-secondary); margin-top: 10px; }
+    .result { display: flex; gap: 18px; align-items: flex-start; padding: 22px; border-radius: var(--radius); border: 1px solid; margin-top: 18px; }
+    .result.ok { background: rgba(16, 185, 129, .1); border-color: var(--accent-green); }
+    .result.no { background: rgba(239, 68, 68, .1); border-color: var(--accent-red); }
+    .result.info { background: rgba(245, 158, 11, .1); border-color: #f59e0b; }
+    .result-icon {
+      width: 52px; height: 52px; border-radius: 50%; flex-shrink: 0; color: #fff;
+      display: flex; align-items: center; justify-content: center; font-size: 1.6rem; font-weight: 700;
+    }
+    .ok .result-icon { background: var(--accent-green); }
+    .no .result-icon { background: var(--accent-red); }
+    .info .result-icon { background: #f59e0b; }
+    .result-title { font-size: 1.5rem; font-weight: 700; }
+    .ok .result-title { color: var(--accent-green); }
+    .no .result-title { color: var(--accent-red); }
+    .info .result-title { color: #f59e0b; }
+    .result-sub { color: var(--text-secondary); font-size: .9rem; margin-top: 4px; }
+    .code-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .code-chip {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 1rem; font-weight: 600;
+      background: var(--bg-main); border: 1px solid var(--border-color); padding: 6px 12px; border-radius: 8px;
+    }
+    mark { background: rgba(245, 158, 11, .35); color: inherit; border-radius: 3px; padding: 0 2px; }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+
+    <header class="main-header">
+      <div class="header-title">
+        <h1>Retira - Consulta de Pedidos</h1>
+        <p>Importe a relação diária e confira se o pedido está na Retira</p>
+      </div>
+      <div class="header-controls">
+        <a href="index.html" id="linkDashboard" class="btn-upload" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
+          <i data-lucide="arrow-left" style="width:16px;height:16px;"></i> Dashboard
+        </a>
+        <a href="clientes.html" id="linkClientes" class="btn-upload" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px; background-color:var(--accent-green);">
+          <i data-lucide="users" style="width:16px;height:16px;"></i> Base & SLAs
+        </a>
+        <a href="atendimento.html" id="linkAtendimento" class="btn-upload" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px; background-color:#f59e0b;">
+          <i data-lucide="phone-call" style="width:16px;height:16px;"></i> Atendimento ELO
+        </a>
+        <div class="status-badge" id="statusBadge">
+          <span class="status-dot"></span>
+          <span id="statusText">Sem relação carregada</span>
+        </div>
+      </div>
+    </header>
+
+    <section class="upload-section">
+      <div class="upload-card" id="dropZone">
+        <i data-lucide="file-spreadsheet" class="upload-icon"></i>
+        <div class="upload-info">
+          <h3>Relação da Praça (diária)</h3>
+          <p>Importe a planilha recebida hoje (.xlsx, .xls ou .csv)</p>
+          <span class="file-label" id="labelFile">Nenhum arquivo selecionado</span>
+        </div>
+        <input type="file" id="fileInput" accept=".xlsx,.xls,.csv">
+        <label for="fileInput" class="btn-upload">Carregar</label>
+        <button type="button" id="btnLimpar" class="btn-upload btn-limpar" style="display:none; margin-left:0;">Limpar</button>
+      </div>
+    </section>
+
+    <section class="table-card">
+      <div class="card-header"><h3>Buscar pedido</h3></div>
+      <div class="search-row">
+        <input type="text" id="inputBusca" class="search-input" inputmode="numeric" autocomplete="off"
+               placeholder="Digite ou bipe o número do pedido...">
+        <button type="button" id="btnBuscar" class="btn-buscar">Buscar</button>
+      </div>
+      <div class="search-hint">Aceita o número completo ou apenas parte dele (mínimo de 6 dígitos). Pressione Enter para buscar.</div>
+      <div id="resultado"></div>
+    </section>
+
+  </div>
+
+  <script>
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+
+    // ---------- Funções puras (extração e busca) ----------
+    // <pure>
+    function normalizarCodigo(v) {
+      if (v === null || v === undefined || v === '') return '';
+      let txt = typeof v === 'number' ? (Number.isFinite(v) ? Math.trunc(v).toString() : '') : String(v);
+      txt = txt.replace(/[\s'.\-]/g, '');
+      return /^\d{8,}$/.test(txt) ? txt : '';
+    }
+
+    function extrairPedidos(rows) {
+      const coletar = (pegar) => {
+        const lista = [];
+        rows.forEach(r => pegar(r).forEach(v => {
+          const c = normalizarCodigo(v);
+          if (c) lista.push(c);
+        }));
+        return lista;
+      };
+      // A relação vem em uma coluna só (A). Se não achar nada, varre todas as colunas.
+      let lista = coletar(r => [r[0]]);
+      if (!lista.length) lista = coletar(r => r);
+      return { pedidos: Array.from(new Set(lista)), linhas: lista.length };
+    }
+
+    function buscarPedidos(pedidos, termo) {
+      const q = String(termo || '').replace(/\D/g, '');
+      if (q.length < 6) return { q, curto: true, achados: [] };
+      const achados = pedidos.filter(p => p.includes(q));
+      achados.sort((a, b) => (b === q) - (a === q));
+      return { q, curto: false, achados };
+    }
+
+    function dataDoNome(nome) {
+      const m = String(nome).match(/(\d{2})[_\-.](\d{2})[_\-.](\d{4})/);
+      return m ? `${m[1]}/${m[2]}/${m[3]}` : '';
+    }
+    // </pure>
+
+    // ---------- Estado e interface ----------
+    const KEY = 'retiraRelacao';
+    const $ = id => document.getElementById(id);
+    let relacao = null;
+
+    const rcaLinks = localStorage.getItem('rcaSelecionado') || localStorage.getItem('sistemaRCA') || '61';
+    $('linkDashboard').href = `index.html?rca=${rcaLinks}`;
+    $('linkClientes').href = `clientes.html?rca=${rcaLinks}`;
+    $('linkAtendimento').href = `atendimento.html?rca=${rcaLinks}`;
+
+    const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const hoje = () => new Date().toLocaleDateString('pt-BR');
+
+    function atualizarStatus() {
+      const badge = $('statusBadge');
+      badge.classList.remove('active', 'warn');
+      $('dropZone').classList.toggle('loaded', !!relacao);
+      $('btnLimpar').style.display = relacao ? '' : 'none';
+
+      if (!relacao) {
+        $('labelFile').textContent = 'Nenhum arquivo selecionado';
+        $('statusText').textContent = 'Sem relação carregada';
+        return;
+      }
+      const repetidos = relacao.linhas - relacao.pedidos.length;
+      $('labelFile').textContent = `${relacao.arquivo} — ${relacao.pedidos.length} pedidos` +
+        (repetidos > 0 ? ` (${repetidos} repetido${repetidos > 1 ? 's' : ''} ignorado${repetidos > 1 ? 's' : ''})` : '');
+
+      const dataRef = relacao.dataRef || new Date(relacao.carregadoEm).toLocaleDateString('pt-BR');
+      if (dataRef === hoje()) {
+        badge.classList.add('active');
+        $('statusText').textContent = `Relação de hoje (${dataRef}) · ${relacao.pedidos.length} pedidos`;
+      } else {
+        badge.classList.add('warn');
+        $('statusText').textContent = `Relação de ${dataRef} — não é a de hoje`;
+      }
+    }
+
+    function mostrar(tipo, icone, titulo, sub, corpoHtml) {
+      $('resultado').innerHTML = `
+        <div class="result ${tipo}">
+          <div class="result-icon">${icone}</div>
+          <div style="flex:1;">
+            <div class="result-title">${titulo}</div>
+            <div class="result-sub">${sub}</div>
+            ${corpoHtml || ''}
+          </div>
+        </div>`;
+    }
+
+    function buscar() {
+      const input = $('inputBusca');
+      if (!relacao) {
+        mostrar('info', '!', 'Carregue a relação do dia', 'Importe a planilha acima antes de buscar.');
+        return;
+      }
+      const { q, curto, achados } = buscarPedidos(relacao.pedidos, input.value);
+      if (curto) {
+        mostrar('info', '!', 'Digite o número do pedido', 'Informe ao menos 6 dígitos para buscar.');
+        return;
+      }
+      if (!achados.length) {
+        mostrar('no', '✕', 'Busca não encontrada', `O pedido <strong>${esc(q)}</strong> não consta na relação carregada.`);
+      } else {
+        const chips = achados.slice(0, 20).map(p => {
+          const i = p.indexOf(q);
+          return `<span class="code-chip">${esc(p.slice(0, i))}<mark>${esc(q)}</mark>${esc(p.slice(i + q.length))}</span>`;
+        }).join('');
+        const extra = achados.length > 20 ? `<div class="result-sub">Mostrando 20 de ${achados.length} resultados. Digite mais dígitos para refinar.</div>` : '';
+        mostrar('ok', '✓', 'Está na Retira',
+          achados.length === 1 ? 'Pedido localizado na relação.' : `${achados.length} registros localizados na relação.`,
+          `<div class="code-list">${chips}</div>${extra}`);
+      }
+      input.select();
+    }
+
+    function lerArquivo(file) {
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        try {
+          const wb = XLSX.read(e.target.result, { type: 'array' });
+          const ws = wb.Sheets[wb.SheetNames[0]];
+          const rows = XLSX.utils.sheet_to_json(ws, { header: 1, raw: true, defval: '' });
+          const { pedidos, linhas } = extrairPedidos(rows);
+          if (!pedidos.length) throw new Error('Nenhum número de pedido encontrado na planilha.');
+
+          relacao = { arquivo: file.name, dataRef: dataDoNome(file.name), carregadoEm: new Date().toISOString(), linhas, pedidos };
+          try { localStorage.setItem(KEY, JSON.stringify(relacao)); } catch (_) { /* sem armazenamento: segue só em memória */ }
+          atualizarStatus();
+          $('resultado').innerHTML = '';
+          $('inputBusca').value = '';
+          $('inputBusca').focus();
+        } catch (err) {
+          console.error(err);
+          mostrar('info', '!', 'Não consegui ler a planilha', esc(err.message || 'Verifique se o arquivo é .xlsx, .xls ou .csv.'));
+        }
+      };
+      reader.readAsArrayBuffer(file);
+    }
+
+    // Eventos
+    $('btnBuscar').addEventListener('click', buscar);
+    $('inputBusca').addEventListener('keydown', e => { if (e.key === 'Enter') buscar(); });
+    $('inputBusca').addEventListener('input', () => { $('resultado').innerHTML = ''; });
+    $('fileInput').addEventListener('change', e => { lerArquivo(e.target.files[0]); e.target.value = ''; });
+    $('btnLimpar').addEventListener('click', () => {
+      relacao = null;
+      try { localStorage.removeItem(KEY); } catch (_) {}
+      atualizarStatus();
+      $('resultado').innerHTML = '';
+    });
+
+    const zona = $('dropZone');
+    ['dragenter', 'dragover'].forEach(ev => zona.addEventListener(ev, e => { e.preventDefault(); zona.classList.add('dragover'); }));
+    ['dragleave', 'drop'].forEach(ev => zona.addEventListener(ev, e => { e.preventDefault(); zona.classList.remove('dragover'); }));
+    zona.addEventListener('drop', e => lerArquivo(e.dataTransfer.files[0]));
+
+    // Restaura a última relação carregada (fica salva neste navegador)
+    try {
+      const salvo = localStorage.getItem(KEY);
+      if (salvo) relacao = JSON.parse(salvo);
+    } catch (_) { relacao = null; }
+    atualizarStatus();
+    $('inputBusca').focus();
+  </script>
+</body>
+</html>
