@@ -11,7 +11,6 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   
   <link rel="stylesheet" href="style.css">
-  <script src="rca-config.js"></script>
 </head>
 <body>
 
@@ -19,7 +18,7 @@
     
     <header class="main-header">
       <div class="header-title">
-        <h1 id="tituloBaseRCA">Base de Clientes & SLAs - RCA 61</h1>
+        <h1>Base de Clientes & SLAs - RCA 61</h1>
         <p>Consulta unificada da carteira completa e prazos de entrega por cidade</p>
       </div>
 
@@ -31,14 +30,6 @@
         <a href="atendimento.html" class="btn-upload" style="text-decoration: none; display: inline-flex; align-items: center; gap: 6px; background-color: #f59e0b;">
           <i data-lucide="phone-call" style="width:16px;height:16px;"></i> Atendimento ELO
         </a>
-
-        <div class="filter-group">
-          <i data-lucide="users" class="filter-icon"></i>
-          <select id="selectRCA" onchange="selecionarRCA(this.value)">
-            <option value="61">RCA 61</option>
-            <option value="66">RCA 66</option>
-          </select>
-        </div>
 
         <div class="status-badge active" id="statusBadge">
           <span class="status-dot"></span>
@@ -88,6 +79,44 @@
   </div>
 
 <script>
+    // ============================================================
+    // NAVEGAÇÃO RCA 61 / RCA 66
+    // Mantém a RCA selecionada ao sair da Base para o Dashboard
+    // ou para o Atendimento ELO.
+    // ============================================================
+    (function() {
+      const params = new URLSearchParams(window.location.search);
+      const rcaUrl = params.get('rca');
+      const rcaSalvo = localStorage.getItem('rcaSelecionado');
+
+      const rcaAtual =
+        rcaUrl === '66' || rcaUrl === '61'
+          ? rcaUrl
+          : (rcaSalvo === '66' || rcaSalvo === '61'
+              ? rcaSalvo
+              : '61');
+
+      if (rcaUrl === '61' || rcaUrl === '66') {
+        localStorage.setItem('rcaSelecionado', rcaUrl);
+      }
+
+      document.addEventListener('DOMContentLoaded', function() {
+        const linkDashboard =
+          document.querySelector('a[href="index.html"]');
+
+        if (linkDashboard) {
+          linkDashboard.href = `index.html?rca=${rcaAtual}`;
+        }
+
+        const linkAtendimento =
+          document.querySelector('a[href="atendimento.html"]');
+
+        if (linkAtendimento) {
+          linkAtendimento.href = `atendimento.html?rca=${rcaAtual}`;
+        }
+      });
+    })();
+
     if (typeof lucide !== 'undefined') lucide.createIcons();
 
     // ============================================================
@@ -480,7 +509,7 @@
 
     function carregarDadosVivos() {
       try {
-        const raw = localStorage.getItem(`rca${RCA_ATUAL}_dadosVivos`);
+        const raw = localStorage.getItem('rca61_dadosVivos');
         dadosVivosGlobal = raw ? JSON.parse(raw) : null;
       } catch (e) {
         dadosVivosGlobal = null;
@@ -683,18 +712,13 @@
     // CARREGAMENTO DOS CLIENTES
     // ============================================================
 
-    const selRCA = document.getElementById('selectRCA');
-    if (selRCA) selRCA.value = RCA_ATUAL;
-    const tituloBaseRCA = document.getElementById('tituloBaseRCA');
-    if (tituloBaseRCA) tituloBaseRCA.textContent = `Base de Clientes & SLAs - RCA ${RCA_ATUAL}`;
-
     document.addEventListener(
       'DOMContentLoaded',
       () => {
 
         carregarDadosVivos();
 
-        fetch(RCA_ATIVO.clientesUrl, { cache: 'no-store' })
+        fetch('clientes.json')
 
           .then(response => {
 
@@ -730,7 +754,7 @@
             document
               .getElementById('tbClientesSLA')
               .innerHTML =
-              '<tr><td colspan="6" class="empty-row" style="color:#ef4444;">Erro ao carregar a base fixa de clientes. Verifique o arquivo da carteira selecionada.</td></tr>';
+              '<tr><td colspan="6" class="empty-row" style="color:#ef4444;">Erro ao carregar a base fixa de clientes. Verifique o arquivo clientes.json.</td></tr>';
 
             document
               .getElementById('contadorClientes')
@@ -1196,7 +1220,7 @@
                 gap:8px;
               "
             >
-              🏢 Detalhes do Cliente (RCA ${RCA_ATUAL})
+              🏢 Detalhes do Cliente (RCA 61)
             </h3>
 
 
