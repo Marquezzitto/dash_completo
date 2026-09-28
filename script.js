@@ -756,8 +756,8 @@ async function carregarDadosFixosMensais() {
       }));
       const total = linhas.reduce((s,r) => s + (Number(r['Valor de venda (R$)']) || 0), 0);
       linhas.forEach(r => { r['% do Total'] = total ? (Number(r['Valor de venda (R$)']) || 0) / total : 0; });
-      const compradores = clientes66.filter(c => Number(c.quantidadeNotas) > 0).length;
-      const pedidos = clientes66.reduce((s,c) => s + (Number(c.quantidadeNotas) || 0), 0);
+      const compradores = clientes66.filter(c => Number(c.qtdNotas ?? c.quantidadeNotas) > 0).length;
+      const pedidos = clientes66.reduce((s,c) => s + (Number(c.qtdNotas ?? c.quantidadeNotas) || 0), 0);
       dataStore.reportSection = { 'Vendas (R$) por Cliente': linhas };
       dataStore.analiseCarteira = {
         'Ultima Fatura': [{
@@ -1128,132 +1128,98 @@ function usarDadosMensaisFixos(
     );
 }
 
-function salvarSessaoAtual() {
-  try {
-    sessionStorage.setItem(
-      `${RCA_STORAGE_PREFIX}sessaoPlanilhas`,
-      JSON.stringify({
-        dataStore,
+// ===== Persistência das planilhas carregadas (IndexedDB) =====
+// Antes: sessionStorage (limite ~5 MB, erro engolido em silêncio, e a chave era por RCA).
+// Agora: IndexedDB, uma sessão por RCA, que sobrevive à troca de RCA/recarregamento/fechar aba.
+const SESSAO_DB_NOME = 'rcaDashboard';
+const SESSAO_DB_STORE = 'sessoes';
+const SESSAO_CHAVE = `${RCA_STORAGE_PREFIX}sessaoPlanilhas`;
 
-        nomeArquivo1:
-          labelFile1
-            ? labelFile1.textContent
-            : '',
-
-        nomeArquivo2:
-          labelFile2
-            ? labelFile2.textContent
-            : '',
-
-        carregado1:
-          !!(
-            dropZone1 &&
-            dropZone1.classList.contains(
-              'loaded'
-            )
-          ),
-
-        carregado2:
-          !!(
-            dropZone2 &&
-            dropZone2.classList.contains(
-              'loaded'
-            )
-          )
-      })
-    );
-  } catch (e) {}
+function abrirBancoSessao() {
+  return new Promise((resolve, reject) => {
+    if (!('indexedDB' in window)) {
+      reject(new Error('IndexedDB indisponível'));
+      return;
+    }
+    const req = indexedDB.open(SESSAO_DB_NOME, 1);
+    req.onupgradeneeded = () => {
+      if (!req.result.objectStoreNames.contains(SESSAO_DB_STORE)) {
+        req.result.createObjectStore(SESSAO_DB_STORE);
+      }
+    };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
 }
 
-function restaurarSessaoAtual() {
+async function sessaoGravar(chave, valor) {
+  const db = await abrirBancoSessao();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(SESSAO_DB_STORE, 'readwrite');
+    tx.objectStore(SESSAO_DB_STORE).put(valor, chave);
+    tx.oncomplete = () => { db.close(); resolve(); };
+    tx.onerror = tx.onabort = () => { db.close(); reject(tx.error); };
+  });
+}
+
+async function sessaoLer(chave) {
+  const db = await abrirBancoSessao();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(SESSAO_DB_STORE, 'readonly');
+    const req = tx.objectStore(SESSAO_DB_STORE).get(chave);
+    req.onsuccess = () => { db.close(); resolve(req.result); };
+    req.onerror = () => { db.close(); reject(req.error); };
+  });
+}
+
+async function salvarSessaoAtual() {
   try {
-    const raw =
-      sessionStorage.getItem(
-        `${RCA_STORAGE_PREFIX}sessaoPlanilhas`
-      );
+    const carregado1 = !!(dropZone1 && dropZone1.classList.contains('loaded'));
+    const carregado2 = !!(dropZone2 && dropZone2.classList.contains('loaded'));
+    await sessaoGravar(SESSAO_CHAVE, {
+      versao: 2,
+      // guarda só o que o usuário realmente carregou (no RCA 66 o resto vem do rca66_clientes.json)
+      reportSection: carregado1 ? dataStore.reportSection : null,
+      analiseCarteira: carregado2 ? dataStore.analiseCarteira : null,
+      nomeArquivo1: labelFile1 ? labelFile1.textContent : '',
+      nomeArquivo2: labelFile2 ? labelFile2.textContent : '',
+      carregado1,
+      carregado2
+    });
+    if (navigator.storage && navigator.storage.persist) {
+      navigator.storage.persist().catch(() => {});
+    }
+  } catch (e) {
+    console.warn(`[RCA ${RCA_ID_ATUAL}] Não foi possível salvar as planilhas`, e);
+  }
+}
 
-    if (!raw) {
+async function restaurarSessaoAtual() {
+  try {
+    const saved = await sessaoLer(SESSAO_CHAVE);
+    if (!saved || saved.versao !== 2) {
       return false;
     }
-
-    const saved =
-      JSON.parse(raw);
-
-    if (
-      !saved ||
-      !saved.dataStore
-    ) {
-      return false;
+    if (saved.carregado1 && saved.reportSection) {
+      dataStore.reportSection = saved.reportSection;
+      if (dropZone1) dropZone1.classList.add('loaded');
+      if (labelFile1 && saved.nomeArquivo1) labelFile1.textContent = saved.nomeArquivo1;
     }
-
-    dataStore =
-      saved.dataStore;
-
-    if (
-      saved.carregado1 &&
-      dropZone1
-    ) {
-      dropZone1.classList.add(
-        'loaded'
-      );
+    if (saved.carregado2 && saved.analiseCarteira) {
+      dataStore.analiseCarteira = saved.analiseCarteira;
+      if (dropZone2) dropZone2.classList.add('loaded');
+      if (labelFile2 && saved.nomeArquivo2) labelFile2.textContent = saved.nomeArquivo2;
     }
-
-    if (
-      saved.carregado2 &&
-      dropZone2
-    ) {
-      dropZone2.classList.add(
-        'loaded'
-      );
-    }
-
-    if (
-      saved.nomeArquivo1 &&
-      labelFile1
-    ) {
-      labelFile1.textContent =
-        saved.nomeArquivo1;
-    }
-
-    if (
-      saved.nomeArquivo2 &&
-      labelFile2
-    ) {
-      labelFile2.textContent =
-        saved.nomeArquivo2;
-    }
-
-    if (
-      algumaPlanilhaCarregada()
-    ) {
-      if (statusBadge) {
-        statusBadge.classList.add(
-          'active'
-        );
-      }
-
-      if (badgeText) {
-        badgeText.textContent =
-          'Dados Sincronizados';
-      }
-
+    if (algumaPlanilhaCarregada()) {
+      if (statusBadge) statusBadge.classList.add('active');
+      if (badgeText) badgeText.textContent = 'Dados Sincronizados';
       popularSelectClientes();
-
-      requestAnimationFrame(
-        renderDashboard
-      );
-
+      requestAnimationFrame(renderDashboard);
       sincronizarPlanilhasDoDrive();
     }
-
     return true;
-
   } catch (e) {
-    console.warn(
-      '[RCA 61] Sessão não restaurada',
-      e
-    );
-
+    console.warn(`[RCA ${RCA_ID_ATUAL}] Sessão não restaurada`, e);
     return false;
   }
 }
@@ -4310,6 +4276,7 @@ function renderDashboard() {
   renderChartTopProdutos();
   renderVendasClienteTable();
   renderInatividadeTable();
+  if (RCA_ID_ATUAL === '66') atualizarKPIsRCA66();
 }
 
 if (fileInput1) {
@@ -4454,7 +4421,7 @@ carregarDadosFixosMensais()
       popularSelectClientes();
       renderDashboard();
       if (RCA_ID_ATUAL === '66') atualizarKPIsRCA66();
-      restaurarSessaoAtual();
+      return restaurarSessaoAtual();
     }
   );
 
