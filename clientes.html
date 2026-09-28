@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   
   <link rel="stylesheet" href="style.css">
 </head>
@@ -18,7 +19,7 @@
     
     <header class="main-header">
       <div class="header-title">
-        <h1>Base de Clientes & SLAs - RCA 61</h1>
+        <h1 id="tituloBase">Base de Clientes & SLAs - RCA 61</h1>
         <p>Consulta unificada da carteira completa e prazos de entrega por cidade</p>
       </div>
 
@@ -709,58 +710,236 @@
 
 
     // ============================================================
-    // CARREGAMENTO DOS CLIENTES
+    // RCA SELECIONADO / CARREGAMENTO DOS CLIENTES
+    // RCA 61: mantém o clientes.json original.
+    // RCA 66: lê a carteira própria da planilha do RCA 66.
     // ============================================================
+
+    const paramsBase = new URLSearchParams(window.location.search);
+    const rcaUrlBase = paramsBase.get('rca');
+    const rcaSalvoBase = localStorage.getItem('rcaSelecionado');
+
+    const rcaBaseAtual =
+      rcaUrlBase === '66' || rcaUrlBase === '61'
+        ? rcaUrlBase
+        : (rcaSalvoBase === '66' || rcaSalvoBase === '61'
+            ? rcaSalvoBase
+            : '61');
+
+    if (rcaUrlBase === '61' || rcaUrlBase === '66') {
+      localStorage.setItem('rcaSelecionado', rcaUrlBase);
+    }
+
+    const CONFIG_BASE_RCA = {
+      '61': {
+        nome: 'RCA 61',
+        titulo: 'Base de Clientes & SLAs - RCA 61'
+      },
+      '66': {
+        nome: 'RCA 66',
+        titulo: 'Base de Clientes & SLAs - RCA 66',
+        driveFileId: '12ZoIQhoWn9MDPWqz-EiPMIAfoL6MiB1DAmhDLB_AaLo'
+      }
+    };
+
+    const configBaseAtual =
+      CONFIG_BASE_RCA[rcaBaseAtual];
+
+    document.title = configBaseAtual.titulo;
+
+    const tituloBase =
+      document.getElementById('tituloBase');
+
+    if (tituloBase) {
+      tituloBase.textContent =
+        configBaseAtual.titulo;
+    }
+
+    async function carregarBaseRCA66() {
+      const url =
+        `https://docs.google.com/spreadsheets/d/${configBaseAtual.driveFileId}/export?format=xlsx`;
+
+      const response =
+        await fetch(url);
+
+      if (!response.ok) {
+        throw new Error(
+          `Não foi possível carregar a planilha do RCA 66 (HTTP ${response.status}).`
+        );
+      }
+
+      const buffer =
+        await response.arrayBuffer();
+
+      const workbook =
+        XLSX.read(
+          new Uint8Array(buffer),
+          {
+            type: 'array',
+            cellDates: true
+          }
+        );
+
+      const primeiraAba =
+        workbook.SheetNames[0];
+
+      const linhas =
+        XLSX.utils.sheet_to_json(
+          workbook.Sheets[primeiraAba],
+          {
+            header: 1,
+            defval: null
+          }
+        );
+
+      const clientes =
+        [];
+
+      for (
+        let i = 1;
+        i < linhas.length;
+        i++
+      ) {
+        const r = linhas[i];
+
+        if (
+          !r ||
+          r.every(
+            c =>
+              c === null ||
+              c === ''
+          )
+        ) {
+          continue;
+        }
+
+        const codigo =
+          r[0];
+
+        const cliente =
+          r[1];
+
+        if (
+          codigo === null ||
+          codigo === '' ||
+          !cliente
+        ) {
+          continue;
+        }
+
+        clientes.push({
+          codigo:
+            Number(codigo),
+
+          cliente:
+            String(cliente).trim(),
+
+          fantasia:
+            r[2]
+              ? String(r[2]).trim()
+              : '',
+
+          cidade:
+            r[3]
+              ? String(r[3]).trim()
+              : '',
+
+          uf:
+            r[4]
+              ? String(r[4]).trim()
+              : '',
+
+          status:
+            r[5]
+              ? String(r[5]).trim()
+              : '',
+
+          rank:
+            r[6] ?? '',
+
+          valor:
+            r[7] ?? '',
+
+          qtdNotas:
+            r[8] ?? '',
+
+          ultimaVenda:
+            r[9] ?? '',
+
+          dataCadastro:
+            r[10] ?? ''
+        });
+      }
+
+      return clientes;
+    }
 
     document.addEventListener(
       'DOMContentLoaded',
-      () => {
+      async () => {
 
         carregarDadosVivos();
 
-        fetch('clientes.json')
+        try {
 
-          .then(response => {
+          let data;
+
+          if (
+            rcaBaseAtual === '66'
+          ) {
+
+            data =
+              await carregarBaseRCA66();
+
+          } else {
+
+            const response =
+              await fetch(
+                'clientes.json'
+              );
 
             if (!response.ok) {
-
               throw new Error(
-                'Não foi possível carregar o arquivo de clientes.'
+                'Não foi possível carregar o arquivo clientes.json.'
               );
             }
 
-            return response.json();
-          })
+            data =
+              await response.json();
+          }
 
-          .then(data => {
+          baseClientesGlobal =
+            data;
 
-            baseClientesGlobal =
-              data;
+          renderizarTabelaClientes(
+            baseClientesGlobal
+          );
 
-            renderizarTabelaClientes(
-              baseClientesGlobal
-            );
-
-            document
-              .getElementById('contadorClientes')
-              .innerText =
+          document
+            .getElementById(
+              'contadorClientes'
+            )
+            .innerText =
               `Base Completa (${baseClientesGlobal.length} Clientes)`;
-          })
 
-          .catch(error => {
+        } catch (error) {
 
-            console.error(error);
+          console.error(error);
 
-            document
-              .getElementById('tbClientesSLA')
-              .innerHTML =
-              '<tr><td colspan="6" class="empty-row" style="color:#ef4444;">Erro ao carregar a base fixa de clientes. Verifique o arquivo clientes.json.</td></tr>';
+          document
+            .getElementById(
+              'tbClientesSLA'
+            )
+            .innerHTML =
+              `<tr><td colspan="6" class="empty-row" style="color:#ef4444;">Erro ao carregar a base da ${configBaseAtual.nome}. Verifique a conexão com a planilha.</td></tr>`;
 
-            document
-              .getElementById('contadorClientes')
-              .innerText =
+          document
+            .getElementById(
+              'contadorClientes'
+            )
+            .innerText =
               'Erro na base';
-          });
+        }
       }
     );
 
