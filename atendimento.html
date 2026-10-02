@@ -885,6 +885,11 @@
       document.getElementById('eloSalvar').onclick = () => salvarAtendimento(c, modal);
     }
 
+    function igualCampo(a, b) {
+      const n = v => String(v === null || v === undefined ? '' : v).replace(/\r\n/g, '\n').trim();
+      return n(a) === n(b);
+    }
+
     async function salvarAtendimento(c, modal) {
       const novo = {
         setContato: document.getElementById('eloSetContato').value,
@@ -909,11 +914,12 @@
         clienteDisse: 'O que o cliente disse', encaminhadoPara: 'Encaminhado para'
       };
       const mudancas = Object.keys(novo)
-        .filter(k => novo[k] !== c[k])
+        .filter(k => igualCampo(novo[k], c[k]) === false)
         .map(k => ({ codigo: c.codigo, coluna: mapaColunas[k], valor: novo[k] }));
 
       if (mudancas.length === 0) {
-        mostrarToast('Nenhuma alteração detectada — nada foi enviado.', false);
+        console.log('[ELO] formulário x carregado:', novo, c);
+        mostrarToast('O formulário está idêntico ao que veio da planilha — nada foi enviado. Altere um campo (ex.: data e assunto de um mês) e salve de novo.', false);
         return;
       }
       console.log('[ELO] enviando', mudancas, 'para', APPS_SCRIPT_URL);
