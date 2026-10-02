@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title id="tituloPaginaElo">Atendimento ELO - RCA 61</title>
+  <title>Atendimento ELO - RCA 61</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -92,7 +92,7 @@
 
     <header class="main-header">
       <div class="header-title">
-        <h1 id="tituloElo">Atendimento ELO - RCA 61</h1>
+        <h1>Atendimento ELO - RCA 61</h1>
         <p>Registro mensal de contato com a carteira - Set/Out/Nov 2026</p>
       </div>
       <div class="header-controls">
@@ -101,9 +101,6 @@
         </a>
         <a href="clientes.html" class="btn-upload" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px; background-color:var(--accent-indigo);">
           <i data-lucide="users" style="width:16px;height:16px;"></i> Base & SLAs
-        </a>
-        <a href="retira.html" class="btn-upload" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px; background-color:#0ea5e9;">
-          <i data-lucide="package-search" style="width:16px;height:16px;"></i> Retira
         </a>
         <div class="status-badge active" id="statusBadge">
           <span class="status-dot"></span>
@@ -163,43 +160,13 @@
     // ============================================================
     // CONFIGURAÇÃO
     // ============================================================
-    // ============================================================
-    // RCA SELECIONADO
-    // ============================================================
-    // Primeiro usa ?rca=61 ou ?rca=66.
-    // Se a tela anterior não passar o parâmetro, usa o RCA salvo
-    // pelo seletor do Dashboard. Sem informação, mantém RCA 61.
-    const rcaDaUrl = new URLSearchParams(window.location.search).get('rca');
-    const rcaSalvo = localStorage.getItem('rcaSelecionado');
-    const rcaSelecionado =
-      rcaDaUrl === '66' || rcaDaUrl === '61'
-        ? rcaDaUrl
-        : (rcaSalvo === '66' || rcaSalvo === '61' ? rcaSalvo : '61');
+    const DRIVE_FILE_ID = '1yr12JeKO-5ipBrzbqrcWFnYXhkfkQvH7tkRicbcogps';
 
-    if (rcaDaUrl === '61' || rcaDaUrl === '66') {
-      localStorage.setItem('rcaSelecionado', rcaDaUrl);
-    }
-
-    const CONFIG_RCA = {
-      '61': {
-        nome: 'RCA 61',
-        driveFileId: '1yr12JeKO-5ipBrzbqrcWFnYXhkfkQvH7tkRicbcogps',
-        appsScriptUrl: 'https://script.google.com/macros/s/AKfycbw-s10eMg-8ajimxH3lK1vwo5dK_o43SLHtQa4H0sN5oHQ8VrewthA-iBxx32_RVfns/exec'
-      },
-      '66': {
-        nome: 'RCA 66',
-        driveFileId: '12ZoIQhoWn9MDPWqz-EiPMIAfoL6MiB1DAmhDLB_AaLo',
-        appsScriptUrl: 'https://script.google.com/macros/s/AKfycbzCO-yjaRfKZd-W56n1BbFTJbyQFJVZls-k3DyjESSDJVTwtKDfJV71PkQ91UUKrTsI/exec'
-      }
-    };
-
-    const CONFIG_ATUAL = CONFIG_RCA[rcaSelecionado];
-    const DRIVE_FILE_ID = CONFIG_ATUAL.driveFileId;
-    const APPS_SCRIPT_URL = CONFIG_ATUAL.appsScriptUrl;
-
-    document.title = `Atendimento ELO - ${CONFIG_ATUAL.nome}`;
-    const tituloElo = document.getElementById('tituloElo');
-    if (tituloElo) tituloElo.textContent = `Atendimento ELO - ${CONFIG_ATUAL.nome}`;
+    // Depois de implantar o Apps Script (arquivo AppsScript_AtendimentoELO.js),
+    // cole aqui a URL que termina em /exec. Enquanto estiver vazio, a
+    // tabela funciona só para VISUALIZAR — o botão Salvar avisa que a
+    // gravação ainda não foi configurada.
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw-s10eMg-8ajimxH3lK1vwo5dK_o43SLHtQa4H0sN5oHQ8VrewthA-iBxx32_RVfns/exec';
 
     const ASSUNTO_OPCOES = [
       'Apresentação da carteira', 'Oferta de gravação', 'Acompanhamento de pedido',
@@ -232,9 +199,9 @@
       } catch (err) {
         console.warn('[Atendimento ELO] Não consegui buscar do Drive, usando snapshot local.', err);
         try {
-          const r = await fetch(rcaSelecionado === '66' ? 'rca66_clientes.json' : 'atendimento_elo.json');
+          const r = await fetch('atendimento_elo.json');
           baseElo = await r.json();
-          setStatus(false, `Snapshot local RCA ${rcaSelecionado} (${baseElo.length} clientes) — sem conexão com o Drive`);
+          setStatus(false, `Snapshot local (${baseElo.length} clientes) — sem conexão com o Drive`);
         } catch (err2) {
           document.getElementById('tbElo').innerHTML = '<tr><td colspan="9" class="empty-row" style="color:#ef4444;">Não foi possível carregar os dados.</td></tr>';
           setStatus(false, 'Erro ao carregar');
@@ -913,9 +880,10 @@
         .map(k => ({ codigo: c.codigo, coluna: mapaColunas[k], valor: novo[k] }));
 
       if (mudancas.length === 0) {
-        modal.style.display = 'none';
+        mostrarToast('Nenhuma alteração detectada — nada foi enviado.', false);
         return;
       }
+      console.log('[ELO] enviando', mudancas, 'para', APPS_SCRIPT_URL);
 
       const btn = document.getElementById('eloSalvar');
       btn.disabled = true;
@@ -926,18 +894,25 @@
         // como "text/plain", o que evita o preflight de CORS que o Apps
         // Script não responde bem.
         const res = await fetch(APPS_SCRIPT_URL, { method: 'POST', body: JSON.stringify({ mudancas }) });
-        const json = await res.json();
-        if (!json.ok) throw new Error(json.erro || (json.erros || []).join(', '));
+        const texto = await res.text();
+        console.log('[ELO] resposta do Apps Script:', texto);
+        let json;
+        try { json = JSON.parse(texto); }
+        catch (e) { throw new Error('Resposta inválida do Apps Script (veja o Console). Provável URL /exec errada ou sem acesso "Qualquer pessoa".'); }
+        if (!json.ok) throw new Error(json.erro || (json.erros || []).join(', ') || 'Falha desconhecida');
+        if (json.aplicadas !== undefined && json.aplicadas !== mudancas.length) {
+          throw new Error('Só ' + json.aplicadas + ' de ' + mudancas.length + ' campos foram gravados.');
+        }
 
         Object.assign(c, novo);
         const idx = baseElo.findIndex(x => x.codigo === c.codigo);
         if (idx > -1) baseElo[idx] = c;
         renderizarTabela(baseElo);
-        mostrarToast('Atendimento salvo no Drive com sucesso!', true);
+        mostrarToast('Gravado em "' + (json.planilha || '?') + '" — células ' + (json.celulas || []).join(', ') + ' (script ' + (json.versao || 'antigo') + ')', true);
         modal.style.display = 'none';
       } catch (err) {
         console.error(err);
-        mostrarToast('Não consegui salvar no Drive. Suas respostas continuam no formulário — tente de novo.', false);
+        mostrarToast('Não salvou: ' + String(err.message || err).slice(0, 250), false);
         btn.disabled = false;
         btn.textContent = 'Salvar no Drive';
       }
@@ -947,10 +922,28 @@
       const t = document.getElementById('eloToast');
       t.textContent = msg;
       t.className = 'elo-toast show ' + (ok ? 'ok' : 'err');
-      setTimeout(() => { t.className = 'elo-toast'; }, 4000);
+      setTimeout(() => { t.className = 'elo-toast'; }, ok ? 4000 : 9000);
     }
 
     carregarDados();
+
+    // Selo de diagnóstico: mostra qual script/planilha o site está usando
+    (async () => {
+      const el = document.createElement('div');
+      el.style.cssText = 'position:fixed;left:12px;bottom:12px;z-index:100000;font-size:11px;padding:6px 10px;border-radius:6px;background:#0f172a;border:1px solid #334155;color:#94a3b8;max-width:70vw;';
+      el.textContent = 'Script: verificando...';
+      document.body.appendChild(el);
+      try {
+        const r = await fetch(APPS_SCRIPT_URL);
+        const j = await r.json();
+        const ok = j.versao === 'v3';
+        el.style.color = ok ? '#10b981' : '#f59e0b';
+        el.textContent = 'Script ' + (j.versao || 'ANTIGO (sem versão)') + ' → ' + (j.planilha || 'planilha desconhecida') + ' · ...' + APPS_SCRIPT_URL.slice(-14);
+      } catch (e) {
+        el.style.color = '#ef4444';
+        el.textContent = 'Script inacessível: URL /exec errada ou acesso não é "Qualquer pessoa"';
+      }
+    })();
   </script>
 </body>
 </html>
