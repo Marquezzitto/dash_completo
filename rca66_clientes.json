@@ -14,7 +14,27 @@
     "cnpj": "10.219.263/0001-40",
     "telefone": "(14) 3301-2733",
     "celular": "(14) 99704-1012",
-    "email": "financeiro@praticbrindes.com.br"
+    "email": "financeiro@praticbrindes.com.br",
+    "telefones": [
+      "(14) 3301-2733",
+      "(14) 99704-1012",
+      "(14) 3422-6776"
+    ],
+    "telefone2": "(14) 3422-6776",
+    "telefonesExtras": [
+      "(14) 3422-6776"
+    ],
+    "emails": [
+      "financeiro@praticbrindes.com.br",
+      "vendas@praticbrindes.com.br"
+    ],
+    "email2": "vendas@praticbrindes.com.br",
+    "emailsExtras": [
+      "vendas@praticbrindes.com.br"
+    ],
+    "cluster": "Fiel",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 11640,
@@ -31,7 +51,20 @@
     "cnpj": "37.208.951/0001-60",
     "telefone": "(11) 93039-0062",
     "celular": "(11) 93039-0062",
-    "email": "compras@beuni.com.br"
+    "email": "compras@beuni.com.br",
+    "telefones": [
+      "(11) 93039-0062"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "compras@beuni.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Fiel",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 5548,
@@ -48,7 +81,31 @@
     "cnpj": "11.990.266/0001-45",
     "telefone": "(11) 2203-1238",
     "celular": "98734-1098",
-    "email": "gerencia@tocadosbrindes.com.br"
+    "email": "gerencia@tocadosbrindes.com.br",
+    "telefones": [
+      "(11) 2203-1238",
+      "98734-1098",
+      "(11) 2924-0600"
+    ],
+    "telefone2": "(11) 2924-0600",
+    "telefonesExtras": [
+      "(11) 2924-0600"
+    ],
+    "emails": [
+      "gerencia@tocadosbrindes.com.br",
+      "vendas2@tocadosbrindes.com.br",
+      "fabio@tocadosbrindes.com.br",
+      "vendas4@tocadosbrindes.com.br"
+    ],
+    "email2": "vendas2@tocadosbrindes.com.br",
+    "emailsExtras": [
+      "vendas2@tocadosbrindes.com.br",
+      "fabio@tocadosbrindes.com.br",
+      "vendas4@tocadosbrindes.com.br"
+    ],
+    "cluster": "Fiel",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 9850,
@@ -65,7 +122,27 @@
     "cnpj": "72.995.145/0001-80",
     "telefone": "(19) 3245-1615",
     "celular": "(19) 99342-1426",
-    "email": "compras@imprimus.com.br"
+    "email": "compras@imprimus.com.br",
+    "telefones": [
+      "(19) 3245-1615",
+      "(19) 99342-1426",
+      "(19) 3267-7041"
+    ],
+    "telefone2": "(19) 3267-7041",
+    "telefonesExtras": [
+      "(19) 3267-7041"
+    ],
+    "emails": [
+      "compras@imprimus.com.br",
+      "contato@imprimus.com.br"
+    ],
+    "email2": "contato@imprimus.com.br",
+    "emailsExtras": [
+      "contato@imprimus.com.br"
+    ],
+    "cluster": "Fiel",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 5171,
@@ -82,7 +159,29 @@
     "cnpj": "12.430.857/0001-20",
     "telefone": "(11) 3181-9088",
     "celular": "(11) 95597-0382",
-    "email": "monica@crazyideas.com.br"
+    "email": "monica@crazyideas.com.br",
+    "telefones": [
+      "(11) 3181-9088",
+      "(11) 95597-0382",
+      "(11) 3044-5306"
+    ],
+    "telefone2": "(11) 3044-5306",
+    "telefonesExtras": [
+      "(11) 3044-5306"
+    ],
+    "emails": [
+      "monica@crazyideas.com.br",
+      "monica@ci3.com.br",
+      "contato@crazyideas.com.br"
+    ],
+    "email2": "monica@ci3.com.br",
+    "emailsExtras": [
+      "monica@ci3.com.br",
+      "contato@crazyideas.com.br"
+    ],
+    "cluster": "Fiel",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 14186,
@@ -99,7 +198,20 @@
     "cnpj": "51.733.778/0001-40",
     "telefone": "(19) 4042-0707",
     "celular": "(19) 4042-0707",
-    "email": "adm@zenbrindes.com.br"
+    "email": "adm@zenbrindes.com.br",
+    "telefones": [
+      "(19) 4042-0707"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "adm@zenbrindes.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Fiel",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 13185,
@@ -116,7 +228,23 @@
     "cnpj": "48.637.880/0001-38",
     "telefone": "(17) 3342-1747",
     "celular": "(17) 3342-1747",
-    "email": "nfe@multifaz.com.br"
+    "email": "nfe@multifaz.com.br",
+    "telefones": [
+      "(17) 3342-1747"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "nfe@multifaz.com.br",
+      "adm.bebedouro@multifaz.com.br"
+    ],
+    "email2": "adm.bebedouro@multifaz.com.br",
+    "emailsExtras": [
+      "adm.bebedouro@multifaz.com.br"
+    ],
+    "cluster": "Fiel",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 9519,
@@ -133,7 +261,24 @@
     "cnpj": "11.728.594/0001-78",
     "telefone": "(19) 3468-4006",
     "celular": "(19) 98214-3233",
-    "email": "compras@grupoastor.com.br"
+    "email": "compras@grupoastor.com.br",
+    "telefones": [
+      "(19) 3468-4006",
+      "(19) 98214-3233"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "compras@grupoastor.com.br",
+      "pedro@astorbrindes.com.br"
+    ],
+    "email2": "pedro@astorbrindes.com.br",
+    "emailsExtras": [
+      "pedro@astorbrindes.com.br"
+    ],
+    "cluster": "Fiel",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 34228,
@@ -150,7 +295,20 @@
     "cnpj": "34.333.303/0001-48",
     "telefone": "(15) 99137-8158",
     "celular": "(15) 99137-8158",
-    "email": "bia.arts.lembrancinha@gmail.com"
+    "email": "bia.arts.lembrancinha@gmail.com",
+    "telefones": [
+      "(15) 99137-8158"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "bia.arts.lembrancinha@gmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Fiel",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 11406,
@@ -167,7 +325,20 @@
     "cnpj": "04.877.356/0001-69",
     "telefone": "(16) 3626-1838",
     "celular": "(16) 3626-1838",
-    "email": "eliana@netobrindes.com.br"
+    "email": "eliana@netobrindes.com.br",
+    "telefones": [
+      "(16) 3626-1838"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "eliana@netobrindes.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Fiel",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 9725,
@@ -184,7 +355,29 @@
     "cnpj": "18.206.727/0001-95",
     "telefone": "(16) 3289-9132",
     "celular": "(16) 99226-0132",
-    "email": "marianepereira@smarthie.com.br"
+    "email": "marianepereira@smarthie.com.br",
+    "telefones": [
+      "(16) 3289-9132",
+      "(16) 99226-0132",
+      "(16) 3329-9132"
+    ],
+    "telefone2": "(16) 3329-9132",
+    "telefonesExtras": [
+      "(16) 3329-9132"
+    ],
+    "emails": [
+      "marianepereira@smarthie.com.br",
+      "comercial@fabiosbrindes.com.br",
+      "administrativo@fabiosbrindes.com.br"
+    ],
+    "email2": "comercial@fabiosbrindes.com.br",
+    "emailsExtras": [
+      "comercial@fabiosbrindes.com.br",
+      "administrativo@fabiosbrindes.com.br"
+    ],
+    "cluster": "Fiel",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 9517,
@@ -201,7 +394,21 @@
     "cnpj": "22.558.094/0001-51",
     "telefone": "(16) 3916-1323",
     "celular": "(16) 99625-2427",
-    "email": "ricardo@boxbrindes.com.br"
+    "email": "ricardo@boxbrindes.com.br",
+    "telefones": [
+      "(16) 3916-1323",
+      "(16) 99625-2427"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "ricardo@boxbrindes.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Recorrente",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 12873,
@@ -218,7 +425,28 @@
     "cnpj": "03.811.335/0002-69",
     "telefone": "(11) 98581-3176",
     "celular": "(11) 98581-3176",
-    "email": "mariana@brindesmelhorpreco.com.br"
+    "email": "mariana@brindesmelhorpreco.com.br",
+    "telefones": [
+      "(11) 98581-3176",
+      "(11) 97787-1760",
+      "(11) 5542-5757"
+    ],
+    "telefone2": "(11) 97787-1760",
+    "telefonesExtras": [
+      "(11) 97787-1760",
+      "(11) 5542-5757"
+    ],
+    "emails": [
+      "mariana@brindesmelhorpreco.com.br",
+      "comercial10@brindesmelhorpreco.com.br"
+    ],
+    "email2": "comercial10@brindesmelhorpreco.com.br",
+    "emailsExtras": [
+      "comercial10@brindesmelhorpreco.com.br"
+    ],
+    "cluster": "Fiel",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 9564,
@@ -235,7 +463,24 @@
     "cnpj": "15.246.690/0001-30",
     "telefone": "(12) 3204-7757",
     "celular": "(12) 98855-8800",
-    "email": "anysolution@anysolution.com.br"
+    "email": "anysolution@anysolution.com.br",
+    "telefones": [
+      "(12) 3204-7757",
+      "(12) 98855-8800"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "anysolution@anysolution.com.br",
+      "marcos@anysolution.com.br"
+    ],
+    "email2": "marcos@anysolution.com.br",
+    "emailsExtras": [
+      "marcos@anysolution.com.br"
+    ],
+    "cluster": "Fiel",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 14128,
@@ -252,7 +497,20 @@
     "cnpj": "51.762.951/0001-39",
     "telefone": "(12) 97406-9146",
     "celular": "(12) 97406-9146",
-    "email": "stnsports@hotmail.com"
+    "email": "stnsports@hotmail.com",
+    "telefones": [
+      "(12) 97406-9146"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "stnsports@hotmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Fiel",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 11767,
@@ -269,7 +527,21 @@
     "cnpj": "43.138.771/0001-52",
     "telefone": "(11) 3181-8622",
     "celular": "(15) 99128-7142",
-    "email": "financeiro@criativebrindes.com.br"
+    "email": "financeiro@criativebrindes.com.br",
+    "telefones": [
+      "(11) 3181-8622",
+      "(15) 99128-7142"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "financeiro@criativebrindes.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Fiel",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 43491,
@@ -286,7 +558,20 @@
     "cnpj": "57.597.264/0001-91",
     "telefone": "(15) 99744-3694",
     "celular": "(15) 99744-3694",
-    "email": "arianne.flashpersonaliza@gmail.com"
+    "email": "arianne.flashpersonaliza@gmail.com",
+    "telefones": [
+      "(15) 99744-3694"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "arianne.flashpersonaliza@gmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Fiel",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 10325,
@@ -303,7 +588,21 @@
     "cnpj": "21.559.378/0001-08",
     "telefone": "(11) 99596-1831",
     "celular": "4646-4654",
-    "email": "flex.negocios.licitacoes@gmail.com"
+    "email": "flex.negocios.licitacoes@gmail.com",
+    "telefones": [
+      "(11) 99596-1831",
+      "4646-4654"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "flex.negocios.licitacoes@gmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Recorrente",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 5126,
@@ -320,7 +619,24 @@
     "cnpj": "08.913.661/0001-10",
     "telefone": "(16) 2102-0800",
     "celular": "(16) 3618-3607",
-    "email": "bruno@marzolabrindes.com.br"
+    "email": "bruno@marzolabrindes.com.br",
+    "telefones": [
+      "(16) 2102-0800",
+      "(16) 3618-3607"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "bruno@marzolabrindes.com.br",
+      "contato@marzolabrindes.com.br"
+    ],
+    "email2": "contato@marzolabrindes.com.br",
+    "emailsExtras": [
+      "contato@marzolabrindes.com.br"
+    ],
+    "cluster": "Fiel",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 13359,
@@ -337,7 +653,23 @@
     "cnpj": "48.783.884/0001-24",
     "telefone": "(43) 98817-0079",
     "celular": "(43) 98817-0079",
-    "email": "gestao@energybrands.com.br"
+    "email": "gestao@energybrands.com.br",
+    "telefones": [
+      "(43) 98817-0079"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "gestao@energybrands.com.br",
+      "contato@energybrands.com.br"
+    ],
+    "email2": "contato@energybrands.com.br",
+    "emailsExtras": [
+      "contato@energybrands.com.br"
+    ],
+    "cluster": "Fiel",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 11634,
@@ -354,7 +686,21 @@
     "cnpj": "10.713.058/0001-36",
     "telefone": "(19) 3847-1186",
     "celular": "(19) 99705-0840",
-    "email": "eg@towerpp.com.br"
+    "email": "eg@towerpp.com.br",
+    "telefones": [
+      "(19) 3847-1186",
+      "(19) 99705-0840"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "eg@towerpp.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Fiel",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-09-24"
   },
   {
     "codigo": 9263,
@@ -371,7 +717,24 @@
     "cnpj": "08.038.731/0001-38",
     "telefone": "(16) 3639-7966",
     "celular": "(16) 98182-7008",
-    "email": "filmplastembalagens@gmail.com"
+    "email": "filmplastembalagens@gmail.com",
+    "telefones": [
+      "(16) 3639-7966",
+      "(16) 98182-7008"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "filmplastembalagens@gmail.com",
+      "contato@photoeimage.com.br"
+    ],
+    "email2": "contato@photoeimage.com.br",
+    "emailsExtras": [
+      "contato@photoeimage.com.br"
+    ],
+    "cluster": "Fiel",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-09-29"
   },
   {
     "codigo": 11264,
@@ -388,7 +751,20 @@
     "cnpj": "38.263.196/0001-80",
     "telefone": "98831-6841",
     "celular": "98831-6841",
-    "email": "luciano@lbbrindes.com.br"
+    "email": "luciano@lbbrindes.com.br",
+    "telefones": [
+      "98831-6841"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "luciano@lbbrindes.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Regular",
+    "ativoSite": "",
+    "ultimoAcessoSite": ""
   },
   {
     "codigo": 12253,
@@ -405,7 +781,20 @@
     "cnpj": "46.450.415/0001-68",
     "telefone": "(11) 97214-0954",
     "celular": "(11) 97214-0954",
-    "email": "vendas@bpmbrindes.com.br"
+    "email": "vendas@bpmbrindes.com.br",
+    "telefones": [
+      "(11) 97214-0954"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "vendas@bpmbrindes.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Fiel",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 31843,
@@ -422,7 +811,23 @@
     "cnpj": "26.760.922/0001-90",
     "telefone": "(11) 98573-5531",
     "celular": "(11) 98573-5531",
-    "email": "fsantosa@engrenagem.com"
+    "email": "fsantosa@engrenagem.com",
+    "telefones": [
+      "(11) 98573-5531"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "fsantosa@engrenagem.com",
+      "fsantosa@engrenagem.co"
+    ],
+    "email2": "fsantosa@engrenagem.co",
+    "emailsExtras": [
+      "fsantosa@engrenagem.co"
+    ],
+    "cluster": "Fiel",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 108456,
@@ -439,7 +844,20 @@
     "cnpj": "35.054.872/0001-17",
     "telefone": "(11) 91000-5625",
     "celular": "(11) 91000-5625",
-    "email": "vendas@abelhinhaslembrancinhas.com.br"
+    "email": "vendas@abelhinhaslembrancinhas.com.br",
+    "telefones": [
+      "(11) 91000-5625"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "vendas@abelhinhaslembrancinhas.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Fiel",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 11531,
@@ -456,7 +874,24 @@
     "cnpj": "26.596.474/0001-31",
     "telefone": "(17) 3520-0520",
     "celular": "(17) 98816-8132",
-    "email": "gesse@novasolucaografica.com.br"
+    "email": "gesse@novasolucaografica.com.br",
+    "telefones": [
+      "(17) 3520-0520",
+      "(17) 98816-8132"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "gesse@novasolucaografica.com.br",
+      "carlos@novasoluografica.com.br"
+    ],
+    "email2": "carlos@novasoluografica.com.br",
+    "emailsExtras": [
+      "carlos@novasoluografica.com.br"
+    ],
+    "cluster": "Recorrente",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 12416,
@@ -473,7 +908,27 @@
     "cnpj": "34.736.968/0001-00",
     "telefone": "(19) 3834-4487",
     "celular": "(19) 9995-2223",
-    "email": "comercial@synergybrindes.com.br"
+    "email": "comercial@synergybrindes.com.br",
+    "telefones": [
+      "(19) 3834-4487",
+      "(19) 9995-2223",
+      "(19) 99244-3344"
+    ],
+    "telefone2": "(19) 99244-3344",
+    "telefonesExtras": [
+      "(19) 99244-3344"
+    ],
+    "emails": [
+      "comercial@synergybrindes.com.br",
+      "marketing@synergybrindes.com.br"
+    ],
+    "email2": "marketing@synergybrindes.com.br",
+    "emailsExtras": [
+      "marketing@synergybrindes.com.br"
+    ],
+    "cluster": "Fiel",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 9501,
@@ -490,7 +945,24 @@
     "cnpj": "10.920.561/0001-62",
     "telefone": "(19) 3826-2333",
     "celular": "(11) 97100-8500",
-    "email": "jorge.mattos@multistorebrindes.com.br"
+    "email": "jorge.mattos@multistorebrindes.com.br",
+    "telefones": [
+      "(19) 3826-2333",
+      "(11) 97100-8500",
+      "(19) 3030-0791"
+    ],
+    "telefone2": "(19) 3030-0791",
+    "telefonesExtras": [
+      "(19) 3030-0791"
+    ],
+    "emails": [
+      "jorge.mattos@multistorebrindes.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Recorrente",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-09-24"
   },
   {
     "codigo": 13044,
@@ -524,7 +996,20 @@
     "cnpj": "33.889.556/0001-30",
     "telefone": "(11) 98865-4491",
     "celular": "(11) 98865-4491",
-    "email": "giovana.maciel@marcaprimebrindes.com.br"
+    "email": "giovana.maciel@marcaprimebrindes.com.br",
+    "telefones": [
+      "(11) 98865-4491"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "giovana.maciel@marcaprimebrindes.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Recorrente",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 10640,
@@ -541,7 +1026,21 @@
     "cnpj": "15.670.551/0001-30",
     "telefone": "(11) 3479-7227",
     "celular": "(11) 98463-7224",
-    "email": "cristiane@ewbrindes.com.br"
+    "email": "cristiane@ewbrindes.com.br",
+    "telefones": [
+      "(11) 3479-7227",
+      "(11) 98463-7224"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "cristiane@ewbrindes.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Fiel",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 9584,
@@ -558,7 +1057,24 @@
     "cnpj": "55.192.348/0001-10",
     "telefone": "(14) 3732-3757",
     "celular": "(14) 99790-7743",
-    "email": "vermontbrindes@vermontbrindes.com.br"
+    "email": "vermontbrindes@vermontbrindes.com.br",
+    "telefones": [
+      "(14) 3732-3757",
+      "(14) 99790-7743",
+      "(14) 99790-0581"
+    ],
+    "telefone2": "(14) 99790-0581",
+    "telefonesExtras": [
+      "(14) 99790-0581"
+    ],
+    "emails": [
+      "vermontbrindes@vermontbrindes.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Recorrente",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 10374,
@@ -575,7 +1091,26 @@
     "cnpj": "11.762.102/0001-60",
     "telefone": "(11) 3439-1598",
     "celular": "-",
-    "email": "zagalo@rightnow8.com.br"
+    "email": "zagalo@rightnow8.com.br",
+    "telefones": [
+      "(11) 3439-1598",
+      "(11) 98383-3107"
+    ],
+    "telefone2": "(11) 98383-3107",
+    "telefonesExtras": [
+      "(11) 98383-3107"
+    ],
+    "emails": [
+      "zagalo@rightnow8.com.br",
+      "zagalo@rightnow8.com"
+    ],
+    "email2": "zagalo@rightnow8.com",
+    "emailsExtras": [
+      "zagalo@rightnow8.com"
+    ],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 10358,
@@ -592,7 +1127,20 @@
     "cnpj": "31.446.104/0001-58",
     "telefone": "(19) 99859-3378",
     "celular": "-",
-    "email": "rafael@pandacase.com.br"
+    "email": "rafael@pandacase.com.br",
+    "telefones": [
+      "(19) 99859-3378"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "rafael@pandacase.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Fiel",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2025-04-02"
   },
   {
     "codigo": 9160,
@@ -609,7 +1157,29 @@
     "cnpj": "57.823.056/0001-63",
     "telefone": "(19) 3112-1456",
     "celular": "(19) 99315-8303",
-    "email": "alexandra@mjpiron.com.br"
+    "email": "alexandra@mjpiron.com.br",
+    "telefones": [
+      "(19) 3112-1456",
+      "(19) 99315-8303",
+      "(19) 3112-1461"
+    ],
+    "telefone2": "(19) 3112-1461",
+    "telefonesExtras": [
+      "(19) 3112-1461"
+    ],
+    "emails": [
+      "alexandra@mjpiron.com.br",
+      "mercival@mjpiron.com.br",
+      "yuri@mjpiron.com.br"
+    ],
+    "email2": "mercival@mjpiron.com.br",
+    "emailsExtras": [
+      "mercival@mjpiron.com.br",
+      "yuri@mjpiron.com.br"
+    ],
+    "cluster": "Fiel",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 9499,
@@ -626,7 +1196,26 @@
     "cnpj": "18.111.739/0001-36",
     "telefone": "(19) 3965-5907",
     "celular": "(19) 3965-5907",
-    "email": "nfe@f5brindes.com.br"
+    "email": "nfe@f5brindes.com.br",
+    "telefones": [
+      "(19) 3965-5907",
+      "193965590719981688691"
+    ],
+    "telefone2": "193965590719981688691",
+    "telefonesExtras": [
+      "193965590719981688691"
+    ],
+    "emails": [
+      "nfe@f5brindes.com.br",
+      "compras@f5brindes.com.br"
+    ],
+    "email2": "compras@f5brindes.com.br",
+    "emailsExtras": [
+      "compras@f5brindes.com.br"
+    ],
+    "cluster": "Recorrente",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 10138,
@@ -643,7 +1232,21 @@
     "cnpj": "22.429.049/0001-05",
     "telefone": "(11) 2761-4236",
     "celular": "(11) 96661-7427",
-    "email": "atendimento@bethapromocionais.com"
+    "email": "atendimento@bethapromocionais.com",
+    "telefones": [
+      "(11) 2761-4236",
+      "(11) 96661-7427"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "atendimento@bethapromocionais.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Fiel",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 10768,
@@ -660,7 +1263,20 @@
     "cnpj": "32.896.289/0001-65",
     "telefone": "(19) 3371-3200",
     "celular": "-",
-    "email": "mimosegracas@gmail.com"
+    "email": "mimosegracas@gmail.com",
+    "telefones": [
+      "(19) 3371-3200"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "mimosegracas@gmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Fiel",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 10580,
@@ -677,7 +1293,23 @@
     "cnpj": "27.830.610/0001-79",
     "telefone": "(13) 99793-9027",
     "celular": "(13) 99793-9027",
-    "email": "atendimento@360personalizados.com.br"
+    "email": "atendimento@360personalizados.com.br",
+    "telefones": [
+      "(13) 99793-9027"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "atendimento@360personalizados.com.br",
+      "trudes.adm@hotmail.com"
+    ],
+    "email2": "trudes.adm@hotmail.com",
+    "emailsExtras": [
+      "trudes.adm@hotmail.com"
+    ],
+    "cluster": "Fiel",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 9008,
@@ -694,7 +1326,23 @@
     "cnpj": "14.369.146/0001-13",
     "telefone": "(11) 3926-1770",
     "celular": "(11) 3926-1770",
-    "email": "andre.bacarini@mondoexpress.com.br"
+    "email": "andre.bacarini@mondoexpress.com.br",
+    "telefones": [
+      "(11) 3926-1770",
+      "2771-0328"
+    ],
+    "telefone2": "2771-0328",
+    "telefonesExtras": [
+      "2771-0328"
+    ],
+    "emails": [
+      "andre.bacarini@mondoexpress.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Fiel",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 10114,
@@ -711,7 +1359,21 @@
     "cnpj": "00.349.618/0001-61",
     "telefone": "(19) 3388-6866",
     "celular": "(19) 98755-7030",
-    "email": "daniel@soferpublicidade.com.br"
+    "email": "daniel@soferpublicidade.com.br",
+    "telefones": [
+      "(19) 3388-6866",
+      "(19) 98755-7030"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "daniel@soferpublicidade.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Recorrente",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2025-11-25"
   },
   {
     "codigo": 13329,
@@ -728,7 +1390,23 @@
     "cnpj": "47.687.320/0001-25",
     "telefone": "(11) 94701-1415",
     "celular": "(11) 94701-1415",
-    "email": "caio@grupoincomunicacao.com.br"
+    "email": "caio@grupoincomunicacao.com.br",
+    "telefones": [
+      "(11) 94701-1415",
+      "(11) 2439-3988"
+    ],
+    "telefone2": "(11) 2439-3988",
+    "telefonesExtras": [
+      "(11) 2439-3988"
+    ],
+    "emails": [
+      "caio@grupoincomunicacao.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-09-30"
   },
   {
     "codigo": 9179,
@@ -745,7 +1423,21 @@
     "cnpj": "13.767.427/0001-61",
     "telefone": "(19) 3229-6438",
     "celular": "(19) 99721-0788",
-    "email": "amauri.oli@gmail.com"
+    "email": "amauri.oli@gmail.com",
+    "telefones": [
+      "(19) 3229-6438",
+      "(19) 99721-0788"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "amauri.oli@gmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Recorrente",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-08-25"
   },
   {
     "codigo": 11857,
@@ -760,9 +1452,25 @@
     "ultimaVenda": "29/07/2026",
     "dataCadastro": "30/11/2021",
     "cnpj": "42.698.393/0001-07",
-    "telefone": "-",
+    "telefone": "(11) 3104-4129",
     "celular": "(11) 3104-4129",
-    "email": "anderson@operacaoasap.com.br"
+    "email": "anderson@operacaoasap.com.br",
+    "telefones": [
+      "(11) 3104-4129"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "anderson@operacaoasap.com.br",
+      "financeiro@operacaoasap.com.br"
+    ],
+    "email2": "financeiro@operacaoasap.com.br",
+    "emailsExtras": [
+      "financeiro@operacaoasap.com.br"
+    ],
+    "cluster": "Recorrente",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 11295,
@@ -779,7 +1487,27 @@
     "cnpj": "38.394.779/0001-40",
     "telefone": "4113-4435",
     "celular": "94731-8377",
-    "email": "contato@mgifts.com.br"
+    "email": "contato@mgifts.com.br",
+    "telefones": [
+      "4113-4435",
+      "94731-8377",
+      "96420-6322"
+    ],
+    "telefone2": "96420-6322",
+    "telefonesExtras": [
+      "96420-6322"
+    ],
+    "emails": [
+      "contato@mgifts.com.br",
+      "qmaispromo@gmail.com"
+    ],
+    "email2": "qmaispromo@gmail.com",
+    "emailsExtras": [
+      "qmaispromo@gmail.com"
+    ],
+    "cluster": "Recorrente",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-02"
   },
   {
     "codigo": 10928,
@@ -796,7 +1524,32 @@
     "cnpj": "19.821.887/0001-07",
     "telefone": "(16) 3443-9037",
     "celular": "(16) 3443-9037",
-    "email": "producoes@agavea.com.br"
+    "email": "producoes@agavea.com.br",
+    "telefones": [
+      "(16) 3443-9037",
+      "(16) 99201-5065",
+      "(19) 99759-6745"
+    ],
+    "telefone2": "(16) 99201-5065",
+    "telefonesExtras": [
+      "(16) 99201-5065",
+      "(19) 99759-6745"
+    ],
+    "emails": [
+      "producoes@agavea.com.br",
+      "eliane@agavea.com.br",
+      "financeiro@agavea.com.br",
+      "vinicius@agavea.com.br"
+    ],
+    "email2": "eliane@agavea.com.br",
+    "emailsExtras": [
+      "eliane@agavea.com.br",
+      "financeiro@agavea.com.br",
+      "vinicius@agavea.com.br"
+    ],
+    "cluster": "Recorrente",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 13435,
@@ -813,7 +1566,23 @@
     "cnpj": "32.998.995/0001-18",
     "telefone": "(11) 99167-4468",
     "celular": "(11) 99167-4468",
-    "email": "comercial@surpresatemhora.com.br"
+    "email": "comercial@surpresatemhora.com.br",
+    "telefones": [
+      "(11) 99167-4468"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "comercial@surpresatemhora.com.br",
+      "viviane@surpresatemhora.com.br"
+    ],
+    "email2": "viviane@surpresatemhora.com.br",
+    "emailsExtras": [
+      "viviane@surpresatemhora.com.br"
+    ],
+    "cluster": "Recorrente",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 9596,
@@ -830,7 +1599,21 @@
     "cnpj": "18.146.022/0001-20",
     "telefone": "(12) 4141-2190",
     "celular": "(12) 98211-1603",
-    "email": "atendimento@portelinhabrindes.com.br"
+    "email": "atendimento@portelinhabrindes.com.br",
+    "telefones": [
+      "(12) 4141-2190",
+      "(12) 98211-1603"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "atendimento@portelinhabrindes.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Fiel",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-01"
   },
   {
     "codigo": 9583,
@@ -847,7 +1630,21 @@
     "cnpj": "11.311.695/0001-49",
     "telefone": "(19) 3304-4488",
     "celular": "193304-448",
-    "email": "anabelbrindes@uol.com.br"
+    "email": "anabelbrindes@uol.com.br",
+    "telefones": [
+      "(19) 3304-4488",
+      "19330-4448"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "anabelbrindes@uol.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Recorrente",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-01"
   },
   {
     "codigo": 10160,
@@ -864,7 +1661,27 @@
     "cnpj": "29.385.863/0001-06",
     "telefone": "(16) 3116-1417",
     "celular": "(16) 99152-3368",
-    "email": "contato@criativalaser.com.br"
+    "email": "contato@criativalaser.com.br",
+    "telefones": [
+      "(16) 3116-1417",
+      "(16) 99152-3368",
+      "(16) 99112-6884"
+    ],
+    "telefone2": "(16) 99112-6884",
+    "telefonesExtras": [
+      "(16) 99112-6884"
+    ],
+    "emails": [
+      "contato@criativalaser.com.br",
+      "cristianogoy@gmail.com"
+    ],
+    "email2": "cristianogoy@gmail.com",
+    "emailsExtras": [
+      "cristianogoy@gmail.com"
+    ],
+    "cluster": "Recorrente",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 10473,
@@ -881,7 +1698,23 @@
     "cnpj": "32.610.093/0001-62",
     "telefone": "(11) 95937-9206",
     "celular": "(11) 95937-9206",
-    "email": "nancisantos@outlook.com.br"
+    "email": "nancisantos@outlook.com.br",
+    "telefones": [
+      "(11) 95937-9206"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "nancisantos@outlook.com.br",
+      "nancisantos101@gmail.com"
+    ],
+    "email2": "nancisantos101@gmail.com",
+    "emailsExtras": [
+      "nancisantos101@gmail.com"
+    ],
+    "cluster": "Fiel",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-09-29"
   },
   {
     "codigo": 9154,
@@ -898,7 +1731,26 @@
     "cnpj": "24.691.312/0001-57",
     "telefone": "(11) 2893-9569",
     "celular": "-",
-    "email": "adriana@canalpromocional.com.br"
+    "email": "adriana@canalpromocional.com.br",
+    "telefones": [
+      "(11) 2893-9569",
+      "(11) 96616-3040"
+    ],
+    "telefone2": "(11) 96616-3040",
+    "telefonesExtras": [
+      "(11) 96616-3040"
+    ],
+    "emails": [
+      "adriana@canalpromocional.com.br",
+      "vinicius@canalpromocional.com.br"
+    ],
+    "email2": "vinicius@canalpromocional.com.br",
+    "emailsExtras": [
+      "vinicius@canalpromocional.com.br"
+    ],
+    "cluster": "Recorrente",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 9712,
@@ -915,7 +1767,20 @@
     "cnpj": "13.802.156/0001-38",
     "telefone": "(14) 3879-7955",
     "celular": "-",
-    "email": "ictusbrindes@ictusbrindes.com.br"
+    "email": "ictusbrindes@ictusbrindes.com.br",
+    "telefones": [
+      "(14) 3879-7955"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "ictusbrindes@ictusbrindes.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-01"
   },
   {
     "codigo": 12328,
@@ -932,7 +1797,26 @@
     "cnpj": "44.623.807/0001-56",
     "telefone": "(11) 2994-0853",
     "celular": "(11) 2994-0853",
-    "email": "mauricio@animabrindes.com.br"
+    "email": "mauricio@animabrindes.com.br",
+    "telefones": [
+      "(11) 2994-0853",
+      "(55) 2991-9501"
+    ],
+    "telefone2": "(55) 2991-9501",
+    "telefonesExtras": [
+      "(55) 2991-9501"
+    ],
+    "emails": [
+      "mauricio@animabrindes.com.br",
+      "angelica@animabrindes.com.br"
+    ],
+    "email2": "angelica@animabrindes.com.br",
+    "emailsExtras": [
+      "angelica@animabrindes.com.br"
+    ],
+    "cluster": "Recorrente",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 24837,
@@ -949,7 +1833,20 @@
     "cnpj": "30.380.427/0001-23",
     "telefone": "(11) 9541-6517",
     "celular": "(11) 9541-6517",
-    "email": "livia.menezes@samsaraarte.com.br"
+    "email": "livia.menezes@samsaraarte.com.br",
+    "telefones": [
+      "(11) 9541-6517"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "livia.menezes@samsaraarte.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Recorrente",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 10646,
@@ -966,7 +1863,21 @@
     "cnpj": "04.895.135/0001-13",
     "telefone": "(16) 3941-4691",
     "celular": "(16) 3967-2926",
-    "email": "brindesjefran@yahoo.com.br"
+    "email": "brindesjefran@yahoo.com.br",
+    "telefones": [
+      "(16) 3941-4691",
+      "(16) 3967-2926"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "brindesjefran@yahoo.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 10594,
@@ -983,7 +1894,24 @@
     "cnpj": "33.188.456/0001-86",
     "telefone": "(11) 3774-6919",
     "celular": "(11) 98686-2306",
-    "email": "guido.piva@lagitanaeventos.com.br"
+    "email": "guido.piva@lagitanaeventos.com.br",
+    "telefones": [
+      "(11) 3774-6919",
+      "(11) 98686-2306"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "guido.piva@lagitanaeventos.com.br",
+      "juan.fernandez@lagitanaeventos.com.br"
+    ],
+    "email2": "juan.fernandez@lagitanaeventos.com.br",
+    "emailsExtras": [
+      "juan.fernandez@lagitanaeventos.com.br"
+    ],
+    "cluster": "Recorrente",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-09-30"
   },
   {
     "codigo": 11791,
@@ -1000,7 +1928,24 @@
     "cnpj": "43.723.932/0001-75",
     "telefone": "(11) 98396-1813",
     "celular": "(41) 9686-9828",
-    "email": "zingo.produtos@gmail.com"
+    "email": "zingo.produtos@gmail.com",
+    "telefones": [
+      "(11) 98396-1813",
+      "(41) 9686-9828"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "zingo.produtos@gmail.com",
+      "ecommerce.lfl@gmail.com"
+    ],
+    "email2": "ecommerce.lfl@gmail.com",
+    "emailsExtras": [
+      "ecommerce.lfl@gmail.com"
+    ],
+    "cluster": "Recorrente",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-09-15"
   },
   {
     "codigo": 12645,
@@ -1017,7 +1962,20 @@
     "cnpj": "28.162.108/0001-08",
     "telefone": "(16) 99449-2382",
     "celular": "(16) 99449-2382",
-    "email": "belladesignp@gmail.com"
+    "email": "belladesignp@gmail.com",
+    "telefones": [
+      "(16) 99449-2382"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "belladesignp@gmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Recorrente",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 12716,
@@ -1034,7 +1992,26 @@
     "cnpj": "44.996.912/0001-30",
     "telefone": "(11) 97667-8458",
     "celular": "(11) 97667-8458",
-    "email": "contato@kanguruideiascriativas.com.br"
+    "email": "contato@kanguruideiascriativas.com.br",
+    "telefones": [
+      "(11) 97667-8458",
+      "(11) 2669-9038"
+    ],
+    "telefone2": "(11) 2669-9038",
+    "telefonesExtras": [
+      "(11) 2669-9038"
+    ],
+    "emails": [
+      "contato@kanguruideiascriativas.com.br",
+      "jcgenevro@gmail.com"
+    ],
+    "email2": "jcgenevro@gmail.com",
+    "emailsExtras": [
+      "jcgenevro@gmail.com"
+    ],
+    "cluster": "Recorrente",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 13193,
@@ -1051,7 +2028,23 @@
     "cnpj": "46.472.043/0001-70",
     "telefone": "(19) 99421-7700",
     "celular": "(19) 99421-7700",
-    "email": "financeiro.hubi26@gmail.com"
+    "email": "financeiro.hubi26@gmail.com",
+    "telefones": [
+      "(19) 99421-7700"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "financeiro.hubi26@gmail.com",
+      "contato.likebrindes@gmail.com"
+    ],
+    "email2": "contato.likebrindes@gmail.com",
+    "emailsExtras": [
+      "contato.likebrindes@gmail.com"
+    ],
+    "cluster": "Recorrente",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 10453,
@@ -1068,7 +2061,20 @@
     "cnpj": "31.778.147/0001-30",
     "telefone": "(16) 99129-8721",
     "celular": "(16) 99129-8721",
-    "email": "erick10gritz@hotmail.com"
+    "email": "erick10gritz@hotmail.com",
+    "telefones": [
+      "(16) 99129-8721"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "erick10gritz@hotmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-09-29"
   },
   {
     "codigo": 11161,
@@ -1085,7 +2091,24 @@
     "cnpj": "21.806.917/0001-58",
     "telefone": "(11) 2409-9522",
     "celular": "(11) 97604-5091",
-    "email": "contato@getbrindes.com.br"
+    "email": "contato@getbrindes.com.br",
+    "telefones": [
+      "(11) 2409-9522",
+      "(11) 97604-5091",
+      "(11) 99519-4231"
+    ],
+    "telefone2": "(11) 99519-4231",
+    "telefonesExtras": [
+      "(11) 99519-4231"
+    ],
+    "emails": [
+      "contato@getbrindes.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Fiel",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 122048,
@@ -1102,7 +2125,20 @@
     "cnpj": "62.845.238/0001-75",
     "telefone": "(16) 99108-4448",
     "celular": "(16) 99108-4448",
-    "email": "atendimento@talicriativa.com"
+    "email": "atendimento@talicriativa.com",
+    "telefones": [
+      "(16) 99108-4448"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "atendimento@talicriativa.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Recorrente",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 43313,
@@ -1119,7 +2155,20 @@
     "cnpj": "57.585.840/0001-80",
     "telefone": "(21) 96482-1169",
     "celular": "(21) 96482-1169",
-    "email": "marcoanicolau@gmail.com"
+    "email": "marcoanicolau@gmail.com",
+    "telefones": [
+      "(21) 96482-1169"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "marcoanicolau@gmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Fiel",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 13298,
@@ -1136,7 +2185,20 @@
     "cnpj": "49.944.597/0001-11",
     "telefone": "(11) 98333-3300",
     "celular": "(11) 98333-3300",
-    "email": "aicesp@gmail.com"
+    "email": "aicesp@gmail.com",
+    "telefones": [
+      "(11) 98333-3300"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "aicesp@gmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 11388,
@@ -1153,7 +2215,20 @@
     "cnpj": "35.099.057/0001-74",
     "telefone": "(11) 97414-2692",
     "celular": "(11) 97414-2692",
-    "email": "jppromo@jppromo.com.br"
+    "email": "jppromo@jppromo.com.br",
+    "telefones": [
+      "(11) 97414-2692"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "jppromo@jppromo.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 105575,
@@ -1170,7 +2245,20 @@
     "cnpj": "36.474.890/0001-10",
     "telefone": "(19) 99919-3113",
     "celular": "(19) 99919-3113",
-    "email": "anarecasagrande@gmail.com"
+    "email": "anarecasagrande@gmail.com",
+    "telefones": [
+      "(19) 99919-3113"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "anarecasagrande@gmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Recorrente",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-04"
   },
   {
     "codigo": 32650,
@@ -1187,7 +2275,20 @@
     "cnpj": "31.709.939/0001-53",
     "telefone": "(19) 98377-9277",
     "celular": "(19) 98377-9277",
-    "email": "robertarighetti1@gmail.com"
+    "email": "robertarighetti1@gmail.com",
+    "telefones": [
+      "(19) 98377-9277"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "robertarighetti1@gmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Fiel",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-01"
   },
   {
     "codigo": 53469,
@@ -1204,7 +2305,20 @@
     "cnpj": "43.495.181/0001-87",
     "telefone": "(19) 99408-4589",
     "celular": "(19) 99408-4589",
-    "email": "atendimento@fabianakido.com.br"
+    "email": "atendimento@fabianakido.com.br",
+    "telefones": [
+      "(19) 99408-4589"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "atendimento@fabianakido.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Pontual",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-02"
   },
   {
     "codigo": 13423,
@@ -1221,7 +2335,20 @@
     "cnpj": "14.111.662/0001-43",
     "telefone": "(19) 98822-1560",
     "celular": "(19) 98822-1560",
-    "email": "clienteseverton@gmail.com"
+    "email": "clienteseverton@gmail.com",
+    "telefones": [
+      "(19) 98822-1560"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "clienteseverton@gmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Pontual",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-09-28"
   },
   {
     "codigo": 9643,
@@ -1238,7 +2365,31 @@
     "cnpj": "25.369.590/0001-55",
     "telefone": "(13) 3349-5580",
     "celular": "(11) 98028-8399",
-    "email": "comercial@zanonibrindes.com"
+    "email": "comercial@zanonibrindes.com",
+    "telefones": [
+      "(13) 3349-5580",
+      "(11) 98028-8399",
+      "(13) 99782-1759",
+      "(11) 94032-9266"
+    ],
+    "telefone2": "(13) 99782-1759",
+    "telefonesExtras": [
+      "(13) 99782-1759",
+      "(11) 94032-9266"
+    ],
+    "emails": [
+      "comercial@zanonibrindes.com",
+      "janaina@zanonieventos.com.br",
+      "seixas.patricia@gmail.com"
+    ],
+    "email2": "janaina@zanonieventos.com.br",
+    "emailsExtras": [
+      "janaina@zanonieventos.com.br",
+      "seixas.patricia@gmail.com"
+    ],
+    "cluster": "Fiel",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 11732,
@@ -1255,7 +2406,23 @@
     "cnpj": "10.456.392/0001-51",
     "telefone": "(11) 94765-7623",
     "celular": "(11) 94765-7623",
-    "email": "mogipromo@gmail.com"
+    "email": "mogipromo@gmail.com",
+    "telefones": [
+      "(11) 94765-7623",
+      "(11) 2378-3869"
+    ],
+    "telefone2": "(11) 2378-3869",
+    "telefonesExtras": [
+      "(11) 2378-3869"
+    ],
+    "emails": [
+      "mogipromo@gmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Recorrente",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-09-23"
   },
   {
     "codigo": 14256,
@@ -1272,7 +2439,20 @@
     "cnpj": "09.206.524/0001-08",
     "telefone": "(11) 4828-5199",
     "celular": "(11) 4828-5199",
-    "email": "xeroxpapagaio@gmail.com"
+    "email": "xeroxpapagaio@gmail.com",
+    "telefones": [
+      "(11) 4828-5199"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "xeroxpapagaio@gmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Recorrente",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 102313,
@@ -1289,7 +2469,20 @@
     "cnpj": "52.848.338/0001-00",
     "telefone": "(17) 98162-8747",
     "celular": "(17) 98162-8747",
-    "email": "contatogrp@gmail.com"
+    "email": "contatogrp@gmail.com",
+    "telefones": [
+      "(17) 98162-8747"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "contatogrp@gmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Fiel",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 35011,
@@ -1306,7 +2499,21 @@
     "cnpj": "54.120.216/0001-10",
     "telefone": "(11) 3798-1788",
     "celular": "(11) 99291-4618",
-    "email": "financeiro@mamori.com.br"
+    "email": "financeiro@mamori.com.br",
+    "telefones": [
+      "(11) 3798-1788",
+      "(11) 99291-4618"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "financeiro@mamori.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Fiel",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 11059,
@@ -1323,7 +2530,24 @@
     "cnpj": "50.724.624/0001-20",
     "telefone": "(16) 3237-9000",
     "celular": "(16) 99601-3486",
-    "email": "angelica@fage.com.br"
+    "email": "angelica@fage.com.br",
+    "telefones": [
+      "(16) 3237-9000",
+      "(16) 99601-3486"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "angelica@fage.com.br",
+      "junior@fage.com.br"
+    ],
+    "email2": "junior@fage.com.br",
+    "emailsExtras": [
+      "junior@fage.com.br"
+    ],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-09-29"
   },
   {
     "codigo": 102459,
@@ -1340,7 +2564,20 @@
     "cnpj": "13.953.162/0001-96",
     "telefone": "(15) 99155-5353",
     "celular": "(15) 99155-5353",
-    "email": "tiagofontolan@gmail.com"
+    "email": "tiagofontolan@gmail.com",
+    "telefones": [
+      "(15) 99155-5353"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "tiagofontolan@gmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Recorrente",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-09-21"
   },
   {
     "codigo": 10560,
@@ -1357,7 +2594,23 @@
     "cnpj": "09.075.704/0001-06",
     "telefone": "(11) 2762-4664",
     "celular": "(11) 2762-4664",
-    "email": "contato@g10.art.br"
+    "email": "contato@g10.art.br",
+    "telefones": [
+      "(11) 2762-4664",
+      "(11) 2986-9535"
+    ],
+    "telefone2": "(11) 2986-9535",
+    "telefonesExtras": [
+      "(11) 2986-9535"
+    ],
+    "emails": [
+      "contato@g10.art.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Recorrente",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 12862,
@@ -1374,7 +2627,23 @@
     "cnpj": "30.638.593/0001-87",
     "telefone": "(16) 3967-0720",
     "celular": "(16) 3967-0720",
-    "email": "slimpersonalizadosnotas@gmail.com"
+    "email": "slimpersonalizadosnotas@gmail.com",
+    "telefones": [
+      "(16) 3967-0720"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "slimpersonalizadosnotas@gmail.com",
+      "slimprodutospersonalizados@gmail.com"
+    ],
+    "email2": "slimprodutospersonalizados@gmail.com",
+    "emailsExtras": [
+      "slimprodutospersonalizados@gmail.com"
+    ],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 11402,
@@ -1391,7 +2660,28 @@
     "cnpj": "27.456.277/0001-80",
     "telefone": "(19) 3318-4555",
     "celular": "(19) 3318-4555",
-    "email": "atendimento@tudoviraestampa.com.br"
+    "email": "atendimento@tudoviraestampa.com.br",
+    "telefones": [
+      "(19) 3318-4555",
+      "(19) 99901-0101"
+    ],
+    "telefone2": "(19) 99901-0101",
+    "telefonesExtras": [
+      "(19) 99901-0101"
+    ],
+    "emails": [
+      "atendimento@tudoviraestampa.com.br",
+      "anacoutinho@tudoviraestampa.com.br",
+      "anacoutinho@gmail.com"
+    ],
+    "email2": "anacoutinho@tudoviraestampa.com.br",
+    "emailsExtras": [
+      "anacoutinho@tudoviraestampa.com.br",
+      "anacoutinho@gmail.com"
+    ],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-09-30"
   },
   {
     "codigo": 13509,
@@ -1408,7 +2698,20 @@
     "cnpj": "28.592.648/0001-13",
     "telefone": "(11) 99830-8360",
     "celular": "99830-8360",
-    "email": "adriana@arborecomunicacao.com.br"
+    "email": "adriana@arborecomunicacao.com.br",
+    "telefones": [
+      "(11) 99830-8360"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "adriana@arborecomunicacao.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 11811,
@@ -1425,7 +2728,26 @@
     "cnpj": "28.222.260/0001-20",
     "telefone": "(16) 3693-1364",
     "celular": "(16) 3693-1364",
-    "email": "franbolsas@gmail.com"
+    "email": "franbolsas@gmail.com",
+    "telefones": [
+      "(16) 3693-1364",
+      "(16) 99325-9556"
+    ],
+    "telefone2": "(16) 99325-9556",
+    "telefonesExtras": [
+      "(16) 99325-9556"
+    ],
+    "emails": [
+      "franbolsas@gmail.com",
+      "fran-bolsas@hotmail.com"
+    ],
+    "email2": "fran-bolsas@hotmail.com",
+    "emailsExtras": [
+      "fran-bolsas@hotmail.com"
+    ],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 13649,
@@ -1442,7 +2764,20 @@
     "cnpj": "31.293.373/0001-21",
     "telefone": "(16) 99375-2622",
     "celular": "(16) 99375-2622",
-    "email": "swagdecor.01@gmail.com"
+    "email": "swagdecor.01@gmail.com",
+    "telefones": [
+      "(16) 99375-2622"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "swagdecor.01@gmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Recorrente",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-04"
   },
   {
     "codigo": 158331,
@@ -1459,7 +2794,23 @@
     "cnpj": "64.735.579/0001-13",
     "telefone": "(11) 94199-8776",
     "celular": "(11) 94199-8776",
-    "email": "primeup.brindes@gmail.com"
+    "email": "primeup.brindes@gmail.com",
+    "telefones": [
+      "(11) 94199-8776",
+      "(11) 99661-5983"
+    ],
+    "telefone2": "(11) 99661-5983",
+    "telefonesExtras": [
+      "(11) 99661-5983"
+    ],
+    "emails": [
+      "primeup.brindes@gmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 71234,
@@ -1476,7 +2827,23 @@
     "cnpj": "57.278.474/0001-17",
     "telefone": "3418-4113",
     "celular": "3418-4113",
-    "email": "marketing@tritengo.com.br"
+    "email": "marketing@tritengo.com.br",
+    "telefones": [
+      "3418-4113"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "marketing@tritengo.com.br",
+      "pcp@tritengo.com.br"
+    ],
+    "email2": "pcp@tritengo.com.br",
+    "emailsExtras": [
+      "pcp@tritengo.com.br"
+    ],
+    "cluster": "Fiel",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 10548,
@@ -1493,7 +2860,23 @@
     "cnpj": "64.747.058/0001-86",
     "telefone": "(19) 3554-1733",
     "celular": "(19) 3554-1733",
-    "email": "comercial@cmpropaganda.com"
+    "email": "comercial@cmpropaganda.com",
+    "telefones": [
+      "(19) 3554-1733",
+      "(19) 98830-1528"
+    ],
+    "telefone2": "(19) 98830-1528",
+    "telefonesExtras": [
+      "(19) 98830-1528"
+    ],
+    "emails": [
+      "comercial@cmpropaganda.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-02"
   },
   {
     "codigo": 12138,
@@ -1510,7 +2893,20 @@
     "cnpj": "18.195.777/0001-14",
     "telefone": "(18) 99749-8702",
     "celular": "(18) 99749-8702",
-    "email": "lelografica@hotmail.com"
+    "email": "lelografica@hotmail.com",
+    "telefones": [
+      "(18) 99749-8702"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "lelografica@hotmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Recorrente",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-01"
   },
   {
     "codigo": 60305,
@@ -1527,7 +2923,20 @@
     "cnpj": "27.993.011/0001-76",
     "telefone": "(11) 94789-6392",
     "celular": "(11) 94789-6392",
-    "email": "luis@canetaspersonalizadas.com.br"
+    "email": "luis@canetaspersonalizadas.com.br",
+    "telefones": [
+      "(11) 94789-6392"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "luis@canetaspersonalizadas.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 12573,
@@ -1544,7 +2953,20 @@
     "cnpj": "34.478.266/0001-66",
     "telefone": "(11) 98558-4682",
     "celular": "(11) 98558-4682",
-    "email": "contato@4estacoesbrindes.com.br"
+    "email": "contato@4estacoesbrindes.com.br",
+    "telefones": [
+      "(11) 98558-4682"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "contato@4estacoesbrindes.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Recorrente",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-04"
   },
   {
     "codigo": 141202,
@@ -1561,7 +2983,20 @@
     "cnpj": "63.781.052/0001-62",
     "telefone": "(11) 98208-4168",
     "celular": "(11) 98208-4168",
-    "email": "vivitoni@agilittebrindes.com.br"
+    "email": "vivitoni@agilittebrindes.com.br",
+    "telefones": [
+      "(11) 98208-4168"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "vivitoni@agilittebrindes.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Recorrente",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-02"
   },
   {
     "codigo": 9313,
@@ -1578,7 +3013,21 @@
     "cnpj": "19.209.120/0001-21",
     "telefone": "(11) 2628-7328",
     "celular": "(11) 94768-7955",
-    "email": "comercial@affusao.com.br"
+    "email": "comercial@affusao.com.br",
+    "telefones": [
+      "(11) 2628-7328",
+      "(11) 94768-7955"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "comercial@affusao.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Recorrente",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-01"
   },
   {
     "codigo": 10894,
@@ -1595,7 +3044,21 @@
     "cnpj": "34.866.296/0001-40",
     "telefone": "(11) 2991-3256",
     "celular": "(11) 98135-9118",
-    "email": "ilumini@ilumini.com.br"
+    "email": "ilumini@ilumini.com.br",
+    "telefones": [
+      "(11) 2991-3256",
+      "(11) 98135-9118"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "ilumini@ilumini.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-09-25"
   },
   {
     "codigo": 10457,
@@ -1612,7 +3075,24 @@
     "cnpj": "21.149.176/0001-80",
     "telefone": "(19) 98106-7686",
     "celular": "(19) 98184-8128",
-    "email": "contato@zattobrazil.com.br"
+    "email": "contato@zattobrazil.com.br",
+    "telefones": [
+      "(19) 98106-7686",
+      "(19) 98184-8128",
+      "(19) 3414-3558"
+    ],
+    "telefone2": "(19) 3414-3558",
+    "telefonesExtras": [
+      "(19) 3414-3558"
+    ],
+    "emails": [
+      "contato@zattobrazil.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Recorrente",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-09-30"
   },
   {
     "codigo": 9582,
@@ -1629,7 +3109,21 @@
     "cnpj": "22.372.599/0001-27",
     "telefone": "(19) 3387-4507",
     "celular": "(19) 99111-5104",
-    "email": "cirpellbrindes@cirpellbrindes.com.br"
+    "email": "cirpellbrindes@cirpellbrindes.com.br",
+    "telefones": [
+      "(19) 3387-4507",
+      "(19) 99111-5104"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "cirpellbrindes@cirpellbrindes.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-04-13"
   },
   {
     "codigo": 13042,
@@ -1646,7 +3140,21 @@
     "cnpj": "41.499.960/0001-25",
     "telefone": "(13) 98131-7685",
     "celular": "(13) 3223-1771",
-    "email": "pepebrindes@gmail.com"
+    "email": "pepebrindes@gmail.com",
+    "telefones": [
+      "(13) 98131-7685",
+      "(13) 3223-1771"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "pepebrindes@gmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Pontual",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-06-30"
   },
   {
     "codigo": 94750,
@@ -1663,7 +3171,20 @@
     "cnpj": "10.190.279/0001-77",
     "telefone": "(12) 3322-2608",
     "celular": "(12) 3322-2608",
-    "email": "financeiro@promastersjc.com"
+    "email": "financeiro@promastersjc.com",
+    "telefones": [
+      "(12) 3322-2608"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "financeiro@promastersjc.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Pontual",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-09-30"
   },
   {
     "codigo": 19979,
@@ -1680,7 +3201,20 @@
     "cnpj": "21.502.724/0001-03",
     "telefone": "(16) 3253-6665",
     "celular": "(16) 3253-6665",
-    "email": "contato.hglaser@gmail.com"
+    "email": "contato.hglaser@gmail.com",
+    "telefones": [
+      "(16) 3253-6665"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "contato.hglaser@gmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Pontual",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-08-02"
   },
   {
     "codigo": 11609,
@@ -1697,7 +3231,23 @@
     "cnpj": "07.595.661/0001-56",
     "telefone": "(11) 99830-6275",
     "celular": "(11) 99830-6275",
-    "email": "atendimento@chsprodutora.com.br"
+    "email": "atendimento@chsprodutora.com.br",
+    "telefones": [
+      "(11) 99830-6275",
+      "(11) 3479-1330"
+    ],
+    "telefone2": "(11) 3479-1330",
+    "telefonesExtras": [
+      "(11) 3479-1330"
+    ],
+    "emails": [
+      "atendimento@chsprodutora.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-02"
   },
   {
     "codigo": 9743,
@@ -1714,7 +3264,21 @@
     "cnpj": "13.575.684/0001-00",
     "telefone": "(11) 5816-4258",
     "celular": "(11) 98475-5887",
-    "email": "railda@frbrindesepromocoes.com.br"
+    "email": "railda@frbrindesepromocoes.com.br",
+    "telefones": [
+      "(11) 5816-4258",
+      "(11) 98475-5887"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "railda@frbrindesepromocoes.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Recorrente",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 10546,
@@ -1731,7 +3295,21 @@
     "cnpj": "32.110.977/0001-58",
     "telefone": "(11) 3864-4639",
     "celular": "(11) 98110-9699",
-    "email": "newgifts.contato@gmail.com"
+    "email": "newgifts.contato@gmail.com",
+    "telefones": [
+      "(11) 3864-4639",
+      "(11) 98110-9699"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "newgifts.contato@gmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-08-07"
   },
   {
     "codigo": 127250,
@@ -1748,7 +3326,20 @@
     "cnpj": "63.109.087/0001-50",
     "telefone": "(11) 97049-4083",
     "celular": "(11) 97049-4083",
-    "email": "flpcxbox@gmail.com"
+    "email": "flpcxbox@gmail.com",
+    "telefones": [
+      "(11) 97049-4083"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "flpcxbox@gmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Recorrente",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-01"
   },
   {
     "codigo": 103096,
@@ -1765,7 +3356,20 @@
     "cnpj": "41.365.095/0001-24",
     "telefone": "(12) 98133-8500",
     "celular": "(12) 98133-8500",
-    "email": "luanrafael.17@outlook.com"
+    "email": "luanrafael.17@outlook.com",
+    "telefones": [
+      "(12) 98133-8500"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "luanrafael.17@outlook.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Recorrente",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-04"
   },
   {
     "codigo": 13798,
@@ -1782,7 +3386,20 @@
     "cnpj": "42.476.298/0001-50",
     "telefone": "(19) 93935-8877",
     "celular": "(19) 93935-8877",
-    "email": "comercial@bslaser.com.br"
+    "email": "comercial@bslaser.com.br",
+    "telefones": [
+      "(19) 93935-8877"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "comercial@bslaser.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Pontual",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-05-11"
   },
   {
     "codigo": 12398,
@@ -1799,7 +3416,27 @@
     "cnpj": "47.624.343/0001-90",
     "telefone": "(19) 3738-0028",
     "celular": "(19) 98810-9511",
-    "email": "vendas.sbpresentes@gmail.com"
+    "email": "vendas.sbpresentes@gmail.com",
+    "telefones": [
+      "(19) 3738-0028",
+      "(19) 98810-9511",
+      "(19) 97152-1861"
+    ],
+    "telefone2": "(19) 97152-1861",
+    "telefonesExtras": [
+      "(19) 97152-1861"
+    ],
+    "emails": [
+      "vendas.sbpresentes@gmail.com",
+      "comercial@sbbrindes.com.br"
+    ],
+    "email2": "comercial@sbbrindes.com.br",
+    "emailsExtras": [
+      "comercial@sbbrindes.com.br"
+    ],
+    "cluster": "Pontual",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-08-26"
   },
   {
     "codigo": 12203,
@@ -1816,7 +3453,20 @@
     "cnpj": "39.870.697/0001-97",
     "telefone": "(15) 98152-1672",
     "celular": "-",
-    "email": "serbrindes@serbrindeseeventos.com"
+    "email": "serbrindes@serbrindeseeventos.com",
+    "telefones": [
+      "(15) 98152-1672"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "serbrindes@serbrindeseeventos.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Recorrente",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-09-23"
   },
   {
     "codigo": 14282,
@@ -1833,7 +3483,20 @@
     "cnpj": "39.293.867/0001-18",
     "telefone": "(19) 98930-4116",
     "celular": "(19) 98930-4116",
-    "email": "vendas@brindesconecta.com.br"
+    "email": "vendas@brindesconecta.com.br",
+    "telefones": [
+      "(19) 98930-4116"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "vendas@brindesconecta.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-09-30"
   },
   {
     "codigo": 12378,
@@ -1850,7 +3513,20 @@
     "cnpj": "37.757.798/0001-20",
     "telefone": "(11) 99620-3653",
     "celular": "-",
-    "email": "essepersonalizados@gmail.com"
+    "email": "essepersonalizados@gmail.com",
+    "telefones": [
+      "(11) 99620-3653"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "essepersonalizados@gmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-09-30"
   },
   {
     "codigo": 14416,
@@ -1867,7 +3543,20 @@
     "cnpj": "42.822.499/0001-62",
     "telefone": "(11) 3136-0597",
     "celular": "(11) 3136-0597",
-    "email": "contato@elephantsgrafica.com.br"
+    "email": "contato@elephantsgrafica.com.br",
+    "telefones": [
+      "(11) 3136-0597"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "contato@elephantsgrafica.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Recorrente",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 13102,
@@ -1884,7 +3573,20 @@
     "cnpj": "40.758.964/0001-18",
     "telefone": "(11) 94553-8727",
     "celular": "(11) 94553-8727",
-    "email": "hoppibrindes@gmail.com"
+    "email": "hoppibrindes@gmail.com",
+    "telefones": [
+      "(11) 94553-8727"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "hoppibrindes@gmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-09-30"
   },
   {
     "codigo": 10607,
@@ -1901,7 +3603,20 @@
     "cnpj": "13.795.429/0001-64",
     "telefone": "(13) 3029-9328",
     "celular": "(13) 3029-9328",
-    "email": "ebrinde@ebrinde.com"
+    "email": "ebrinde@ebrinde.com",
+    "telefones": [
+      "(13) 3029-9328"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "ebrinde@ebrinde.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Recorrente",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-01"
   },
   {
     "codigo": 42235,
@@ -1918,7 +3633,23 @@
     "cnpj": "57.587.619/0001-61",
     "telefone": "(14) 99177-0521",
     "celular": "(14) 99177-0521",
-    "email": "studio4youbrindes@gmail.com"
+    "email": "studio4youbrindes@gmail.com",
+    "telefones": [
+      "(14) 99177-0521"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "studio4youbrindes@gmail.com",
+      "zelarebrindescorporativo@gmail.com"
+    ],
+    "email2": "zelarebrindescorporativo@gmail.com",
+    "emailsExtras": [
+      "zelarebrindescorporativo@gmail.com"
+    ],
+    "cluster": "Pontual",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-01"
   },
   {
     "codigo": 13186,
@@ -1935,7 +3666,20 @@
     "cnpj": "44.840.657/0001-32",
     "telefone": "(19) 98231-9636",
     "celular": "(19) 98231-9636",
-    "email": "contato@symbolpromocional.com.br"
+    "email": "contato@symbolpromocional.com.br",
+    "telefones": [
+      "(19) 98231-9636"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "contato@symbolpromocional.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Pontual",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 24927,
@@ -1952,7 +3696,20 @@
     "cnpj": "49.971.002/0001-17",
     "telefone": "(19) 99130-5094",
     "celular": "(19) 99130-5094",
-    "email": "balestra019@gmail.com"
+    "email": "balestra019@gmail.com",
+    "telefones": [
+      "(19) 99130-5094"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "balestra019@gmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-02"
   },
   {
     "codigo": 159006,
@@ -1969,7 +3726,21 @@
     "cnpj": "63.460.889/0001-00",
     "telefone": "(11) 94725-5876",
     "celular": "(11) 94970-0351",
-    "email": "financeiro2@l7personalizados.com.br"
+    "email": "financeiro2@l7personalizados.com.br",
+    "telefones": [
+      "(11) 94725-5876",
+      "(11) 94970-0351"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "financeiro2@l7personalizados.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Recorrente",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 12609,
@@ -1986,7 +3757,23 @@
     "cnpj": "46.309.542/0001-41",
     "telefone": "(11) 97635-9243",
     "celular": "(11) 97635-9243",
-    "email": "ana@criegift.com.br"
+    "email": "ana@criegift.com.br",
+    "telefones": [
+      "(11) 97635-9243"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "ana@criegift.com.br",
+      "financeiro@criegift.com.br"
+    ],
+    "email2": "financeiro@criegift.com.br",
+    "emailsExtras": [
+      "financeiro@criegift.com.br"
+    ],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-09-03"
   },
   {
     "codigo": 18164,
@@ -2003,7 +3790,20 @@
     "cnpj": "52.994.661/0001-83",
     "telefone": "(11) 97508-3865",
     "celular": "(11) 97508-3865",
-    "email": "lumi.personalizacoes@gmail.com"
+    "email": "lumi.personalizacoes@gmail.com",
+    "telefones": [
+      "(11) 97508-3865"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "lumi.personalizacoes@gmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-09-14"
   },
   {
     "codigo": 9288,
@@ -2020,7 +3820,24 @@
     "cnpj": "05.583.362/0001-76",
     "telefone": "(16) 3941-1410",
     "celular": "(16) 99992-9204",
-    "email": "financeiro.maria@freefashion.com.br"
+    "email": "financeiro.maria@freefashion.com.br",
+    "telefones": [
+      "(16) 3941-1410",
+      "(16) 99992-9204"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "financeiro.maria@freefashion.com.br",
+      "freefashion@freefashion.com.br"
+    ],
+    "email2": "freefashion@freefashion.com.br",
+    "emailsExtras": [
+      "freefashion@freefashion.com.br"
+    ],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-02"
   },
   {
     "codigo": 164959,
@@ -2037,7 +3854,20 @@
     "cnpj": "66.000.203/0001-96",
     "telefone": "(11) 98915-7923",
     "celular": "(11) 98915-7923",
-    "email": "financeiro@luminardesign.com.br"
+    "email": "financeiro@luminardesign.com.br",
+    "telefones": [
+      "(11) 98915-7923"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "financeiro@luminardesign.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Fiel",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 91719,
@@ -2071,7 +3901,20 @@
     "cnpj": "46.139.137/0001-22",
     "telefone": "(13) 99109-1528",
     "celular": "(13) 99109-1528",
-    "email": "adm@ideiasilimitadas.com"
+    "email": "adm@ideiasilimitadas.com",
+    "telefones": [
+      "(13) 99109-1528"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "adm@ideiasilimitadas.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 30388,
@@ -2088,7 +3931,20 @@
     "cnpj": "53.921.245/0001-18",
     "telefone": "(17) 98168-9311",
     "celular": "(17) 98168-9311",
-    "email": "irvin.mc@gmail.com"
+    "email": "irvin.mc@gmail.com",
+    "telefones": [
+      "(17) 98168-9311"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "irvin.mc@gmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-09-18"
   },
   {
     "codigo": 18052,
@@ -2105,7 +3961,20 @@
     "cnpj": "13.688.921/0001-30",
     "telefone": "(11) 95336-9257",
     "celular": "(11) 95336-9257",
-    "email": "robson@guanacos.com.br"
+    "email": "robson@guanacos.com.br",
+    "telefones": [
+      "(11) 95336-9257"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "robson@guanacos.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-07-07"
   },
   {
     "codigo": 12414,
@@ -2122,7 +3991,24 @@
     "cnpj": "35.527.214/0001-03",
     "telefone": "(17) 99108-3244",
     "celular": "(17) 99110-4155",
-    "email": "canecasmugartriopreto@gmail.com"
+    "email": "canecasmugartriopreto@gmail.com",
+    "telefones": [
+      "(17) 99108-3244",
+      "(17) 99110-4155",
+      "(17) 3353-3659"
+    ],
+    "telefone2": "(17) 3353-3659",
+    "telefonesExtras": [
+      "(17) 3353-3659"
+    ],
+    "emails": [
+      "canecasmugartriopreto@gmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-09-30"
   },
   {
     "codigo": 13852,
@@ -2139,7 +4025,23 @@
     "cnpj": "50.668.518/0001-76",
     "telefone": "(12) 98223-1376",
     "celular": "(12) 98223-1376",
-    "email": "alexvilelamoreno@gmail.com"
+    "email": "alexvilelamoreno@gmail.com",
+    "telefones": [
+      "(12) 98223-1376"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "alexvilelamoreno@gmail.com",
+      "rsbrindescompras@gmail.com"
+    ],
+    "email2": "rsbrindescompras@gmail.com",
+    "emailsExtras": [
+      "rsbrindescompras@gmail.com"
+    ],
+    "cluster": "Pontual",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-08-20"
   },
   {
     "codigo": 32555,
@@ -2156,7 +4058,20 @@
     "cnpj": "30.104.075/0001-83",
     "telefone": "(19) 98103-8878",
     "celular": "(19) 98103-8878",
-    "email": "donachefaestamparia@gmail.com"
+    "email": "donachefaestamparia@gmail.com",
+    "telefones": [
+      "(19) 98103-8878"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "donachefaestamparia@gmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-09-29"
   },
   {
     "codigo": 27999,
@@ -2173,7 +4088,20 @@
     "cnpj": "50.456.016/0001-81",
     "telefone": "(11) 3981-2711",
     "celular": "(11) 3981-2711",
-    "email": "vendas@floridabrindes.com.br"
+    "email": "vendas@floridabrindes.com.br",
+    "telefones": [
+      "(11) 3981-2711"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "vendas@floridabrindes.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 12680,
@@ -2190,7 +4118,26 @@
     "cnpj": "38.115.710/0001-30",
     "telefone": "(11) 97668-7284",
     "celular": "-",
-    "email": "marebrindes2@gmail.com"
+    "email": "marebrindes2@gmail.com",
+    "telefones": [
+      "(11) 97668-7284",
+      "(11) 95145-3965"
+    ],
+    "telefone2": "(11) 95145-3965",
+    "telefonesExtras": [
+      "(11) 95145-3965"
+    ],
+    "emails": [
+      "marebrindes2@gmail.com",
+      "contato@marebrindes.com.br"
+    ],
+    "email2": "contato@marebrindes.com.br",
+    "emailsExtras": [
+      "contato@marebrindes.com.br"
+    ],
+    "cluster": "Recorrente",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-02"
   },
   {
     "codigo": 165397,
@@ -2207,7 +4154,20 @@
     "cnpj": "46.050.876/0001-43",
     "telefone": "(18) 99636-5256",
     "celular": "(18) 99636-5256",
-    "email": "c.vmilbrindes@gmail.com"
+    "email": "c.vmilbrindes@gmail.com",
+    "telefones": [
+      "(18) 99636-5256"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "c.vmilbrindes@gmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Pontual",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-09-15"
   },
   {
     "codigo": 87775,
@@ -2224,7 +4184,20 @@
     "cnpj": "59.114.212/0001-42",
     "telefone": "(13) 99135-8583",
     "celular": "(13) 99135-8583",
-    "email": "atendimentopratubrindes@gmail.com"
+    "email": "atendimentopratubrindes@gmail.com",
+    "telefones": [
+      "(13) 99135-8583"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "atendimentopratubrindes@gmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Recorrente",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-01"
   },
   {
     "codigo": 34071,
@@ -2241,7 +4214,23 @@
     "cnpj": "55.309.989/0001-01",
     "telefone": "(13) 99700-3007",
     "celular": "(13) 99700-3007",
-    "email": "rosimeiry.monteiro@yahoo.com.br"
+    "email": "rosimeiry.monteiro@yahoo.com.br",
+    "telefones": [
+      "(13) 99700-3007"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "rosimeiry.monteiro@yahoo.com.br",
+      "rosimeiry.monteiro@lalamon.com.br"
+    ],
+    "email2": "rosimeiry.monteiro@lalamon.com.br",
+    "emailsExtras": [
+      "rosimeiry.monteiro@lalamon.com.br"
+    ],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-03"
   },
   {
     "codigo": 13171,
@@ -2258,7 +4247,23 @@
     "cnpj": "29.799.001/0001-20",
     "telefone": "(12) 99707-0254",
     "celular": "(12) 99707-0254",
-    "email": "fornecedores@ahrriba.com.br"
+    "email": "fornecedores@ahrriba.com.br",
+    "telefones": [
+      "(12) 99707-0254"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "fornecedores@ahrriba.com.br",
+      "contato@ahrriba.com.br"
+    ],
+    "email2": "contato@ahrriba.com.br",
+    "emailsExtras": [
+      "contato@ahrriba.com.br"
+    ],
+    "cluster": "Pontual",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-09-15"
   },
   {
     "codigo": 10622,
@@ -2275,7 +4280,21 @@
     "cnpj": "12.385.106/0001-30",
     "telefone": "(11) 3831-0053",
     "celular": "(11) 99107-3387",
-    "email": "alexandre@alebrindes.com.br"
+    "email": "alexandre@alebrindes.com.br",
+    "telefones": [
+      "(11) 3831-0053",
+      "(11) 99107-3387"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "alexandre@alebrindes.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Recorrente",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 9664,
@@ -2309,7 +4328,20 @@
     "cnpj": "59.626.418/0001-51",
     "telefone": "(19) 99306-3354",
     "celular": "-",
-    "email": "admin@suacarapresentes.com.br"
+    "email": "admin@suacarapresentes.com.br",
+    "telefones": [
+      "(19) 99306-3354"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "admin@suacarapresentes.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-01"
   },
   {
     "codigo": 154652,
@@ -2326,7 +4358,23 @@
     "cnpj": "08.989.687/0001-41",
     "telefone": "(19) 3743-3500",
     "celular": "(19) 3743-3500",
-    "email": "amanda@nextgrupo.com"
+    "email": "amanda@nextgrupo.com",
+    "telefones": [
+      "(19) 3743-3500",
+      "(19) 98109-5560"
+    ],
+    "telefone2": "(19) 98109-5560",
+    "telefonesExtras": [
+      "(19) 98109-5560"
+    ],
+    "emails": [
+      "amanda@nextgrupo.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Recorrente",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-04"
   },
   {
     "codigo": 13104,
@@ -2360,7 +4408,20 @@
     "cnpj": "14.654.692/0001-04",
     "telefone": "(11) 97494-2966",
     "celular": "(11) 97494-2966",
-    "email": "lr.laiserocha@gmail.com"
+    "email": "lr.laiserocha@gmail.com",
+    "telefones": [
+      "(11) 97494-2966"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "lr.laiserocha@gmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Pontual",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-09-23"
   },
   {
     "codigo": 163078,
@@ -2377,7 +4438,23 @@
     "cnpj": "49.802.238/0001-20",
     "telefone": "(11) 94213-5132",
     "celular": "(11) 94213-5132",
-    "email": "douglasrosa@bmbrindeslaser.store"
+    "email": "douglasrosa@bmbrindeslaser.store",
+    "telefones": [
+      "(11) 94213-5132"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "douglasrosa@bmbrindeslaser.store",
+      "contato@bmbrindespersonalizados.com.br"
+    ],
+    "email2": "contato@bmbrindespersonalizados.com.br",
+    "emailsExtras": [
+      "contato@bmbrindespersonalizados.com.br"
+    ],
+    "cluster": "Fiel",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 13662,
@@ -2394,7 +4471,23 @@
     "cnpj": "31.206.086/0001-37",
     "telefone": "(11) 98330-1507",
     "celular": "(11) 98330-1507",
-    "email": "pixelbrindes@gmail.com"
+    "email": "pixelbrindes@gmail.com",
+    "telefones": [
+      "(11) 98330-1507"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "pixelbrindes@gmail.com",
+      "arte@grafpixel.net"
+    ],
+    "email2": "arte@grafpixel.net",
+    "emailsExtras": [
+      "arte@grafpixel.net"
+    ],
+    "cluster": "Pontual",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-09-21"
   },
   {
     "codigo": 33888,
@@ -2428,7 +4521,20 @@
     "cnpj": "60.586.890/0001-97",
     "telefone": "(13) 99786-9541",
     "celular": "(13) 99786-9541",
-    "email": "sheillass4@hotmail.com"
+    "email": "sheillass4@hotmail.com",
+    "telefones": [
+      "(13) 99786-9541"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "sheillass4@hotmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Recorrente",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 156538,
@@ -2445,7 +4551,26 @@
     "cnpj": "26.386.689/0001-28",
     "telefone": "(18) 98151-2827",
     "celular": "(18) 98151-2827",
-    "email": "jfpes@yahoo.com.br"
+    "email": "jfpes@yahoo.com.br",
+    "telefones": [
+      "(18) 98151-2827",
+      "(18) 98802-3883"
+    ],
+    "telefone2": "(18) 98802-3883",
+    "telefonesExtras": [
+      "(18) 98802-3883"
+    ],
+    "emails": [
+      "jfpes@yahoo.com.br",
+      "contato@maxbrindespersonalizados.com.br"
+    ],
+    "email2": "contato@maxbrindespersonalizados.com.br",
+    "emailsExtras": [
+      "contato@maxbrindespersonalizados.com.br"
+    ],
+    "cluster": "Recorrente",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 87915,
@@ -2462,7 +4587,20 @@
     "cnpj": "39.817.593/0001-19",
     "telefone": "(19) 97105-9026",
     "celular": "(19) 97105-9026",
-    "email": "seoleopersonalizados@gmail.com"
+    "email": "seoleopersonalizados@gmail.com",
+    "telefones": [
+      "(19) 97105-9026"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "seoleopersonalizados@gmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-01"
   },
   {
     "codigo": 132907,
@@ -2479,7 +4617,21 @@
     "cnpj": "42.519.995/0001-41",
     "telefone": "(11) 3951-7451",
     "celular": "(13) 3189-0174",
-    "email": "importultra3@gmail.com"
+    "email": "importultra3@gmail.com",
+    "telefones": [
+      "(11) 3951-7451",
+      "(13) 3189-0174"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "importultra3@gmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-06-12"
   },
   {
     "codigo": 103107,
@@ -2496,7 +4648,20 @@
     "cnpj": "30.596.713/0001-20",
     "telefone": "(19) 99668-8648",
     "celular": "(19) 99668-8648",
-    "email": "contato@bycompras.com.br"
+    "email": "contato@bycompras.com.br",
+    "telefones": [
+      "(19) 99668-8648"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "contato@bycompras.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Pontual",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-01"
   },
   {
     "codigo": 10593,
@@ -2513,7 +4678,24 @@
     "cnpj": "08.216.208/0001-54",
     "telefone": "(16) 3234-6811",
     "celular": "(16) 99276-0971",
-    "email": "claudia@rgideias.com.br"
+    "email": "claudia@rgideias.com.br",
+    "telefones": [
+      "(16) 3234-6811",
+      "(16) 99276-0971"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "claudia@rgideias.com.br",
+      "contato@rgideias.com.br"
+    ],
+    "email2": "contato@rgideias.com.br",
+    "emailsExtras": [
+      "contato@rgideias.com.br"
+    ],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 10916,
@@ -2530,7 +4712,26 @@
     "cnpj": "17.513.343/0001-52",
     "telefone": "(11) 97563-0356",
     "celular": "(11) 97563-0356",
-    "email": "diasvander64@gmail.com"
+    "email": "diasvander64@gmail.com",
+    "telefones": [
+      "(11) 97563-0356",
+      "(11) 2645-5440"
+    ],
+    "telefone2": "(11) 2645-5440",
+    "telefonesExtras": [
+      "(11) 2645-5440"
+    ],
+    "emails": [
+      "diasvander64@gmail.com",
+      "vendas@fattorbrindes.com.br"
+    ],
+    "email2": "vendas@fattorbrindes.com.br",
+    "emailsExtras": [
+      "vendas@fattorbrindes.com.br"
+    ],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-02"
   },
   {
     "codigo": 181214,
@@ -2547,7 +4748,20 @@
     "cnpj": "48.012.527/0001-62",
     "telefone": "(17) 99714-1439",
     "celular": "(17) 99714-1439",
-    "email": "halley_fitas@hotmail.com"
+    "email": "halley_fitas@hotmail.com",
+    "telefones": [
+      "(17) 99714-1439"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "halley_fitas@hotmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-01"
   },
   {
     "codigo": 30041,
@@ -2581,7 +4795,20 @@
     "cnpj": "58.737.110/0001-10",
     "telefone": "(11) 97153-5094",
     "celular": "(11) 97153-5094",
-    "email": "vendas.trbrindes@gmail.com"
+    "email": "vendas.trbrindes@gmail.com",
+    "telefones": [
+      "(11) 97153-5094"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "vendas.trbrindes@gmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Recorrente",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-09-28"
   },
   {
     "codigo": 13660,
@@ -2598,7 +4825,20 @@
     "cnpj": "39.545.096/0001-09",
     "telefone": "(13) 99146-9809",
     "celular": "(13) 99146-9809",
-    "email": "ka.lazaro@gmail.com"
+    "email": "ka.lazaro@gmail.com",
+    "telefones": [
+      "(13) 99146-9809"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "ka.lazaro@gmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-09-28"
   },
   {
     "codigo": 13563,
@@ -2615,7 +4855,20 @@
     "cnpj": "27.461.195/0001-23",
     "telefone": "(18) 99798-8321",
     "celular": "(18) 99798-8321",
-    "email": "adonai.ct@hotmail.com"
+    "email": "adonai.ct@hotmail.com",
+    "telefones": [
+      "(18) 99798-8321"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "adonai.ct@hotmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-09-10"
   },
   {
     "codigo": 13172,
@@ -2649,7 +4902,23 @@
     "cnpj": "64.780.302/0001-02",
     "telefone": "(15) 9773-2403",
     "celular": "(15) 9773-2403",
-    "email": "europabrindes1@gmail.com"
+    "email": "europabrindes1@gmail.com",
+    "telefones": [
+      "(15) 9773-2403"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "europabrindes1@gmail.com",
+      "brindeseuropa0@gmail.com"
+    ],
+    "email2": "brindeseuropa0@gmail.com",
+    "emailsExtras": [
+      "brindeseuropa0@gmail.com"
+    ],
+    "cluster": "Pontual",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-09-24"
   },
   {
     "codigo": 102504,
@@ -2700,7 +4969,23 @@
     "cnpj": "61.823.897/0001-48",
     "telefone": "(11) 95746-9180",
     "celular": "-",
-    "email": "oigarotobrindes@gmail.com"
+    "email": "oigarotobrindes@gmail.com",
+    "telefones": [
+      "(11) 95746-9180"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "oigarotobrindes@gmail.com",
+      "camilaribeiro@oigarotobrindes.com.br"
+    ],
+    "email2": "camilaribeiro@oigarotobrindes.com.br",
+    "emailsExtras": [
+      "camilaribeiro@oigarotobrindes.com.br"
+    ],
+    "cluster": "Recorrente",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-02"
   },
   {
     "codigo": 12156,
@@ -2717,7 +5002,20 @@
     "cnpj": "10.373.404/0001-84",
     "telefone": "(19) 99293-3177",
     "celular": "(19) 99293-3177",
-    "email": "contato@idealizebrindes.com.br"
+    "email": "contato@idealizebrindes.com.br",
+    "telefones": [
+      "(19) 99293-3177"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "contato@idealizebrindes.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 14377,
@@ -2751,7 +5049,20 @@
     "cnpj": "18.187.232/0001-66",
     "telefone": "(11) 96274-0136",
     "celular": "(11) 96274-0136",
-    "email": "gilsonrenner1@hotmail.com"
+    "email": "gilsonrenner1@hotmail.com",
+    "telefones": [
+      "(11) 96274-0136"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "gilsonrenner1@hotmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 13709,
@@ -2768,7 +5079,20 @@
     "cnpj": "45.406.202/0001-76",
     "telefone": "(19) 99657-6055",
     "celular": "(19) 99657-6055",
-    "email": "victormelo.grafica@gmail.com"
+    "email": "victormelo.grafica@gmail.com",
+    "telefones": [
+      "(19) 99657-6055"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "victormelo.grafica@gmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 174814,
@@ -2785,7 +5109,20 @@
     "cnpj": "24.260.175/0001-04",
     "telefone": "(12) 98227-0057",
     "celular": "(12) 98227-0057",
-    "email": "rjsolucoes01@gmail.com"
+    "email": "rjsolucoes01@gmail.com",
+    "telefones": [
+      "(12) 98227-0057"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "rjsolucoes01@gmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-01"
   },
   {
     "codigo": 11537,
@@ -2802,7 +5139,24 @@
     "cnpj": "04.162.919/0001-32",
     "telefone": "(19) 3434-7244",
     "celular": "(19) 98282-7982",
-    "email": "matheus@acoartefatos.com.br"
+    "email": "matheus@acoartefatos.com.br",
+    "telefones": [
+      "(19) 3434-7244",
+      "(19) 98282-7982"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "matheus@acoartefatos.com.br",
+      "matheus.ferrari@gmail.com"
+    ],
+    "email2": "matheus.ferrari@gmail.com",
+    "emailsExtras": [
+      "matheus.ferrari@gmail.com"
+    ],
+    "cluster": "Pontual",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 169618,
@@ -2819,7 +5173,20 @@
     "cnpj": "63.307.972/0001-43",
     "telefone": "(19) 99601-5000",
     "celular": "(19) 99601-5000",
-    "email": "contato@brindesdodia.com.br"
+    "email": "contato@brindesdodia.com.br",
+    "telefones": [
+      "(19) 99601-5000"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "contato@brindesdodia.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Pontual",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 12464,
@@ -2836,7 +5203,26 @@
     "cnpj": "08.696.232/0001-38",
     "telefone": "(11) 2759-1279",
     "celular": "(11) 2759-1279",
-    "email": "comercial@primeg.com.br"
+    "email": "comercial@primeg.com.br",
+    "telefones": [
+      "(11) 2759-1279",
+      "(11) 9452-1279"
+    ],
+    "telefone2": "(11) 9452-1279",
+    "telefonesExtras": [
+      "(11) 9452-1279"
+    ],
+    "emails": [
+      "comercial@primeg.com.br",
+      "roberto@primeg.com.br"
+    ],
+    "email2": "roberto@primeg.com.br",
+    "emailsExtras": [
+      "roberto@primeg.com.br"
+    ],
+    "cluster": "Pontual",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-09-09"
   },
   {
     "codigo": 11362,
@@ -2853,7 +5239,20 @@
     "cnpj": "23.541.660/0001-85",
     "telefone": "(11) 2840-4849",
     "celular": "(11) 2840-4849",
-    "email": "artespersonalizacaodd@gmail.com"
+    "email": "artespersonalizacaodd@gmail.com",
+    "telefones": [
+      "(11) 2840-4849"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "artespersonalizacaodd@gmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Recorrente",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-01"
   },
   {
     "codigo": 86399,
@@ -2870,7 +5269,20 @@
     "cnpj": "40.238.475/0001-35",
     "telefone": "(16) 99640-3670",
     "celular": "(16) 99640-3670",
-    "email": "compras_gustavo@outlook.com.br"
+    "email": "compras_gustavo@outlook.com.br",
+    "telefones": [
+      "(16) 99640-3670"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "compras_gustavo@outlook.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-09-30"
   },
   {
     "codigo": 108808,
@@ -2904,7 +5316,20 @@
     "cnpj": "19.123.412/0001-47",
     "telefone": "(14) 98130-3823",
     "celular": "(14) 98130-3823",
-    "email": "dreamsloveatelie@hotmail.com"
+    "email": "dreamsloveatelie@hotmail.com",
+    "telefones": [
+      "(14) 98130-3823"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "dreamsloveatelie@hotmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Pontual",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-02"
   },
   {
     "codigo": 126141,
@@ -2921,7 +5346,20 @@
     "cnpj": "57.754.674/0001-07",
     "telefone": "(19) 98910-6565",
     "celular": "(19) 98910-6565",
-    "email": "vendas@nikaidobrindes.com.br"
+    "email": "vendas@nikaidobrindes.com.br",
+    "telefones": [
+      "(19) 98910-6565"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "vendas@nikaidobrindes.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-08-26"
   },
   {
     "codigo": 139084,
@@ -2938,7 +5376,20 @@
     "cnpj": "61.540.070/0001-27",
     "telefone": "(11) 5824-3800",
     "celular": "(11) 5824-3800",
-    "email": "vendas@brasilverdegrupo.com.br"
+    "email": "vendas@brasilverdegrupo.com.br",
+    "telefones": [
+      "(11) 5824-3800"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "vendas@brasilverdegrupo.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Pontual",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-09-24"
   },
   {
     "codigo": 5134,
@@ -2955,7 +5406,36 @@
     "cnpj": "11.236.822/0001-92",
     "telefone": "(19) 3278-3244",
     "celular": "(19) 3278-3244",
-    "email": "financeiro@brindecolor.com.br"
+    "email": "financeiro@brindecolor.com.br",
+    "telefones": [
+      "(19) 3278-3244",
+      "(19) 98826-0121",
+      "(11) 3044-5306"
+    ],
+    "telefone2": "(19) 98826-0121",
+    "telefonesExtras": [
+      "(19) 98826-0121",
+      "(11) 3044-5306"
+    ],
+    "emails": [
+      "financeiro@brindecolor.com.br",
+      "artfinal@brindecolor.com.br",
+      "brindecolor@hotmail.com",
+      "enrique@brindecolor.com.br",
+      "artefinal@brindecolor.com.br",
+      "fcastanheira17@terra.com.br"
+    ],
+    "email2": "artfinal@brindecolor.com.br",
+    "emailsExtras": [
+      "artfinal@brindecolor.com.br",
+      "brindecolor@hotmail.com",
+      "enrique@brindecolor.com.br",
+      "artefinal@brindecolor.com.br",
+      "fcastanheira17@terra.com.br"
+    ],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-09-30"
   },
   {
     "codigo": 10858,
@@ -2970,9 +5450,22 @@
     "ultimaVenda": "03/08/2026",
     "dataCadastro": "17/09/2019",
     "cnpj": "34.371.339/0001-16",
-    "telefone": "-",
+    "telefone": "(11) 98544-5154",
     "celular": "(11) 98544-5154",
-    "email": "vendas@sevenpromotion.com.br"
+    "email": "vendas@sevenpromotion.com.br",
+    "telefones": [
+      "(11) 98544-5154"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "vendas@sevenpromotion.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Pontual",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 159231,
@@ -2989,7 +5482,20 @@
     "cnpj": "50.792.963/0001-43",
     "telefone": "(17) 99145-5149",
     "celular": "(17) 99145-5149",
-    "email": "gravluxbrindes@gmail.com"
+    "email": "gravluxbrindes@gmail.com",
+    "telefones": [
+      "(17) 99145-5149"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "gravluxbrindes@gmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-09-29"
   },
   {
     "codigo": 12294,
@@ -3006,7 +5512,20 @@
     "cnpj": "22.639.329/0001-30",
     "telefone": "(19) 98736-9483",
     "celular": "(19) 98736-9483",
-    "email": "lucas.define.rossi@gmail.com"
+    "email": "lucas.define.rossi@gmail.com",
+    "telefones": [
+      "(19) 98736-9483"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "lucas.define.rossi@gmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 179619,
@@ -3023,7 +5542,20 @@
     "cnpj": "58.198.984/0001-47",
     "telefone": "(14) 9735-1802",
     "celular": "(14) 9735-1802",
-    "email": "finelinelaserstudiobr@gmail.com"
+    "email": "finelinelaserstudiobr@gmail.com",
+    "telefones": [
+      "(14) 9735-1802"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "finelinelaserstudiobr@gmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-09-28"
   },
   {
     "codigo": 122037,
@@ -3040,7 +5572,21 @@
     "cnpj": "46.590.129/0001-06",
     "telefone": "(11) 97137-4437",
     "celular": "(11) 91467-3008",
-    "email": "casarinpersonalizados@gmail.com"
+    "email": "casarinpersonalizados@gmail.com",
+    "telefones": [
+      "(11) 97137-4437",
+      "(11) 91467-3008"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "casarinpersonalizados@gmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 10955,
@@ -3057,7 +5603,23 @@
     "cnpj": "20.696.864/0001-05",
     "telefone": "(19) 99295-4173",
     "celular": "(19) 99295-4173",
-    "email": "ebcbrindes2@gmail.com"
+    "email": "ebcbrindes2@gmail.com",
+    "telefones": [
+      "(19) 99295-4173"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "ebcbrindes2@gmail.com",
+      "ebcbrindes@yahoo.com.br"
+    ],
+    "email2": "ebcbrindes@yahoo.com.br",
+    "emailsExtras": [
+      "ebcbrindes@yahoo.com.br"
+    ],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-09-29"
   },
   {
     "codigo": 36314,
@@ -3091,7 +5653,26 @@
     "cnpj": "30.672.357/0001-87",
     "telefone": "(19) 99119-5359",
     "celular": "(19) 99119-5359",
-    "email": "atendimento@masterartprint.com.br"
+    "email": "atendimento@masterartprint.com.br",
+    "telefones": [
+      "(19) 99119-5359",
+      "(19) 98177-1128"
+    ],
+    "telefone2": "(19) 98177-1128",
+    "telefonesExtras": [
+      "(19) 98177-1128"
+    ],
+    "emails": [
+      "atendimento@masterartprint.com.br",
+      "contatomasterart@gmail.com"
+    ],
+    "email2": "contatomasterart@gmail.com",
+    "emailsExtras": [
+      "contatomasterart@gmail.com"
+    ],
+    "cluster": "Pontual",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-09-02"
   },
   {
     "codigo": 12635,
@@ -3108,7 +5689,24 @@
     "cnpj": "28.864.093/0001-11",
     "telefone": "(11) 97518-0618",
     "celular": "(11) 97778-0505",
-    "email": "contato@lonnypersonalizados.com.br"
+    "email": "contato@lonnypersonalizados.com.br",
+    "telefones": [
+      "(11) 97518-0618",
+      "(11) 97778-0505"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "contato@lonnypersonalizados.com.br",
+      "pedido@lonnyweb.com.br"
+    ],
+    "email2": "pedido@lonnyweb.com.br",
+    "emailsExtras": [
+      "pedido@lonnyweb.com.br"
+    ],
+    "cluster": "Recorrente",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 184316,
@@ -3125,7 +5723,26 @@
     "cnpj": "64.583.579/0001-45",
     "telefone": "(19) 3201-6390",
     "celular": "(19) 3201-6390",
-    "email": "isabelcristin1@hotmail.com"
+    "email": "isabelcristin1@hotmail.com",
+    "telefones": [
+      "(19) 3201-6390",
+      "(19) 99767-4891"
+    ],
+    "telefone2": "(19) 99767-4891",
+    "telefonesExtras": [
+      "(19) 99767-4891"
+    ],
+    "emails": [
+      "isabelcristin1@hotmail.com",
+      "isabelcristin1966@gmail.com"
+    ],
+    "email2": "isabelcristin1966@gmail.com",
+    "emailsExtras": [
+      "isabelcristin1966@gmail.com"
+    ],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-03"
   },
   {
     "codigo": 14307,
@@ -3142,7 +5759,20 @@
     "cnpj": "03.138.216/0001-06",
     "telefone": "(16) 98821-0441",
     "celular": "(16) 98821-0441",
-    "email": "matheus@fazplast.com.br"
+    "email": "matheus@fazplast.com.br",
+    "telefones": [
+      "(16) 98821-0441"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "matheus@fazplast.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-09-14"
   },
   {
     "codigo": 11165,
@@ -3159,7 +5789,21 @@
     "cnpj": "24.210.796/0001-75",
     "telefone": "(19) 3308-7621",
     "celular": "(19) 99118-2658",
-    "email": "contato@sustentaetiquetas.com.br"
+    "email": "contato@sustentaetiquetas.com.br",
+    "telefones": [
+      "(19) 3308-7621",
+      "(19) 99118-2658"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "contato@sustentaetiquetas.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Pontual",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-09-01"
   },
   {
     "codigo": 24722,
@@ -3176,7 +5820,21 @@
     "cnpj": "31.965.744/0001-74",
     "telefone": "(11) 99629-4385",
     "celular": "(11) 94135-9442",
-    "email": "digitalatibaia.financeiro@gmail.com"
+    "email": "digitalatibaia.financeiro@gmail.com",
+    "telefones": [
+      "(11) 99629-4385",
+      "(11) 94135-9442"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "digitalatibaia.financeiro@gmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Pontual",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-09-17"
   },
   {
     "codigo": 33597,
@@ -3193,7 +5851,21 @@
     "cnpj": "53.649.112/0001-34",
     "telefone": "(18) 99722-0483",
     "celular": "(18) 99758-5814",
-    "email": "phenix.laserphenix@gmail.com"
+    "email": "phenix.laserphenix@gmail.com",
+    "telefones": [
+      "(18) 99722-0483",
+      "(18) 99758-5814"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "phenix.laserphenix@gmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Pontual",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-01"
   },
   {
     "codigo": 13988,
@@ -3210,7 +5882,20 @@
     "cnpj": "47.878.719/0001-93",
     "telefone": "(16) 98188-6629",
     "celular": "(16) 98188-6629",
-    "email": "villacriativa.rp@gmail.com"
+    "email": "villacriativa.rp@gmail.com",
+    "telefones": [
+      "(16) 98188-6629"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "villacriativa.rp@gmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Pontual",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 34179,
@@ -3227,7 +5912,20 @@
     "cnpj": "53.760.562/0001-08",
     "telefone": "(16) 99142-2216",
     "celular": "(16) 99142-2216",
-    "email": "jcastrogil@yahoo.com.br"
+    "email": "jcastrogil@yahoo.com.br",
+    "telefones": [
+      "(16) 99142-2216"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "jcastrogil@yahoo.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Pontual",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-08-11"
   },
   {
     "codigo": 76014,
@@ -3244,7 +5942,20 @@
     "cnpj": "08.294.106/0001-57",
     "telefone": "(11) 98249-9631",
     "celular": "(11) 98249-9631",
-    "email": "zeroberto.retoquefinal@gmail.com"
+    "email": "zeroberto.retoquefinal@gmail.com",
+    "telefones": [
+      "(11) 98249-9631"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "zeroberto.retoquefinal@gmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-08-21"
   },
   {
     "codigo": 160534,
@@ -3261,7 +5972,20 @@
     "cnpj": "62.674.398/0001-07",
     "telefone": "(11) 95386-0075",
     "celular": "(11) 95386-0075",
-    "email": "cristian.almeida@gmail.com"
+    "email": "cristian.almeida@gmail.com",
+    "telefones": [
+      "(11) 95386-0075"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "cristian.almeida@gmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-09-28"
   },
   {
     "codigo": 13229,
@@ -3278,7 +6002,20 @@
     "cnpj": "33.180.705/0001-97",
     "telefone": "(16) 99283-4588",
     "celular": "(16) 99283-4588",
-    "email": "marcatobrindes@gmail.com"
+    "email": "marcatobrindes@gmail.com",
+    "telefones": [
+      "(16) 99283-4588"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "marcatobrindes@gmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Pontual",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-09-24"
   },
   {
     "codigo": 12410,
@@ -3295,7 +6032,24 @@
     "cnpj": "12.570.616/0001-87",
     "telefone": "(19) 3452-1093",
     "celular": "(19) 99502-8106",
-    "email": "contatorhenik@gmail.com"
+    "email": "contatorhenik@gmail.com",
+    "telefones": [
+      "(19) 3452-1093",
+      "(19) 99502-8106"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "contatorhenik@gmail.com",
+      "contatorenikbrindes@hotmail.com"
+    ],
+    "email2": "contatorenikbrindes@hotmail.com",
+    "emailsExtras": [
+      "contatorenikbrindes@hotmail.com"
+    ],
+    "cluster": "Pontual",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 13296,
@@ -3312,7 +6066,20 @@
     "cnpj": "16.704.471/0001-10",
     "telefone": "(11) 98085-5841",
     "celular": "-",
-    "email": "vendas@3rcbrindes.com.br"
+    "email": "vendas@3rcbrindes.com.br",
+    "telefones": [
+      "(11) 98085-5841"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "vendas@3rcbrindes.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-02"
   },
   {
     "codigo": 13099,
@@ -3329,7 +6096,20 @@
     "cnpj": "28.469.576/0001-11",
     "telefone": "(19) 98176-2332",
     "celular": "(19) 98176-2332",
-    "email": "liberamf@gmail.com"
+    "email": "liberamf@gmail.com",
+    "telefones": [
+      "(19) 98176-2332"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "liberamf@gmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Pontual",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 34024,
@@ -3346,7 +6126,20 @@
     "cnpj": "44.011.887/0001-99",
     "telefone": "(11) 97956-1131",
     "celular": "(11) 97956-1131",
-    "email": "liluarts@outlook.com"
+    "email": "liluarts@outlook.com",
+    "telefones": [
+      "(11) 97956-1131"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "liluarts@outlook.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-01"
   },
   {
     "codigo": 37698,
@@ -3380,7 +6173,20 @@
     "cnpj": "28.746.959/0001-90",
     "telefone": "(13) 99740-8757",
     "celular": "(13) 99740-8757",
-    "email": "librande@gmail.com"
+    "email": "librande@gmail.com",
+    "telefones": [
+      "(13) 99740-8757"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "librande@gmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-07-08"
   },
   {
     "codigo": 33629,
@@ -3414,7 +6220,21 @@
     "cnpj": "53.329.128/0001-60",
     "telefone": "(11) 2256-5469",
     "celular": "(11) 97840-9801",
-    "email": "comercial1@standardbrindes.com.br"
+    "email": "comercial1@standardbrindes.com.br",
+    "telefones": [
+      "(11) 2256-5469",
+      "(11) 97840-9801"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "comercial1@standardbrindes.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-07-24"
   },
   {
     "codigo": 83773,
@@ -3431,7 +6251,20 @@
     "cnpj": "60.264.205/0001-06",
     "telefone": "(16) 98149-5348",
     "celular": "(16) 98149-5348",
-    "email": "marcomrozinsk@gmail.com"
+    "email": "marcomrozinsk@gmail.com",
+    "telefones": [
+      "(16) 98149-5348"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "marcomrozinsk@gmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Pontual",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-07-29"
   },
   {
     "codigo": 57304,
@@ -3465,7 +6298,20 @@
     "cnpj": "49.359.242/0001-65",
     "telefone": "(19) 97105-8389",
     "celular": "(19) 97105-8389",
-    "email": "contato@unilaser.com.br"
+    "email": "contato@unilaser.com.br",
+    "telefones": [
+      "(19) 97105-8389"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "contato@unilaser.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-02"
   },
   {
     "codigo": 12418,
@@ -3516,7 +6362,20 @@
     "cnpj": "56.993.201/0001-91",
     "telefone": "(11) 95096-4102",
     "celular": "-",
-    "email": "comercial@tmgpersonalizados.com.br"
+    "email": "comercial@tmgpersonalizados.com.br",
+    "telefones": [
+      "(11) 95096-4102"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "comercial@tmgpersonalizados.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 76017,
@@ -3550,7 +6409,20 @@
     "cnpj": "44.334.162/0001-31",
     "telefone": "(47) 99901-7377",
     "celular": "(47) 99901-7377",
-    "email": "grasiela@regaliperte.com.br"
+    "email": "grasiela@regaliperte.com.br",
+    "telefones": [
+      "(47) 99901-7377"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "grasiela@regaliperte.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Pontual",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-09-29"
   },
   {
     "codigo": 122078,
@@ -3567,7 +6439,21 @@
     "cnpj": "46.843.634/0001-07",
     "telefone": "(11) 97527-4840",
     "celular": "(11) 97585-6909",
-    "email": "comercial@mellisbrindes.com.br"
+    "email": "comercial@mellisbrindes.com.br",
+    "telefones": [
+      "(11) 97527-4840",
+      "(11) 97585-6909"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "comercial@mellisbrindes.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Pontual",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-08-26"
   },
   {
     "codigo": 98536,
@@ -3584,7 +6470,20 @@
     "cnpj": "59.935.076/0001-51",
     "telefone": "(11) 94727-8630",
     "celular": "(11) 94727-8630",
-    "email": "comercial@roevabrindes.com.br"
+    "email": "comercial@roevabrindes.com.br",
+    "telefones": [
+      "(11) 94727-8630"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "comercial@roevabrindes.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Pontual",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-04"
   },
   {
     "codigo": 129115,
@@ -3635,7 +6534,20 @@
     "cnpj": "50.344.377/0001-36",
     "telefone": "(11) 95314-7703",
     "celular": "(11) 95314-7703",
-    "email": "farefoto1@gmail.com"
+    "email": "farefoto1@gmail.com",
+    "telefones": [
+      "(11) 95314-7703"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "farefoto1@gmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-09-30"
   },
   {
     "codigo": 13627,
@@ -3652,7 +6564,20 @@
     "cnpj": "21.514.974/0001-63",
     "telefone": "(16) 98142-2233",
     "celular": "(16) 98142-2233",
-    "email": "artecorr@hotmail.com"
+    "email": "artecorr@hotmail.com",
+    "telefones": [
+      "(16) 98142-2233"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "artecorr@hotmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-01"
   },
   {
     "codigo": 103054,
@@ -3669,7 +6594,20 @@
     "cnpj": "31.660.172/0001-15",
     "telefone": "(19) 99527-6277",
     "celular": "(19) 99527-6277",
-    "email": "new.clothes@hotmail.com"
+    "email": "new.clothes@hotmail.com",
+    "telefones": [
+      "(19) 99527-6277"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "new.clothes@hotmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Pontual",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-03"
   },
   {
     "codigo": 13799,
@@ -3686,7 +6624,20 @@
     "cnpj": "18.742.420/0001-09",
     "telefone": "(19) 99909-9610",
     "celular": "(19) 99909-9610",
-    "email": "gd.lemme@hotmail.com"
+    "email": "gd.lemme@hotmail.com",
+    "telefones": [
+      "(19) 99909-9610"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "gd.lemme@hotmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Pontual",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-08-07"
   },
   {
     "codigo": 11177,
@@ -3703,7 +6654,20 @@
     "cnpj": "24.691.063/0001-08",
     "telefone": "(11) 3691-9304",
     "celular": "(11) 3691-9304",
-    "email": "celso.m.leal@hotmail.com"
+    "email": "celso.m.leal@hotmail.com",
+    "telefones": [
+      "(11) 3691-9304"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "celso.m.leal@hotmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2023-09-20"
   },
   {
     "codigo": 102315,
@@ -3754,7 +6718,21 @@
     "cnpj": "39.836.442/0001-08",
     "telefone": "(11) 97588-1467",
     "celular": "(11) 4775-5103",
-    "email": "joicechilo@hotmail.com"
+    "email": "joicechilo@hotmail.com",
+    "telefones": [
+      "(11) 97588-1467",
+      "(11) 4775-5103"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "joicechilo@hotmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-09-28"
   },
   {
     "codigo": 180507,
@@ -3771,7 +6749,20 @@
     "cnpj": "63.459.987/0001-27",
     "telefone": "(19) 98771-0189",
     "celular": "(19) 98771-0189",
-    "email": "brindesroca@gmail.com"
+    "email": "brindesroca@gmail.com",
+    "telefones": [
+      "(19) 98771-0189"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "brindesroca@gmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Pontual",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-02"
   },
   {
     "codigo": 137136,
@@ -3788,7 +6779,20 @@
     "cnpj": "34.535.710/0001-38",
     "telefone": "(19) 99770-9600",
     "celular": "(19) 99770-9600",
-    "email": "uniformesac@hotmail.com"
+    "email": "uniformesac@hotmail.com",
+    "telefones": [
+      "(19) 99770-9600"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "uniformesac@hotmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Pontual",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-08-28"
   },
   {
     "codigo": 155342,
@@ -3805,7 +6809,20 @@
     "cnpj": "57.934.103/0001-46",
     "telefone": "(19) 99996-1530",
     "celular": "(19) 99996-1530",
-    "email": "vendas.sbpresentes@gmail.com"
+    "email": "vendas.sbpresentes@gmail.com",
+    "telefones": [
+      "(19) 99996-1530"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "vendas.sbpresentes@gmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Pontual",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 12826,
@@ -3822,7 +6839,26 @@
     "cnpj": "44.818.190/0001-24",
     "telefone": "(19) 98866-8858",
     "celular": "(19) 98866-8858",
-    "email": "tonisarkovas@gmail.com"
+    "email": "tonisarkovas@gmail.com",
+    "telefones": [
+      "(19) 98866-8858",
+      "(19) 99600-2530"
+    ],
+    "telefone2": "(19) 99600-2530",
+    "telefonesExtras": [
+      "(19) 99600-2530"
+    ],
+    "emails": [
+      "tonisarkovas@gmail.com",
+      "financeiro@brindarbrindes.com.br"
+    ],
+    "email2": "financeiro@brindarbrindes.com.br",
+    "emailsExtras": [
+      "financeiro@brindarbrindes.com.br"
+    ],
+    "cluster": "Pontual",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-08-28"
   },
   {
     "codigo": 83776,
@@ -3839,7 +6875,20 @@
     "cnpj": "60.779.024/0001-12",
     "telefone": "(19) 98129-8332",
     "celular": "(19) 98129-8332",
-    "email": "adeliaflorasilva@gmail.com"
+    "email": "adeliaflorasilva@gmail.com",
+    "telefones": [
+      "(19) 98129-8332"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "adeliaflorasilva@gmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Pontual",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-09-10"
   },
   {
     "codigo": 5123,
@@ -3907,7 +6956,20 @@
     "cnpj": "35.421.406/0001-22",
     "telefone": "(19) 98174-1573",
     "celular": "(19) 98174-1573",
-    "email": "xqzpersonalizacao@hotmail.com"
+    "email": "xqzpersonalizacao@hotmail.com",
+    "telefones": [
+      "(19) 98174-1573"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "xqzpersonalizacao@hotmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Pontual",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-09-02"
   },
   {
     "codigo": 11128,
@@ -3941,7 +7003,20 @@
     "cnpj": "02.084.963/0001-46",
     "telefone": "(14) 3313-8550",
     "celular": "(14) 3313-8550",
-    "email": "financeiro@dagra.com.br"
+    "email": "financeiro@dagra.com.br",
+    "telefones": [
+      "(14) 3313-8550"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "financeiro@dagra.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Pontual",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-09-14"
   },
   {
     "codigo": 10043,
@@ -3958,7 +7033,23 @@
     "cnpj": "29.655.828/0001-60",
     "telefone": "(15) 9969-9274",
     "celular": "(15) 9969-9274",
-    "email": "xifusbrindes75@gmail.com"
+    "email": "xifusbrindes75@gmail.com",
+    "telefones": [
+      "(15) 9969-9274",
+      "(15) 99699-2743"
+    ],
+    "telefone2": "(15) 99699-2743",
+    "telefonesExtras": [
+      "(15) 99699-2743"
+    ],
+    "emails": [
+      "xifusbrindes75@gmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Pontual",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 129113,
@@ -3975,7 +7066,20 @@
     "cnpj": "47.333.155/0001-03",
     "telefone": "(16) 99106-0290",
     "celular": "(16) 99106-0290",
-    "email": "imprimimais3@gmail.com"
+    "email": "imprimimais3@gmail.com",
+    "telefones": [
+      "(16) 99106-0290"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "imprimimais3@gmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Pontual",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-07-01"
   },
   {
     "codigo": 78620,
@@ -4026,7 +7130,20 @@
     "cnpj": "65.936.731/0001-99",
     "telefone": "(11) 99412-8032",
     "celular": "(11) 99412-8032",
-    "email": "digital4youstudio@outlook.com"
+    "email": "digital4youstudio@outlook.com",
+    "telefones": [
+      "(11) 99412-8032"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "digital4youstudio@outlook.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 109455,
@@ -4043,7 +7160,21 @@
     "cnpj": "51.553.757/0001-43",
     "telefone": "(19) 99702-1389",
     "celular": "(19) 99800-8901",
-    "email": "admin@pp1.com.br"
+    "email": "admin@pp1.com.br",
+    "telefones": [
+      "(19) 99702-1389",
+      "(19) 99800-8901"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "admin@pp1.com.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Pontual",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-07-03"
   },
   {
     "codigo": 34873,
@@ -4111,7 +7242,28 @@
     "cnpj": "07.017.669/0001-35",
     "telefone": "(12) 99125-3205",
     "celular": "(12) 99125-3205",
-    "email": "brindesespeciais.sjc@gmail.com"
+    "email": "brindesespeciais.sjc@gmail.com",
+    "telefones": [
+      "(12) 99125-3205",
+      "(12) 98202-7623",
+      "(12) 99627-6260"
+    ],
+    "telefone2": "(12) 98202-7623",
+    "telefonesExtras": [
+      "(12) 98202-7623",
+      "(12) 99627-6260"
+    ],
+    "emails": [
+      "brindesespeciais.sjc@gmail.com",
+      "brindesbarbato@gmail.com"
+    ],
+    "email2": "brindesbarbato@gmail.com",
+    "emailsExtras": [
+      "brindesbarbato@gmail.com"
+    ],
+    "cluster": "Pontual",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 14030,
@@ -4264,7 +7416,20 @@
     "cnpj": "48.233.408/0001-30",
     "telefone": "(19) 99162-2222",
     "celular": "(19) 99162-2222",
-    "email": "sheimi.limaa@gmail.com"
+    "email": "sheimi.limaa@gmail.com",
+    "telefones": [
+      "(19) 99162-2222"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "sheimi.limaa@gmail.com"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Regular",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-02"
   },
   {
     "codigo": 162104,
@@ -4451,7 +7616,20 @@
     "cnpj": "12.627.224/0001-07",
     "telefone": "(11) 5643-3800",
     "celular": "-",
-    "email": "vendas@ga.art.br"
+    "email": "vendas@ga.art.br",
+    "telefones": [
+      "(11) 5643-3800"
+    ],
+    "telefone2": "",
+    "telefonesExtras": [],
+    "emails": [
+      "vendas@ga.art.br"
+    ],
+    "email2": "",
+    "emailsExtras": [],
+    "cluster": "Pontual",
+    "ativoSite": "Sim",
+    "ultimoAcessoSite": "2026-10-05"
   },
   {
     "codigo": 179673,
