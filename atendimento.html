@@ -14,63 +14,62 @@
   <link rel="stylesheet" href="style.css">
   <style>
     .elo-badge { display:inline-block; padding:2px 8px; border-radius:6px; font-size:0.7rem; font-weight:600; }
-    .elo-cell-locked { color: var(--text-secondary); background: rgba(255,255,255,0.02); }
-    .elo-dot { display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:4px; }
-    .elo-dot.on { background: var(--accent-green); }
-    .elo-dot.off { background: #334155; }
+    .elo-dot { display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:5px; }
+    .elo-dot.on   { background: var(--accent-green); }
+    .elo-dot.bad  { background: var(--accent-red); }
+    .elo-dot.try  { background: #f59e0b; }
+    .elo-dot.off  { background: #334155; }
+    .elo-dot.na   { background: transparent; border:1px dashed #475569; }
+    .elo-legend { display:flex; flex-wrap:wrap; gap:14px; font-size:0.72rem; color:var(--text-secondary); }
+    .elo-legend span { display:inline-flex; align-items:center; }
     .elo-guide { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 16px 20px; }
     .elo-guide summary { cursor: pointer; font-weight: 600; }
-    .elo-guide-row { display:flex; gap:10px; margin-top:10px; font-size:0.85rem; }
-    .elo-guide-row b { min-width: 120px; color: var(--accent-indigo); flex-shrink:0; }
-    .elo-panel-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap:14px; }
+    .elo-guide-title { margin-top:16px; font-size:0.72rem; text-transform:uppercase; letter-spacing:.05em; color:#64748b; font-weight:700; }
+    .elo-guide-row { display:flex; gap:10px; margin-top:8px; font-size:0.85rem; }
+    .elo-guide-row b { min-width: 170px; color: var(--accent-indigo); flex-shrink:0; }
+    .elo-section-title { font-size:0.78rem; text-transform:uppercase; letter-spacing:.05em; color:var(--text-secondary); font-weight:700; margin:4px 0 -4px; }
+    .elo-panel-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(190px,1fr)); gap:14px; }
     .elo-panel-card { background: var(--bg-card); border:1px solid var(--border-color); border-radius: var(--radius); padding:14px 16px; }
     .elo-panel-card .lbl { font-size:0.7rem; color: var(--text-secondary); text-transform:uppercase; }
     .elo-panel-card .val { font-size:1.3rem; font-weight:700; margin-top:4px; }
-    .elo-panel-card .var { font-size:0.75rem; margin-top:2px; }
-    .elo-progress-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; margin-top:14px; }
+    .elo-panel-card .var { font-size:0.75rem; margin-top:2px; color:#94a3b8; line-height:1.3; }
+    .elo-progress-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; }
     .elo-progress-card { background:var(--bg-card); border:1px solid var(--border-color); border-radius:var(--radius); padding:16px; }
+    .elo-progress-card.atual { border-color:#6366f1; }
     .elo-progress-head { display:flex; justify-content:space-between; align-items:flex-start; gap:12px; }
     .elo-progress-month { font-size:0.78rem; color:var(--text-secondary); text-transform:uppercase; letter-spacing:.04em; }
-    .elo-progress-pct { font-size:1.45rem; font-weight:700; line-height:1; }
+    .elo-progress-pct { font-size:1.45rem; font-weight:700; line-height:1; color:#10b981; }
     .elo-progress-main { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:14px; }
     .elo-progress-kpi { background:#0f172a; border-radius:8px; padding:10px; }
     .elo-progress-kpi .lbl { display:block; font-size:0.68rem; color:#64748b; text-transform:uppercase; }
     .elo-progress-kpi .num { display:block; margin-top:3px; font-size:1rem; font-weight:700; color:#f8fafc; }
-    .elo-progress-bar { height:8px; background:#1e293b; border-radius:999px; overflow:hidden; margin-top:14px; }
-    .elo-progress-fill { height:100%; border-radius:999px; background:#10b981; transition:width .25s ease; }
-    .elo-progress-status { margin-top:9px; font-size:0.75rem; color:#94a3b8; line-height:1.35; }
-    .elo-progress-footer {
-      display:grid !important;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:8px;
-      margin-top:12px;
-      padding-top:11px;
-      border-top:1px solid var(--border-color);
-      min-height:48px;
-      visibility:visible;
-    }
-    .elo-progress-footer-item {
-      text-align:center;
-      font-size:0.72rem;
-      color:#94a3b8;
-      line-height:1.25;
-    }
-    .elo-progress-footer-item strong {
-      display:block;
-      margin-top:3px;
-      font-size:0.95rem;
-      color:#f8fafc;
-    }
+    .elo-progress-bar { height:8px; background:#0f172a; border-radius:999px; overflow:hidden; margin-top:14px; display:flex; }
+    .elo-progress-fill { height:100%; background:#10b981; transition:width .25s ease; }
+    .elo-progress-fill.sem { background:#f59e0b; }
+    .elo-progress-status { margin-top:9px; font-size:0.75rem; color:#94a3b8; line-height:1.35; min-height:2.6em; }
+    .elo-progress-footer { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; margin-top:12px; padding-top:11px; border-top:1px solid var(--border-color); }
+    .elo-progress-footer-item { text-align:center; font-size:0.72rem; color:#94a3b8; line-height:1.25; }
+    .elo-progress-footer-item strong { display:block; margin-top:3px; font-size:0.95rem; color:#f8fafc; }
+    .elo-progress-footer-item.ok strong { color:#10b981; }
+    .elo-progress-footer-item.sem strong { color:#f59e0b; }
+    .elo-progress-footer-item.nao strong { color:#ef4444; }
     @media (max-width:900px) { .elo-progress-grid { grid-template-columns:1fr; } }
-    .elo-modal-month { background:#0f172a; border-radius:8px; padding:12px; display:flex; flex-direction:column; gap:8px; }
-    .elo-modal-month h4 { font-size:0.8rem; color:#94a3b8; text-transform:uppercase; }
+    .elo-filtro { background:var(--bg-main); border:1px solid var(--border-color); color:var(--text-primary); padding:6px 10px; border-radius:6px; font-size:0.825rem; outline:none; }
+    .elo-toolbar { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    .elo-modal-sec { background:#0f172a; border-radius:8px; padding:12px; }
+    .elo-modal-sec h4 { font-size:0.75rem; color:#94a3b8; text-transform:uppercase; margin-bottom:8px; letter-spacing:.04em; }
+    .elo-kv { display:grid; grid-template-columns:140px 1fr; gap:4px 10px; font-size:0.82rem; }
+    .elo-kv .k { color:#64748b; }
+    .elo-kv .v { color:#e2e8f0; word-break:break-word; white-space:pre-wrap; }
+    .elo-novo { color:#10b981; }
     .elo-field label { display:block; font-size:0.7rem; color:#64748b; margin-bottom:3px; }
     .elo-field input, .elo-field select, .elo-field textarea {
       width:100%; background:#1e293b; border:1px solid #334155; color:#f8fafc;
       padding:7px 8px; border-radius:6px; font-size:0.85rem; font-family:inherit;
     }
-    .elo-field textarea { resize: vertical; min-height:70px; }
-    .elo-dirty { border-color:#f59e0b !important; box-shadow:0 0 0 1px rgba(245,158,11,0.4); }
+    .elo-field textarea { resize:vertical; min-height:64px; }
+    .elo-btn-save-modal { background:#10b981; color:#fff; border:none; padding:10px 20px; border-radius:6px; font-weight:600; cursor:pointer; font-size:0.9rem; }
+    .elo-btn-save-modal:disabled { opacity:0.5; cursor:not-allowed; }
     .elo-toast {
       position:fixed; bottom:20px; right:20px; z-index:100000; padding:12px 18px;
       border-radius:8px; font-size:0.875rem; font-weight:600; color:#fff; opacity:0;
@@ -79,11 +78,6 @@
     .elo-toast.show { opacity:1; transform: translateY(0); }
     .elo-toast.ok { background:#10b981; }
     .elo-toast.err { background:#ef4444; }
-    .elo-btn-save-modal {
-      background:#10b981; color:#fff; border:none; padding:10px 20px; border-radius:6px;
-      font-weight:600; cursor:pointer; font-size:0.9rem;
-    }
-    .elo-btn-save-modal:disabled { opacity:0.5; cursor:not-allowed; }
   </style>
 </head>
 <body>
@@ -93,18 +87,28 @@
     <header class="main-header">
       <div class="header-title">
         <h1 id="tituloElo">Atendimento ELO - RCA 61</h1>
-        <p>Registro mensal de contato com a carteira - Set/Out/Nov 2026</p>
+        <p id="subtituloElo">Registro mensal de contato com a carteira</p>
       </div>
       <div class="header-controls">
-        <a href="index.html" class="btn-upload" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
+        <a href="index.html" id="linkDashboard" class="btn-upload" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
           <i data-lucide="arrow-left" style="width:16px;height:16px;"></i> Dashboard
         </a>
-        <a href="clientes.html" class="btn-upload" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px; background-color:var(--accent-indigo);">
+        <a href="clientes.html" id="linkClientes" class="btn-upload" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px; background-color:var(--accent-indigo);">
           <i data-lucide="users" style="width:16px;height:16px;"></i> Base & SLAs
         </a>
-        <a href="retira.html" class="btn-upload" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px; background-color:#0ea5e9;">
+        <a href="retira.html" id="linkRetira" class="btn-upload" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px; background-color:#0ea5e9;">
           <i data-lucide="package-search" style="width:16px;height:16px;"></i> Retira
         </a>
+        <a href="#" id="linkPlanilha" target="_blank" rel="noopener" class="btn-upload" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px; background-color:#f59e0b;">
+          <i data-lucide="table" style="width:16px;height:16px;"></i> Abrir planilha
+        </a>
+        <div class="filter-group">
+          <i data-lucide="users" class="filter-icon"></i>
+          <select id="selectRCA">
+            <option value="61">RCA 61</option>
+            <option value="66">RCA 66</option>
+          </select>
+        </div>
         <div class="status-badge active" id="statusBadge">
           <span class="status-dot"></span>
           <span id="statusText">Carregando...</span>
@@ -112,14 +116,30 @@
       </div>
     </header>
 
-    <!-- Painel resumo (comparativo Jan-Ago 25 x 26, direto da aba "Painel") -->
-    <section class="elo-panel-grid" id="painelGrid"></section>
-
-    <!-- Progresso do atendimento ELO: cada cliente só conta no mês
-         correspondente quando houver data válida do mês/ano e assunto. -->
+    <!-- Progresso por mês: falei / sem retorno / não liguei -->
+    <div class="elo-section-title">Atendimento por mês</div>
     <section class="elo-progress-grid" id="eloProgressGrid"></section>
 
-    <!-- Guia rápido (aba "Fluxo de Atendimento") -->
+    <!-- Painel do mês atual (calculado a partir da aba Minha Carteira) -->
+    <div class="elo-section-title" id="tituloPainelMes">O trabalho do mês</div>
+    <section class="elo-panel-grid" id="painelMes"></section>
+
+    <!-- Resultado da carteira (aba Painel, seção 3) -->
+    <div class="elo-section-title">Resultado da carteira</div>
+    <section class="elo-panel-grid" id="painelResultado"></section>
+
+    <!-- Composição por cluster (aba Painel, seção 4) -->
+    <section class="table-card" id="cardClusters" style="display:none;">
+      <div class="card-header"><h3>Composição da carteira por cluster</h3></div>
+      <div class="table-wrapper" style="max-height:none;">
+        <table>
+          <thead id="theadClusters"></thead>
+          <tbody id="tbClusters"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Guia rápido (aba "Regras do Piloto") -->
     <details class="elo-guide">
       <summary>Como funciona esse atendimento (clique para abrir)</summary>
       <div id="guiaConteudo"></div>
@@ -128,8 +148,18 @@
     <!-- Tabela principal -->
     <section class="table-card" style="margin-top:10px;">
       <div class="card-header space-between">
-        <h3>Minha Carteira - 270 Clientes</h3>
-        <input type="text" id="searchElo" placeholder="Pesquisar por cliente, cidade ou código..." class="table-search" style="width:300px;">
+        <h3 id="tituloTabela">Minha Carteira</h3>
+        <div class="elo-toolbar">
+          <select id="filtroStatus" class="elo-filtro"></select>
+          <input type="text" id="searchElo" placeholder="Pesquisar por cliente, cidade ou código..." class="table-search" style="width:280px;">
+        </div>
+      </div>
+      <div class="elo-legend" id="legendaDots">
+        <span><i class="elo-dot on"></i>Falei com o cliente</span>
+        <span><i class="elo-dot try"></i>Tentei, sem retorno (mês aberto)</span>
+        <span><i class="elo-dot bad"></i>Mês encerrado sem contato</span>
+        <span><i class="elo-dot off"></i>Pendente / mês futuro</span>
+        <span><i class="elo-dot na"></i>Não estava na carteira</span>
       </div>
       <div class="table-wrapper" style="max-height:600px;">
         <table>
@@ -138,16 +168,17 @@
               <th>Código</th>
               <th>Cliente</th>
               <th>Cidade</th>
+              <th>Cluster</th>
               <th>Var%</th>
               <th>Ped. 26</th>
-              <th>Grava?</th>
               <th>Ponto de Atenção</th>
-              <th>Contatos (S/O/N)</th>
-              <th style="text-align:center;">Ações</th>
+              <th id="thMeses">Contatos</th>
+              <th>Próx. ligação</th>
+              <th style="text-align:center;">Detalhes</th>
             </tr>
           </thead>
           <tbody id="tbElo">
-            <tr><td colspan="9" class="empty-row">Carregando planilha do Drive...</td></tr>
+            <tr><td colspan="10" class="empty-row">Carregando planilha do Drive...</td></tr>
           </tbody>
         </table>
       </div>
@@ -161,824 +192,753 @@
     if (typeof lucide !== 'undefined') lucide.createIcons();
 
     // ============================================================
-    // CONFIGURAÇÃO
+    // FUNÇÕES PURAS (leitura da planilha e classificação)
     // ============================================================
-    // ============================================================
-    // RCA SELECIONADO
-    // ============================================================
-    // Primeiro usa ?rca=61 ou ?rca=66.
-    // Se a tela anterior não passar o parâmetro, usa o RCA salvo
-    // pelo seletor do Dashboard. Sem informação, mantém RCA 61.
-    const rcaDaUrl = new URLSearchParams(window.location.search).get('rca');
-    const rcaSalvo = localStorage.getItem('rcaSelecionado');
-    const rcaSelecionado =
-      rcaDaUrl === '66' || rcaDaUrl === '61'
-        ? rcaDaUrl
-        : (rcaSalvo === '66' || rcaSalvo === '61' ? rcaSalvo : '61');
+    // <pure>
+    const MESES_NOME = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
 
-    if (rcaDaUrl === '61' || rcaDaUrl === '66') {
-      localStorage.setItem('rcaSelecionado', rcaDaUrl);
+    function norm(s) {
+      return String(s === null || s === undefined ? '' : s)
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim().toLowerCase();
+    }
+    function txt(v) { return v === null || v === undefined ? '' : String(v).trim(); }
+    function numero(v) { const n = Number(v); return Number.isFinite(n) ? n : 0; }
+
+    function mesDoTexto(t) {
+      const n = norm(t);
+      for (let i = 0; i < MESES_NOME.length; i++) if (n.includes(norm(MESES_NOME[i]))) return i + 1;
+      return 0;
+    }
+    function nomeDoMes(n) { const m = MESES_NOME[n - 1] || ''; return m.charAt(0).toUpperCase() + m.slice(1); }
+
+    // Data da célula -> 'AAAA-MM-DD' (aceita Date, serial do Excel, dd/mm/aaaa e aaaa-mm-dd)
+    function paraISO(v) {
+      if (v === null || v === undefined || v === '') return '';
+      if (v instanceof Date) {
+        if (isNaN(v)) return '';
+        const d = new Date(v.getTime() + 12 * 3600 * 1000); // evita virar o dia por fuso/arredondamento
+        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+      }
+      if (typeof v === 'number') {
+        const d = new Date(Math.round((v - 25569) * 86400 * 1000));
+        return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}-${String(d.getUTCDate()).padStart(2, '0')}`;
+      }
+      const s = String(v).trim();
+      let m = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
+      if (m) return `${m[1]}-${m[2]}-${m[3]}`;
+      m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})/);
+      if (m) {
+        const ano = m[3].length === 2 ? '20' + m[3] : m[3];
+        return `${ano}-${m[2].padStart(2, '0')}-${m[1].padStart(2, '0')}`;
+      }
+      return '';
     }
 
-    const CONFIG_RCA = {
-      '61': {
-        nome: 'RCA 61',
-        driveFileId: '1yr12JeKO-5ipBrzbqrcWFnYXhkfkQvH7tkRicbcogps',
-        appsScriptUrl: 'https://script.google.com/macros/s/AKfycbw-s10eMg-8ajimxH3lK1vwo5dK_o43SLHtQa4H0sN5oHQ8VrewthA-iBxx32_RVfns/exec'
-      },
-      '66': {
-        nome: 'RCA 66',
-        driveFileId: '12ZoIQhoWn9MDPWqz-EiPMIAfoL6MiB1DAmhDLB_AaLo',
-        appsScriptUrl: 'https://script.google.com/macros/s/AKfycbzCO-yjaRfKZd-W56n1BbFTJbyQFJVZls-k3DyjESSDJVTwtKDfJV71PkQ91UUKrTsI/exec'
+    function extrairDoWorkbook(wb, rca) {
+      const lerAba = nome => XLSX.utils.sheet_to_json(wb.Sheets[nome], { header: 1, defval: null, raw: true });
+      const rows = lerAba('Minha Carteira');
+
+      // título -> mês/ano do atendimento atual
+      const titulo = txt(rows[0] && rows[0][0]);
+      let mAno = norm(titulo).match(new RegExp('(' + MESES_NOME.map(norm).join('|') + ')/(\\d{4})'));
+      let mesAtual = 0, ano = 2026;
+      if (mAno) { mesAtual = MESES_NOME.map(norm).indexOf(mAno[1]) + 1; ano = Number(mAno[2]); }
+      else {
+        const m2 = norm((rows[1] || []).join(' ')).match(/atendimento de ([a-z]+)/);
+        if (m2) mesAtual = mesDoTexto(m2[1]);
       }
-    };
 
-    const CONFIG_ATUAL = CONFIG_RCA[rcaSelecionado];
-    const DRIVE_FILE_ID = CONFIG_ATUAL.driveFileId;
-    const APPS_SCRIPT_URL = CONFIG_ATUAL.appsScriptUrl;
+      const hi = rows.slice(0, 8).findIndex(r => r && norm(r[0]) === 'cod');
+      if (hi < 0) throw new Error('Cabeçalho da aba "Minha Carteira" não encontrado.');
+      const h = rows[hi].map(norm);
+      const f = p => h.findIndex(p);
+      const jan = h.map((x, i) => x.startsWith('jan-') ? i : -1).filter(i => i >= 0);
+      const col = {
+        cod: f(x => x === 'cod'), cliente: f(x => x === 'cliente'), cidade: f(x => x === 'cidade'), cluster: f(x => x === 'cluster'),
+        p25: jan[0], p26: jan[1], varp: f(x => x.startsWith('var')), mesant: f(x => /^[a-z]+\/\d{2}$/.test(x)),
+        ped: f(x => x.startsWith('pedidos')), ponto: f(x => x.startsWith('ponto')),
+        t1: f(x => /^1.\s*tentativa/.test(x)), a1: f(x => x === 'assunto 1'), r1: f(x => x === 'resultado 1'),
+        t2: f(x => /^2.\s*tentativa/.test(x)), a2: f(x => x === 'assunto 2'), r2: f(x => x === 'resultado 2'),
+        disse: f(x => x.startsWith('o que o cliente disse')), prox: f(x => x === 'proxima ligacao'),
+        trouxe: f(x => x.startsWith('o que a proxima')), enc: f(x => x.startsWith('encaminhado')),
+        gestao: f(x => x.startsWith('retorno da gestao'))
+      };
+      const hist = h.map((x, i) => x.startsWith('historico') ? { i, mes: mesDoTexto(x.split('·').pop()) } : null).filter(Boolean);
 
-    document.title = `Atendimento ELO - ${CONFIG_ATUAL.nome}`;
-    const tituloElo = document.getElementById('tituloElo');
-    if (tituloElo) tituloElo.textContent = `Atendimento ELO - ${CONFIG_ATUAL.nome}`;
+      // aba Carteira e Contatos
+      const contatos = {};
+      if (wb.Sheets['Carteira e Contatos']) {
+        const cr = lerAba('Carteira e Contatos');
+        const ci = cr.slice(0, 8).findIndex(r => r && norm(r[0]) === 'cod');
+        if (ci >= 0) {
+          const ch = cr[ci].map(norm); const g = n => ch.indexOf(n);
+          cr.slice(ci + 1).forEach(r => {
+            if (!r || r[0] === null || r[0] === '') return;
+            const ua = txt(r[g('ultimo acesso')]);
+            contatos[Math.trunc(Number(r[0]))] = {
+              telefone: txt(r[g('telefone')]), celular: txt(r[g('celular')]), telefoneSite: txt(r[g('telefone do site')]),
+              emailCadastro: txt(r[g('e-mail do cadastro')]), emailsSite: txt(r[g('e-mail(s) do site')]), emailLogin: txt(r[g('e-mail de login')]),
+              ultimoAcesso: ua.startsWith('0000') ? '' : ua, ativoSite: txt(r[g('ativo no site')])
+            };
+          });
+        }
+      }
 
-    const ASSUNTO_OPCOES = [
-      'Apresentação da carteira', 'Oferta de gravação', 'Acompanhamento de pedido',
-      'Ocorrência ou devolução', 'Cliente sem compra', 'entender motivo',
-      'Dúvida de produto ou processo', 'Atualização de cadastro', 'Sem retorno',
-      'Cliente não localizado'
+      const clientes = [];
+      rows.slice(hi + 1).forEach(r => {
+        if (!r || r[col.cod] === null || r[col.cod] === '' || !r[col.cliente]) return;
+        const cod = Math.trunc(Number(r[col.cod]));
+        const historicos = {};
+        hist.forEach(x => { historicos[String(x.mes)] = txt(r[x.i]); });
+        clientes.push({
+          codigo: cod, cliente: txt(r[col.cliente]), cidade: txt(r[col.cidade]), cluster: txt(r[col.cluster]),
+          fat25: numero(r[col.p25]), fat26: numero(r[col.p26]), varPct: typeof r[col.varp] === 'number' ? r[col.varp] : null,
+          vendaMesAnt: numero(r[col.mesant]), pedidos26: Math.trunc(numero(r[col.ped])), pontoAtencao: txt(r[col.ponto]),
+          historicos,
+          t1: paraISO(r[col.t1]), a1: txt(r[col.a1]), r1: txt(r[col.r1]),
+          t2: paraISO(r[col.t2]), a2: txt(r[col.a2]), r2: txt(r[col.r2]),
+          clienteDisse: txt(r[col.disse]), proxLigacao: paraISO(r[col.prox]), trouxe: txt(r[col.trouxe]),
+          encaminhadoPara: txt(r[col.enc]), retornoGestao: txt(r[col.gestao]),
+          contatos: contatos[cod] || null
+        });
+      });
+
+      // aba Painel: seções 3 (resultado) e 4 (cluster)
+      let resultado = [], clusters = [], clusterCols = [], responsavel = '';
+      try {
+        const p = lerAba('Painel');
+        const tp = txt(p[0] && p[0][0]).split('|');
+        if (tp.length >= 3) responsavel = tp[2].trim();
+        const i3 = p.findIndex(r => r && norm(r[0]).startsWith('3.'));
+        const i4 = p.findIndex(r => r && norm(r[0]).startsWith('4.'));
+        if (i3 >= 0 && i4 > i3) {
+          resultado = p.slice(i3 + 1, i4).filter(r => r && r[0]).map(r => ({ label: txt(r[0]), valor: r[3], nota: txt(r[4]) }));
+        }
+        if (i4 >= 0) {
+          clusterCols = (p[i4 + 1] || []).slice(3, 8).map(txt);
+          for (let k = i4 + 2; k < p.length; k++) {
+            const r = p[k];
+            if (!r || !r[0] || typeof r[3] !== 'number') break;
+            clusters.push({ cluster: txt(r[0]), clientes: r[3], fat25: r[4], fat26: r[5], var: r[6], compraram: r[7] });
+          }
+        }
+      } catch (e) { /* painel opcional */ }
+
+      // aba Regras do Piloto
+      const guia = [];
+      if (wb.Sheets['Regras do Piloto']) {
+        lerAba('Regras do Piloto').slice(1).forEach(r => {
+          if (!r) return;
+          if (r[0] && r[1]) guia.push({ tipo: 'par', a: txt(r[0]), b: txt(r[1]) });
+          else if (r[0]) guia.push({ tipo: 'titulo', a: txt(r[0]) });
+        });
+      }
+
+      return {
+        meta: {
+          rca, titulo, responsavel, mesAtual, ano, historicos: hist.map(x => x.mes),
+          periodoAnt: txt(rows[hi][col.p25]), periodoAtu: txt(rows[hi][col.p26]), mesAnt: txt(rows[hi][col.mesant]), clusterCols
+        },
+        clientes, painel: { resultado, clusters }, guia
+      };
+    }
+
+    // ---------- Classificação ----------
+    const ASSUNTOS_CONHECIDOS = [
+      'apresentacao da carteira', 'oferta de gravacao', 'acompanhamento de pedido', 'ocorrencia ou devolucao',
+      'cliente sem compra', 'entender queda nas compras', 'entender motivo', 'duvida de produto ou processo',
+      'atualizacao de cadastro', 'cliente nao localizado', 'sem retorno'
     ];
-    const ENCAMINHADO_OPCOES = [
-      'Nada a encaminhar', 'Reunião com a Aline Almeida', 'Mesa de negociação',
-      'Crédito e limite', 'Logística', 'Fiscal', 'Qualidade ou gravação', 'Cadastro'
-    ];
+    const ASSUNTO_SEM_CONTATO = new Set(['sem retorno', 'cliente nao localizado']);
+    const RESULTADO_SEM_CONTATO = new Set(['sem retorno', 'cliente bloqueado']);
+    const RESULTADOS_EFETIVOS = new Set([
+      'contato com compras', 'alinhamento com comercial', 'falou com decisor', 'agendou visita showroom', 'pedido gerado'
+    ]);
 
-    let baseElo = [];
+    // Status possíveis de um cliente em um mês:
+    //   teveRetorno | semRetorno | naoLigou | fora (não estava na carteira) | futuro (sem dados)
+
+    // Mês vindo da coluna "Histórico · <mês>": "17/09 · Sem retorno. cx postal"
+    function classificarHistorico(texto) {
+      const t = norm(texto);
+      if (!t) return 'naoLigou';
+      if (t.startsWith('cliente nao estava na planilha')) return 'fora';
+      if (t.startsWith('estava na carteira e nao teve contato')) return 'naoLigou';
+      const m = String(texto).trim().match(/^(\d{1,2})\/(\d{1,2})\s*·\s*([\s\S]*)$/);
+      if (!m) {
+        // Linha sem data/assunto (ex.: ". Não atende"): só a anotação sobrou.
+        const anot = norm(texto).replace(/^[\s.·-]+/, '');
+        if (/nao atende|caixa postal|cx postal|ocupado|so chama/.test(anot)) return 'semRetorno';
+        return anot.length >= 30 ? 'teveRetorno' : 'naoLigou';
+      }
+      const resto = norm(m[3]);
+      let assunto = ASSUNTOS_CONHECIDOS.find(a => resto.startsWith(a));
+      if (!assunto) assunto = resto.split('.')[0].trim();
+      return ASSUNTO_SEM_CONTATO.has(assunto) ? 'semRetorno' : 'teveRetorno';
+    }
+
+    function dataValidaNoMes(iso, mes, ano) {
+      const m = String(iso || '').match(/^(\d{4})-(\d{2})-\d{2}$/);
+      return !!m && Number(m[1]) === ano && Number(m[2]) === mes;
+    }
+
+    // Mês atual: colunas 1ª/2ª tentativa + Assunto + Resultado
+    function classificarMesAtual(c, mes, ano) {
+      const tentativas = [
+        { t: c.t1, a: norm(c.a1), r: norm(c.r1) },
+        { t: c.t2, a: norm(c.a2), r: norm(c.r2) }
+      ].filter(x => dataValidaNoMes(x.t, mes, ano) && (x.a || x.r));
+      if (!tentativas.length) return 'naoLigou';
+      const houveContato = tentativas.some(x =>
+        x.r ? !RESULTADO_SEM_CONTATO.has(x.r) : !ASSUNTO_SEM_CONTATO.has(x.a));
+      return houveContato ? 'teveRetorno' : 'semRetorno';
+    }
+
+    function statusNoMes(c, mes, meta) {
+      if ((meta.historicos || []).includes(mes)) return classificarHistorico((c.historicos || {})[String(mes)]);
+      if (mes === meta.mesAtual) return classificarMesAtual(c, mes, meta.ano);
+      return 'futuro';
+    }
+    // </pure>
 
     // ============================================================
-    // CARREGAMENTO: tenta buscar a planilha ao vivo do Drive; se falhar
-    // (permissão, CORS, sem internet), cai pro snapshot fixo local.
+    // CONFIGURAÇÃO / RCA
+    // ============================================================
+    const CONFIG_RCA = {
+      // Cole em appsScriptUrl a URL /exec gerada ao implantar o Apps Script de CADA planilha.
+      '61': { nome: 'RCA 61', sheetId: '1AIAKNYMQbWFFbD1JJTlejK17cfU9T-1uhwr45GOLqyg', snapshot: 'atendimento_elo.json', appsScriptUrl: '' },
+      '66': { nome: 'RCA 66', sheetId: '10AdnLEmOP3q2N7g_8AMTFhaGsq3bjJ2srnYIv0lpVKA', snapshot: 'atendimento_elo.json', appsScriptUrl: '' }
+    };
+    const rcaDaUrl = new URLSearchParams(window.location.search).get('rca');
+    const rcaSalvo = localStorage.getItem('sistemaRCA') || localStorage.getItem('rcaSelecionado');
+    const rcaSelecionado = [rcaDaUrl, rcaSalvo].find(v => v === '61' || v === '66') || '61';
+    try { localStorage.setItem('sistemaRCA', rcaSelecionado); localStorage.setItem('rcaSelecionado', rcaSelecionado); } catch (_) {}
+
+    const CFG = CONFIG_RCA[rcaSelecionado];
+    const APPS_SCRIPT_URL = CFG.appsScriptUrl;
+    const URL_PLANILHA = `https://docs.google.com/spreadsheets/d/${CFG.sheetId}/edit`;
+
+    document.title = `Atendimento ELO - ${CFG.nome}`;
+    document.getElementById('tituloElo').textContent = `Atendimento ELO - ${CFG.nome}`;
+    document.getElementById('linkPlanilha').href = URL_PLANILHA;
+    document.getElementById('linkDashboard').href = `index.html?rca=${rcaSelecionado}`;
+    document.getElementById('linkClientes').href = `clientes.html?rca=${rcaSelecionado}`;
+    document.getElementById('linkRetira').href = `retira.html?rca=${rcaSelecionado}`;
+    const selRca = document.getElementById('selectRCA');
+    selRca.value = rcaSelecionado;
+    selRca.addEventListener('change', () => {
+      const url = new URL(window.location.href);
+      url.searchParams.set('rca', selRca.value);
+      try { localStorage.setItem('sistemaRCA', selRca.value); localStorage.setItem('rcaSelecionado', selRca.value); } catch (_) {}
+      window.location.href = url.toString();
+    });
+
+    const FERIADOS = new Set(['2026-10-12', '2026-11-02', '2026-11-20', '2026-12-25']);
+    const ASSUNTO_OPCOES = ['Apresentação da carteira','Oferta de gravação','Acompanhamento de pedido','Ocorrência ou devolução','Cliente sem compra','Entender queda nas compras','Dúvida de produto ou processo','Atualização de cadastro','Cliente não localizado','Sem retorno'];
+    const RESULTADO_OPCOES = ['Contato com Compras','Alinhamento com Comercial','Falou com decisor','Agendou Visita Showroom','Pedido gerado','Retorno agendado','Sem retorno','Cadastro atualizado','Cliente bloqueado'];
+    const ENCAMINHADO_OPCOES = ['Não precisou encaminhar','Comercial - Aline','Mesa de negociação','Financeiro','Logística','Gravação','Cadastro'];
+    const MAPA_COLUNAS = {
+      t1: '1ª tentativa', a1: 'Assunto 1', r1: 'Resultado 1',
+      t2: '2ª tentativa', a2: 'Assunto 2', r2: 'Resultado 2',
+      clienteDisse: 'O que o cliente disse', proxLigacao: 'Próxima ligação',
+      trouxe: 'O que a próxima ligação trouxe', encaminhadoPara: 'Encaminhado para'
+    };
+    const ASSUNTO_RESULTADO_ATENCAO = new Set(['falou com decisor', 'alinhamento com comercial']);
+
+    let dados = null;     // { meta, clientes, painel, guia }
+    let baseElo = [];
+    let MESES = [];       // meses exibidos (números)
+
+    const $ = id => document.getElementById(id);
+    const esc = s => String(s === null || s === undefined ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+    // ============================================================
+    // CARREGAMENTO: Drive ao vivo -> snapshot local
     // ============================================================
     async function carregarDados() {
+      let origemDrive = false;
       try {
-        const url = `https://docs.google.com/spreadsheets/d/${DRIVE_FILE_ID}/export?format=xlsx`;
-        const res = await fetch(url);
+        const res = await fetch(`https://docs.google.com/spreadsheets/d/${CFG.sheetId}/export?format=xlsx`);
         if (!res.ok) throw new Error('HTTP ' + res.status);
         const buf = await res.arrayBuffer();
         const wb = XLSX.read(new Uint8Array(buf), { type: 'array', cellDates: true });
-        baseElo = extrairDoWorkbook(wb);
-        renderizarPainel(wb);
-        renderizarGuia(wb);
-        setStatus(true, `Sincronizado do Drive (${baseElo.length} clientes)`);
+        dados = extrairDoWorkbook(wb, rcaSelecionado);
+        origemDrive = true;
       } catch (err) {
-        console.warn('[Atendimento ELO] Não consegui buscar do Drive, usando snapshot local.', err);
+        console.warn('[Atendimento ELO] Não consegui ler o Drive, usando snapshot local.', err);
         try {
-          const r = await fetch(rcaSelecionado === '66' ? 'rca66_clientes.json' : 'atendimento_elo.json');
-          baseElo = await r.json();
-          setStatus(false, `Snapshot local RCA ${rcaSelecionado} (${baseElo.length} clientes) — sem conexão com o Drive`);
+          const r = await fetch(CFG.snapshot);
+          if (!r.ok) throw new Error('HTTP ' + r.status);
+          const j = await r.json();
+          dados = j[rcaSelecionado] || (j.meta ? j : null);
+          if (!dados) throw new Error('Snapshot sem dados do RCA ' + rcaSelecionado);
         } catch (err2) {
-          document.getElementById('tbElo').innerHTML = '<tr><td colspan="9" class="empty-row" style="color:#ef4444;">Não foi possível carregar os dados.</td></tr>';
+          console.error(err2);
+          $('tbElo').innerHTML = '<tr><td colspan="10" class="empty-row" style="color:#ef4444;">Não foi possível carregar os dados.</td></tr>';
           setStatus(false, 'Erro ao carregar');
           return;
         }
       }
-      renderizarTabela(baseElo);
+      baseElo = dados.clientes;
+      const ult = Math.max(11, dados.meta.mesAtual || 0);
+      MESES = []; for (let m = 9; m <= ult; m++) MESES.push(m);
+
+      const resp = dados.meta.responsavel ? ` · ${dados.meta.responsavel}` : '';
+      $('subtituloElo').textContent = `Registro mensal de contato com a carteira${resp} · ${nomeDoMes(dados.meta.mesAtual)}/${dados.meta.ano}`;
+      setStatus(origemDrive,
+        origemDrive ? `Sincronizado do Drive (${baseElo.length} clientes)`
+                    : `Snapshot local RCA ${rcaSelecionado} (${baseElo.length} clientes) — sem conexão com o Drive`);
+
+      montarFiltro();
+      renderizarTudo();
     }
 
     function setStatus(ok, texto) {
-      const badge = document.getElementById('statusBadge');
-      const txt = document.getElementById('statusText');
-      txt.textContent = texto;
-      badge.classList.toggle('active', ok);
-    }
-
-    function fmtDataCell(v) {
-      if (v instanceof Date) return v.toISOString().slice(0, 10);
-      if (typeof v === 'string' && v) return v;
-      return '';
-    }
-
-    function extrairDoWorkbook(wb) {
-      const aba = wb.Sheets['Minha Carteira'];
-      const linhas = XLSX.utils.sheet_to_json(aba, { header: 1, defval: null });
-      const clientes = [];
-      for (let i = 3; i < linhas.length; i++) {
-        const r = linhas[i];
-        if (!r || r.every(c => c === null || c === '')) continue;
-        const [cod, cliente, cidade, janAgo25, janAgo26, varPct, pedidos26, grava, ponto,
-          setContato, setAssunto, outContato, outAssunto, novContato, novAssunto,
-          clienteDisse, encaminhado] = r;
-        if (!cod || !cliente) continue;
-        clientes.push({
-          codigo: Math.trunc(Number(cod)),
-          cliente: String(cliente).trim(),
-          cidade: cidade ? String(cidade).trim() : '',
-          janAgo25: Number(janAgo25) || 0,
-          janAgo26: Number(janAgo26) || 0,
-          varPct: typeof varPct === 'number' ? varPct : null,
-          pedidos26: Number(pedidos26) || 0,
-          grava: grava || '',
-          pontoAtencao: ponto || '',
-          setContato: fmtDataCell(setContato),
-          setAssunto: setAssunto || '',
-          outContato: fmtDataCell(outContato),
-          outAssunto: outAssunto || '',
-          novContato: fmtDataCell(novContato),
-          novAssunto: novAssunto || '',
-          clienteDisse: clienteDisse || '',
-          encaminhadoPara: encaminhado || ''
-        });
-      }
-      return clientes;
+      $('statusText').textContent = texto;
+      $('statusBadge').classList.toggle('active', ok);
     }
 
     // ============================================================
-    // PAINEL (seção 1 da aba "Painel" - comparativo Jan-Ago)
+    // DATAS / DIAS ÚTEIS
     // ============================================================
-    function renderizarPainel(wb) {
-      const grid = document.getElementById('painelGrid');
-      try {
-        const aba = wb.Sheets['Painel'];
-        const linhas = XLSX.utils.sheet_to_json(aba, { header: 1, defval: null });
-        // linhas 4 a 8 (índice 3 a 7) = indicadores da seção 1
-        const indicadores = linhas.slice(3, 8).filter(r => r && r[0] && typeof r[1] === 'number');
-        grid.innerHTML = indicadores.map(r => {
-          const [nome, v25, v26, variacao] = r;
-          const ehMoeda = String(nome).toLowerCase().includes('faturamento');
-          const fmt = n => ehMoeda
-            ? n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 })
-            : n.toLocaleString('pt-BR', { maximumFractionDigits: 1 });
-          const corVar = variacao >= 0 ? '#10b981' : '#ef4444';
-          const varTxt = typeof variacao === 'number' ? `${variacao >= 0 ? '+' : ''}${(variacao * 100).toFixed(1)}%` : '-';
-          return `<div class="elo-panel-card">
-            <div class="lbl">${nome}</div>
-            <div class="val">${fmt(v26)}</div>
-            <div class="var" style="color:${corVar};">${varTxt} vs Jan-Ago/25 (${fmt(v25)})</div>
-          </div>`;
-        }).join('');
-      } catch (e) {
-        grid.innerHTML = '';
-      }
+    function dataLocalHoje() { const a = new Date(); return new Date(a.getFullYear(), a.getMonth(), a.getDate()); }
+    function isoLocal(d) { return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; }
+    function fmtDM(iso) { const m = String(iso || '').match(/^\d{4}-(\d{2})-(\d{2})/); return m ? `${m[2]}/${m[1]}` : ''; }
+    function ehDiaUtil(d) { return d.getDay() !== 0 && d.getDay() !== 6 && !FERIADOS.has(isoLocal(d)); }
+
+    function situacaoDoMes(mes) {
+      const ano = dados.meta.ano, hoje = dataLocalHoje();
+      const ini = new Date(ano, mes - 1, 1), fim = new Date(ano, mes, 0);
+      if (hoje > fim) return 'encerrado';
+      if (hoje < ini) return 'futuro';
+      return 'andamento';
     }
 
-    function renderizarGuia(wb) {
-      const el = document.getElementById('guiaConteudo');
-      try {
-        const aba = wb.Sheets['Fluxo de Atendimento'];
-        const linhas = XLSX.utils.sheet_to_json(aba, { header: 1, defval: null });
-        const pares = linhas.slice(3).filter(r => r && r[0] && r[1]);
-        el.innerHTML = pares.map(r => `<div class="elo-guide-row"><b>${r[0]}</b><span>${r[1]}</span></div>`).join('');
-      } catch (e) {
-        el.innerHTML = '<p style="color:#64748b;font-size:0.85rem;">Guia não disponível.</p>';
-      }
-    }
-
-    // ============================================================
-    // PROGRESSO DO ATENDIMENTO ELO
-    // ============================================================
-    //
-    // Um cliente só é considerado FEITO no mês quando:
-    // - existe uma data de contato;
-    // - a data pertence ao mês/ano de referência;
-    // - existe um assunto preenchido.
-    //
-    // A mesma regra é usada para a bolinha verde da tabela.
-    // ============================================================
-
-    const MESES_ELO = [
-      { numero: 9, nome: 'Setembro', contato: 'setContato', assunto: 'setAssunto' },
-      { numero: 10, nome: 'Outubro', contato: 'outContato', assunto: 'outAssunto' },
-      { numero: 11, nome: 'Novembro', contato: 'novContato', assunto: 'novAssunto' }
-    ];
-
-    const FERIADOS_NACIONAIS_ELO_2026 = new Set([
-      '2026-10-12',
-      '2026-11-02',
-      '2026-11-20'
-    ]);
-
-    function dataContatoValidaParaMes(valor, mes) {
-      if (!valor) return false;
-
-      const s = String(valor).trim();
-      const m = s.match(/^(\d{4})-(\d{2})-(\d{2})$/);
-
-      if (!m) return false;
-
-      const ano = Number(m[1]);
-      const mesNumero = Number(m[2]);
-
-      return ano === 2026 && mesNumero === mes;
-    }
-
-    function clienteFeitoNoMes(c, cfg) {
-      const temData =
-        dataContatoValidaParaMes(c[cfg.contato], cfg.numero);
-
-      const temAssunto =
-        String(c[cfg.assunto] || '').trim() !== '';
-
-      return temData && temAssunto;
-    }
-
-    function normalizarAssuntoElo(valor) {
-      return String(valor || '')
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '')
-        .trim()
-        .toLowerCase();
-    }
-
-    function classificarAtendimentoNoMes(c, cfg) {
-      const temData =
-        dataContatoValidaParaMes(c[cfg.contato], cfg.numero);
-
-      const assunto =
-        normalizarAssuntoElo(c[cfg.assunto]);
-
-      const temAssunto =
-        assunto !== '';
-
-      // Sem data válida do mês = ainda não liguei para esse cliente neste mês.
-      // Mesmo que exista texto no assunto, sem a data do mês ele não entra
-      // como contato realizado.
-      if (!temData) {
-        return 'naoLigou';
-      }
-
-      // Data válida + assunto "Sem retorno" ou "Cliente não localizado"
-      // = houve tentativa de contato, mas não houve retorno do cliente.
-      if (
-        temAssunto &&
-        (
-          assunto === 'sem retorno' ||
-          assunto === 'cliente nao localizado'
-        )
-      ) {
-        return 'semRetorno';
-      }
-
-      // Data válida + qualquer outro assunto = tive retorno / contato efetivo.
-      // Data sem assunto continua fora do atendimento concluído.
-      if (temAssunto) {
-        return 'teveRetorno';
-      }
-
-      return 'naoLigou';
-    }
-
-    function contarStatusAtendimentoMes(cfg) {
-      const status = {
-        teveRetorno: 0,
-        semRetorno: 0,
-        naoLigou: 0
-      };
-
-      baseElo.forEach(c => {
-        const categoria =
-          classificarAtendimentoNoMes(c, cfg);
-
-        status[categoria]++;
-      });
-
-      return status;
-    }
-
-    function contarConcluidosMes(cfg) {
-      return baseElo.filter(c =>
-        clienteFeitoNoMes(c, cfg)
-      ).length;
-    }
-
-    function dataLocalHoje() {
-      const agora = new Date();
-
-      return new Date(
-        agora.getFullYear(),
-        agora.getMonth(),
-        agora.getDate()
-      );
-    }
-
-    function primeiroDiaMes(ano, mesNumero) {
-      return new Date(
-        ano,
-        mesNumero - 1,
-        1
-      );
-    }
-
-    function ultimoDiaMes(ano, mesNumero) {
-      return new Date(
-        ano,
-        mesNumero,
-        0
-      );
-    }
-
-    function formatarDataCurta(data) {
-      return data.toLocaleDateString(
-        'pt-BR',
-        {
-          day: '2-digit',
-          month: '2-digit'
-        }
-      );
-    }
-
-    function ehDiaUtilElo(data) {
-      const diaSemana = data.getDay();
-
-      if (diaSemana === 0 || diaSemana === 6) {
-        return false;
-      }
-
-      const iso =
-        `${data.getFullYear()}-${String(data.getMonth() + 1).padStart(2, '0')}-${String(data.getDate()).padStart(2, '0')}`;
-
-      return !FERIADOS_NACIONAIS_ELO_2026.has(iso);
-    }
-
-    function diasUteisRestantesMes(mesNumero) {
-      const hoje = dataLocalHoje();
-      const inicioMes = primeiroDiaMes(2026, mesNumero);
-      const fimMes = ultimoDiaMes(2026, mesNumero);
-
-      let inicioContagem;
-
-      if (hoje < inicioMes) {
-        // Mês futuro: conta todos os dias úteis do mês.
-        inicioContagem = inicioMes;
-      } else if (hoje > fimMes) {
-        // Mês passado: não há dias úteis restantes.
-        return 0;
-      } else {
-        // Mês atual: conta a partir de amanhã.
-        inicioContagem = new Date(hoje);
-        inicioContagem.setDate(
-          inicioContagem.getDate() + 1
-        );
-      }
-
+    function diasUteisRestantes(mes) {
+      const ano = dados.meta.ano, hoje = dataLocalHoje();
+      const ini = new Date(ano, mes - 1, 1), fim = new Date(ano, mes, 0);
+      if (hoje > fim) return 0;
+      const cursor = hoje < ini ? new Date(ini) : new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate() + 1);
       let total = 0;
-      const cursor = new Date(inicioContagem);
-
-      while (cursor <= fimMes) {
-        if (ehDiaUtilElo(cursor)) {
-          total++;
-        }
-
-        cursor.setDate(
-          cursor.getDate() + 1
-        );
-      }
-
+      while (cursor <= fim) { if (ehDiaUtil(cursor)) total++; cursor.setDate(cursor.getDate() + 1); }
       return total;
     }
 
-    function dataInicioContatosPossivel(mesNumero) {
-      const hoje = dataLocalHoje();
-      const primeiro = primeiroDiaMes(
-        2026,
-        mesNumero
-      );
-      const ultimo = ultimoDiaMes(
-        2026,
-        mesNumero
-      );
-
-      if (hoje > ultimo) {
-        return 'Mês finalizado';
-      }
-
-      if (hoje < primeiro) {
-        return `Inicia em ${formatarDataCurta(primeiro)}`;
-      }
-
-      return 'Mês em andamento';
+    // ============================================================
+    // PROGRESSO POR MÊS
+    // ============================================================
+    function contarMes(mes) {
+      const r = { teveRetorno: 0, semRetorno: 0, naoLigou: 0, fora: 0, futuro: 0 };
+      baseElo.forEach(c => { r[statusNoMes(c, mes, dados.meta)]++; });
+      return r;
     }
 
-    function renderizarProgressoAtendimento() {
-      const grid =
-        document.getElementById(
-          'eloProgressGrid'
-        );
+    function renderizarProgresso() {
+      const grid = $('eloProgressGrid');
+      if (!baseElo.length) { grid.innerHTML = ''; return; }
+      grid.innerHTML = MESES.map(mes => {
+        const sit = situacaoDoMes(mes);
+        const s = contarMes(mes);
+        const semDados = s.futuro === baseElo.length;
+        const base = baseElo.length - s.fora;
+        const feitos = s.teveRetorno + s.semRetorno;
+        const faltam = s.naoLigou;
+        const pct = base > 0 ? (feitos / base) * 100 : 0;
+        const dias = diasUteisRestantes(mes);
+        const nome = nomeDoMes(mes);
 
-      if (!grid) return;
+        let status;
+        if (semDados) status = `⏳ Ainda sem registros — ${dias} dias úteis no mês.`;
+        else if (sit === 'encerrado') {
+          status = faltam === 0 && s.semRetorno === 0 ? '✅ Finalizado — falei com todos os clientes.'
+            : `⚠️ Mês encerrado — ${faltam} sem tentativa e ${s.semRetorno} sem retorno.`;
+        } else {
+          status = faltam === 0 ? '✅ Todos os clientes já tiveram tentativa de contato.'
+            : `🔄 Em andamento — faltam ${faltam} clientes e ${dias} dias úteis para o fim do mês.`;
+        }
+        if (s.fora > 0 && !semDados) status += ` (${s.fora} cliente${s.fora > 1 ? 's' : ''} novo${s.fora > 1 ? 's' : ''} fora da lista deste mês)`;
 
-      const totalClientes =
-        baseElo.length;
-
-      if (!totalClientes) {
-        grid.innerHTML = '';
-
-        return;
-      }
-
-      grid.innerHTML =
-        MESES_ELO.map(cfg => {
-          const feitos =
-            contarConcluidosMes(cfg);
-
-          const statusAtendimento =
-            contarStatusAtendimentoMes(cfg);
-
-          const faltam =
-            Math.max(
-              totalClientes - feitos,
-              0
-            );
-
-          const percentual =
-            totalClientes > 0
-              ? (feitos / totalClientes) * 100
-              : 0;
-
-          const diasRestantes =
-            diasUteisRestantesMes(
-              cfg.numero
-            );
-
-          const hoje =
-            dataLocalHoje();
-
-          const primeiro =
-            primeiroDiaMes(
-              2026,
-              cfg.numero
-            );
-
-          const ultimo =
-            ultimoDiaMes(
-              2026,
-              cfg.numero
-            );
-
-          let statusTexto = '';
-
-          if (hoje > ultimo) {
-
-            statusTexto =
-              faltam === 0
-                ? '✅ Finalizado — todos os clientes foram feitos.'
-                : `⚠️ Mês finalizado — ainda faltam ${faltam} clientes.`;
-
-          } else if (hoje < primeiro) {
-
-            statusTexto =
-              `⏳ Ainda não iniciado — ${diasRestantes} dias úteis no mês.`;
-
-          } else {
-
-            statusTexto =
-              faltam === 0
-                ? '✅ Atendimento concluído — todos os clientes foram feitos.'
-                : `🔄 Em andamento — faltam ${faltam} clientes e ${diasRestantes} dias úteis para o fim do mês.`;
-          }
-
-          return `
-            <div class="elo-progress-card">
-
-              <div class="elo-progress-head">
-
-                <div>
-                  <div class="elo-progress-month">
-                    Atendimento ELO · ${cfg.nome}/2026
-                  </div>
-
-                  <div
-                    style="
-                      margin-top:5px;
-                      font-size:1rem;
-                      font-weight:700;
-                    "
-                  >
-                    ${feitos} de ${totalClientes} clientes
-                  </div>
-                </div>
-
-                <div
-                  class="elo-progress-pct"
-                  style="
-                    color:#10b981;
-                  "
-                >
-                  ${percentual.toFixed(1)}%
-                </div>
-
+        const pRet = base > 0 ? (s.teveRetorno / base) * 100 : 0;
+        const pSem = base > 0 ? (s.semRetorno / base) * 100 : 0;
+        const dash = semDados ? '–' : null;
+        return `
+          <div class="elo-progress-card ${mes === dados.meta.mesAtual ? 'atual' : ''}">
+            <div class="elo-progress-head">
+              <div>
+                <div class="elo-progress-month">Atendimento ELO · ${nome}/${dados.meta.ano}</div>
+                <div style="margin-top:5px;font-size:1rem;font-weight:700;">${semDados ? '–' : feitos} de ${base} clientes</div>
               </div>
-
-              <div class="elo-progress-main">
-
-                <div class="elo-progress-kpi">
-                  <span class="lbl">
-                    Feitos
-                  </span>
-
-                  <span class="num">
-                    ${feitos}
-                  </span>
-                </div>
-
-                <div class="elo-progress-kpi">
-                  <span class="lbl">
-                    Faltam
-                  </span>
-
-                  <span class="num">
-                    ${faltam}
-                  </span>
-                </div>
-
-                <div class="elo-progress-kpi">
-                  <span class="lbl">
-                    Dias úteis
-                  </span>
-
-                  <span class="num">
-                    ${diasRestantes}
-                  </span>
-                </div>
-
-              </div>
-
-              <div class="elo-progress-bar">
-                <div
-                  class="elo-progress-fill"
-                  style="
-                    width:${Math.min(
-                      percentual,
-                      100
-                    )}%;
-                  "
-                ></div>
-              </div>
-
-              <div class="elo-progress-status">
-                ${statusTexto}
-              </div>
-
-              <div class="elo-progress-footer">
-
-                <div class="elo-progress-footer-item">
-                  Tive retorno
-                  <strong>${statusAtendimento.teveRetorno}</strong>
-                </div>
-
-                <div class="elo-progress-footer-item">
-                  Sem retorno
-                  <strong>${statusAtendimento.semRetorno}</strong>
-                </div>
-
-                <div class="elo-progress-footer-item">
-                  Não liguei
-                  <strong>${statusAtendimento.naoLigou}</strong>
-                </div>
-
-              </div>
-
+              <div class="elo-progress-pct">${semDados ? '–' : pct.toFixed(1) + '%'}</div>
             </div>
-          `;
-        }).join('');
+            <div class="elo-progress-main">
+              <div class="elo-progress-kpi"><span class="lbl">Feitos</span><span class="num">${dash ?? feitos}</span></div>
+              <div class="elo-progress-kpi"><span class="lbl">Faltam</span><span class="num">${dash ?? faltam}</span></div>
+              <div class="elo-progress-kpi"><span class="lbl">Dias úteis</span><span class="num">${dias}</span></div>
+            </div>
+            <div class="elo-progress-bar">
+              <div class="elo-progress-fill" style="width:${Math.min(pRet, 100)}%"></div>
+              <div class="elo-progress-fill sem" style="width:${Math.min(pSem, 100 - Math.min(pRet, 100))}%"></div>
+            </div>
+            <div class="elo-progress-status">${status}</div>
+            <div class="elo-progress-footer">
+              <div class="elo-progress-footer-item ok">Tive retorno<strong>${dash ?? s.teveRetorno}</strong></div>
+              <div class="elo-progress-footer-item sem">Sem retorno<strong>${dash ?? s.semRetorno}</strong></div>
+              <div class="elo-progress-footer-item nao">Não liguei<strong>${dash ?? s.naoLigou}</strong></div>
+            </div>
+          </div>`;
+      }).join('');
     }
 
+    // ============================================================
+    // PAINEL DO MÊS (mesmas regras da aba Painel da planilha)
+    // ============================================================
+    function renderizarPainelMes() {
+      const mes = dados.meta.mesAtual, nome = nomeDoMes(mes);
+      $('tituloPainelMes').textContent = `O trabalho do mês · ${nome}/${dados.meta.ano}`;
+      const total = baseElo.length;
+      const hoje = isoLocal(dataLocalHoje());
+
+      const tent1 = baseElo.filter(c => c.t1).length;
+      const tent2 = baseElo.filter(c => c.t2).length;
+      const resultados = baseElo.flatMap(c => [norm(c.r1), norm(c.r2)]).filter(Boolean);
+      const efetivas = resultados.filter(r => RESULTADOS_EFETIVOS.has(r)).length;
+      const decisor = resultados.filter(r => ASSUNTO_RESULTADO_ATENCAO.has(r)).length;
+      const compras = resultados.filter(r => r === 'contato com compras').length;
+      const cadastros = resultados.filter(r => r === 'cadastro atualizado').length;
+      const perdidas = resultados.filter(r => RESULTADO_SEM_CONTATO.has(r)).length;
+      const tentativas = tent1 + tent2;
+      const encaminhadas = baseElo.filter(c => c.encaminhadoPara && norm(c.encaminhadoPara) !== 'nao precisou encaminhar').length;
+      const agendadas = baseElo.filter(c => c.proxLigacao).length;
+      const atrasadas = baseElo.filter(c => c.proxLigacao && c.proxLigacao < hoje).length;
+      const pctCob = total ? (tent1 / total) * 100 : 0;
+      const pctEf = tentativas ? (efetivas / tentativas) * 100 : 0;
+      const pctPerd = tentativas ? (perdidas / tentativas) * 100 : 0;
+
+      const card = (lbl, val, sub, cor) => `<div class="elo-panel-card"><div class="lbl">${lbl}</div><div class="val" ${cor ? `style="color:${cor}"` : ''}>${val}</div><div class="var">${sub}</div></div>`;
+      $('painelMes').innerHTML = [
+        card('Cobertura da carteira', pctCob.toFixed(1) + '%', `${tent1} de ${total} clientes com 1ª tentativa`, '#10b981'),
+        card('2ª tentativa registrada', tent2, 'Quem não atendeu na primeira volta para a fila'),
+        card('Conversas efetivas', efetivas, `Taxa de ${pctEf.toFixed(1)}% das tentativas · ${compras} com Compras · ${decisor} com decisor/comercial`),
+        card('Cadastros atualizados', cadastros, 'Base correta garante que a próxima ligação chegue'),
+        card('Demandas encaminhadas', encaminhadas, 'Oportunidades passadas para dar sequência'),
+        card('Próximas ligações', agendadas, atrasadas ? `${atrasadas} em atraso` : 'Nenhuma em atraso', atrasadas ? '#ef4444' : ''),
+        card('Tentativas perdidas', perdidas, `${pctPerd.toFixed(1)}% das tentativas (sem retorno ou bloqueado)`, pctPerd > 40 ? '#f59e0b' : '')
+      ].join('');
+    }
+
+    function fmtValorPainel(label, v) {
+      if (typeof v !== 'number') return esc(v ?? '-');
+      if (norm(label).includes('faturamento')) return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 });
+      return v.toLocaleString('pt-BR', { maximumFractionDigits: 1 });
+    }
+
+    function renderizarResultado() {
+      const lista = dados.painel.resultado || [];
+      $('painelResultado').innerHTML = lista.map(r => `
+        <div class="elo-panel-card">
+          <div class="lbl">${esc(r.label)}</div>
+          <div class="val">${fmtValorPainel(r.label, r.valor)}</div>
+          <div class="var">${esc(r.nota)}</div>
+        </div>`).join('');
+      $('painelResultado').previousElementSibling.style.display = lista.length ? '' : 'none';
+
+      const cl = dados.painel.clusters || [];
+      $('cardClusters').style.display = cl.length ? '' : 'none';
+      if (!cl.length) return;
+      const cols = dados.meta.clusterCols && dados.meta.clusterCols.length ? dados.meta.clusterCols : ['Clientes', 'Jan-Set/25', 'Jan-Set/26', 'Variação', 'Compraram'];
+      $('theadClusters').innerHTML = `<tr><th>Cluster</th>${cols.map(c => `<th>${esc(c)}</th>`).join('')}</tr>`;
+      const brl = n => typeof n === 'number' ? n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }) : '-';
+      $('tbClusters').innerHTML = cl.map(c => {
+        const cor = typeof c.var === 'number' ? (c.var >= 0 ? '#10b981' : '#ef4444') : '#64748b';
+        const v = typeof c.var === 'number' ? `${c.var >= 0 ? '+' : ''}${(c.var * 100).toFixed(1)}%` : '-';
+        return `<tr><td><strong>${esc(c.cluster)}</strong></td><td>${c.clientes ?? '-'}</td><td>${brl(c.fat25)}</td><td>${brl(c.fat26)}</td><td style="color:${cor};font-weight:600;">${v}</td><td>${c.compraram ?? '-'}</td></tr>`;
+      }).join('');
+    }
+
+    function renderizarGuia() {
+      const g = dados.guia || [];
+      $('guiaConteudo').innerHTML = g.length
+        ? g.map(x => x.tipo === 'titulo'
+            ? `<div class="elo-guide-title">${esc(x.a)}</div>`
+            : `<div class="elo-guide-row"><b>${esc(x.a)}</b><span>${esc(x.b)}</span></div>`).join('')
+        : '<p style="color:#64748b;font-size:0.85rem;">Guia não disponível.</p>';
+    }
 
     // ============================================================
     // TABELA
     // ============================================================
     function badgePonto(texto) {
       if (!texto) return '-';
-      const t = texto.toLowerCase();
+      const t = norm(texto);
       let cor = '#64748b';
-      if (t.includes('caiu')) cor = '#f59e0b';
-      else if (t.includes('não comprou') || t.includes('sem compra')) cor = '#ef4444';
-      else if (t.includes('nunca gravou')) cor = '#3b82f6';
-      else if (t.includes('manutenção')) cor = '#10b981';
-      return `<span class="elo-badge" style="background:${cor}22; color:${cor};">${texto}</span>`;
+      if (t.startsWith('nunca comprou')) cor = '#ef4444';
+      else if (t.includes('nao comprou') || t.includes('sem compra')) cor = '#f59e0b';
+      else if (t.includes('caiu') || t.includes('queda') || t.includes('parou')) cor = '#f59e0b';
+      else if (t.includes('cresc') || t.includes('manuten')) cor = '#10b981';
+      return `<span class="elo-badge" style="background:${cor}22; color:${cor};">${esc(texto)}</span>`;
     }
 
-    function renderizarTabela(dados) {
-      renderizarProgressoAtendimento();
-
-      const tbody = document.getElementById('tbElo');
-      if (dados.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="9" class="empty-row">Nenhum cliente encontrado.</td></tr>';
-        return;
+    // Cor/rótulo da bolinha de um mês
+    function dotDoMes(c, mes) {
+      const st = statusNoMes(c, mes, dados.meta);
+      const sit = situacaoDoMes(mes);
+      const nome = nomeDoMes(mes);
+      if (st === 'teveRetorno') return { cls: 'on', tip: `${nome}: falei com o cliente` };
+      if (st === 'fora') return { cls: 'na', tip: `${nome}: cliente não estava na carteira` };
+      if (st === 'futuro') return { cls: 'off', tip: `${nome}: mês ainda sem registros` };
+      if (sit === 'encerrado') {
+        return { cls: 'bad', tip: st === 'semRetorno' ? `${nome}: mês encerrado — tentei, mas sem retorno` : `${nome}: mês encerrado — sem contato` };
       }
+      if (st === 'semRetorno') return { cls: 'try', tip: `${nome}: tentei, sem retorno (ainda dá tempo)` };
+      return { cls: 'off', tip: `${nome}: pendente` };
+    }
+
+    function montarFiltro() {
+      const nome = nomeDoMes(dados.meta.mesAtual);
+      $('filtroStatus').innerHTML = `
+        <option value="">Todos os clientes</option>
+        <option value="teveRetorno">${nome}: tive retorno</option>
+        <option value="semRetorno">${nome}: sem retorno</option>
+        <option value="naoLigou">${nome}: não liguei</option>
+        <option value="atrasada">Próxima ligação em atraso</option>`;
+      $('thMeses').textContent = 'Contatos (' + MESES.map(m => nomeDoMes(m).charAt(0)).join('/') + ')';
+    }
+
+    function filtrarBase() {
+      const termo = norm($('searchElo').value);
+      const filtro = $('filtroStatus').value;
+      const hoje = isoLocal(dataLocalHoje());
+      return baseElo.filter(c => {
+        if (termo && !(norm(c.cliente).includes(termo) || norm(c.cidade).includes(termo) || String(c.codigo).includes(termo))) return false;
+        if (filtro === 'atrasada') return c.proxLigacao && c.proxLigacao < hoje;
+        if (filtro) return statusNoMes(c, dados.meta.mesAtual, dados.meta) === filtro;
+        return true;
+      });
+    }
+
+    function renderizarTabela() {
+      const lista = filtrarBase();
+      $('tituloTabela').textContent = `Minha Carteira - ${baseElo.length} Clientes` + (lista.length !== baseElo.length ? ` (${lista.length} exibidos)` : '');
+      const tbody = $('tbElo');
+      if (!lista.length) { tbody.innerHTML = '<tr><td colspan="10" class="empty-row">Nenhum cliente encontrado.</td></tr>'; return; }
       tbody.innerHTML = '';
       const frag = document.createDocumentFragment();
-      dados.forEach(c => {
+      const hoje = isoLocal(dataLocalHoje());
+      lista.forEach(c => {
         const varTxt = typeof c.varPct === 'number' ? `${(c.varPct * 100).toFixed(0)}%` : '-';
         const corVar = typeof c.varPct === 'number' ? (c.varPct >= 0 ? '#10b981' : '#ef4444') : '#64748b';
-        const dots = `
-          <span
-            class="elo-dot ${clienteFeitoNoMes(c, MESES_ELO[0]) ? 'on' : 'off'}"
-            title="Setembro: ${clienteFeitoNoMes(c, MESES_ELO[0]) ? 'Feito' : 'Pendente'}"
-          ></span>
-
-          <span
-            class="elo-dot ${clienteFeitoNoMes(c, MESES_ELO[1]) ? 'on' : 'off'}"
-            title="Outubro: ${clienteFeitoNoMes(c, MESES_ELO[1]) ? 'Feito' : 'Pendente'}"
-          ></span>
-
-          <span
-            class="elo-dot ${clienteFeitoNoMes(c, MESES_ELO[2]) ? 'on' : 'off'}"
-            title="Novembro: ${clienteFeitoNoMes(c, MESES_ELO[2]) ? 'Feito' : 'Pendente'}"
-          ></span>`;
+        const dots = MESES.map(m => { const d = dotDoMes(c, m); return `<span class="elo-dot ${d.cls}" title="${esc(d.tip)}"></span>`; }).join('');
+        const atrasada = c.proxLigacao && c.proxLigacao < hoje;
+        const prox = c.proxLigacao ? `<span style="color:${atrasada ? '#ef4444' : '#e2e8f0'};font-weight:${atrasada ? 700 : 400};" title="${atrasada ? 'Ligação em atraso' : ''}">${fmtDM(c.proxLigacao)}</span>` : '<span style="color:#64748b;">-</span>';
         const tr = document.createElement('tr');
         tr.className = 'clickable-row';
         tr.innerHTML = `
           <td>${c.codigo}</td>
-          <td><strong>${c.cliente}</strong></td>
-          <td>${c.cidade}</td>
+          <td><strong>${esc(c.cliente)}</strong></td>
+          <td>${esc(c.cidade)}</td>
+          <td>${esc(c.cluster) || '-'}</td>
           <td style="color:${corVar}; font-weight:600;">${varTxt}</td>
           <td>${c.pedidos26}</td>
-          <td>${c.grava || '-'}</td>
           <td>${badgePonto(c.pontoAtencao)}</td>
           <td>${dots}</td>
-          <td style="text-align:center;">
-            <button class="btn-upload" style="padding:4px 10px;font-size:0.75rem;">Registrar Atendimento</button>
-          </td>`;
-        tr.querySelector('button').addEventListener('click', () => abrirModal(c));
+          <td>${prox}</td>
+          <td style="text-align:center;"><button class="btn-upload" style="padding:4px 10px;font-size:0.75rem;">Ver detalhes</button></td>`;
+        tr.addEventListener('click', () => abrirModal(c));
         frag.appendChild(tr);
       });
       tbody.appendChild(frag);
     }
 
-    document.getElementById('searchElo').addEventListener('input', e => {
-      const termo = e.target.value.toLowerCase().trim();
-      const filtrados = baseElo.filter(c =>
-        c.cliente.toLowerCase().includes(termo) ||
-        c.cidade.toLowerCase().includes(termo) ||
-        String(c.codigo).includes(termo)
-      );
-      renderizarTabela(filtrados);
-    });
+    function renderizarTudo() {
+      renderizarProgresso();
+      renderizarPainelMes();
+      renderizarResultado();
+      renderizarGuia();
+      renderizarTabela();
+    }
+
+    $('searchElo').addEventListener('input', renderizarTabela);
+    $('filtroStatus').addEventListener('change', renderizarTabela);
 
     // ============================================================
-    // MODAL DE REGISTRO DE ATENDIMENTO
+    // MODAL (somente leitura — o registro é feito na planilha do Drive)
     // ============================================================
-    function optionsHtml(lista, selecionado) {
-      return `<option value="">-</option>` + lista.map(op =>
-        `<option value="${op}" ${op === selecionado ? 'selected' : ''}>${op}</option>`
-      ).join('');
+    const brl = n => Number(n || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 });
+    function dataBR(iso) { const m = String(iso || '').match(/^(\d{4})-(\d{2})-(\d{2})/); return m ? `${m[3]}/${m[2]}/${m[1]}` : ''; }
+    const kv = (k, v) => v ? `<div class="k">${esc(k)}</div><div class="v">${v}</div>` : '';
+
+    function listaUnica(...textos) {
+      const vistos = new Set(), out = [];
+      textos.join('|').split(/[|;]/).map(s => s.trim()).filter(Boolean).forEach(s => {
+        const chave = s.toLowerCase().replace(/\D/g, '') || s.toLowerCase();
+        if (!vistos.has(chave)) { vistos.add(chave); out.push(s); }
+      });
+      return out;
     }
 
     function abrirModal(c) {
-      let modal = document.getElementById('eloModal');
+      let modal = $('eloModal');
       if (!modal) {
         modal = document.createElement('div');
         modal.id = 'eloModal';
         modal.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(11,15,25,0.85);backdrop-filter:blur(6px);z-index:99999;display:flex;align-items:center;justify-content:center;overflow-y:auto;padding:20px;';
+        modal.addEventListener('click', e => { if (e.target === modal) modal.style.display = 'none'; });
         document.body.appendChild(modal);
+      }
+      const meta = dados.meta;
+      const nomeAtual = nomeDoMes(meta.mesAtual);
+
+      const histHtml = (meta.historicos || []).map(m => {
+        const t = (c.historicos || {})[String(m)];
+        return t ? `<div class="elo-kv">${kv('Histórico · ' + nomeDoMes(m), esc(t))}</div>` : '';
+      }).join('') || '<span style="color:#64748b;font-size:0.82rem;">Sem histórico registrado.</span>';
+
+      const opt = (lista, val) => '<option value="">-</option>' +
+        (val && !lista.includes(val) ? `<option value="${esc(val)}" selected>${esc(val)}</option>` : '') +
+        lista.map(o => `<option value="${esc(o)}" ${o === val ? 'selected' : ''}>${esc(o)}</option>`).join('');
+      const mm = String(meta.mesAtual).padStart(2, '0');
+      const dMin = `${meta.ano}-${mm}-01`, dMax = `${meta.ano}-${mm}-${String(new Date(meta.ano, meta.mesAtual, 0).getDate()).padStart(2, '0')}`;
+      const blocoTent = n => {
+        const k = n === 1 ? ['t1', 'a1', 'r1'] : ['t2', 'a2', 'r2'];
+        return `<div style="background:#1e293b;border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:8px;">
+          <div style="font-size:0.75rem;color:#94a3b8;text-transform:uppercase;">${n}ª tentativa</div>
+          <div class="elo-field"><label>Data</label><input type="date" id="elo_${k[0]}" value="${esc(c[k[0]])}" min="${dMin}" max="${dMax}"></div>
+          <div class="elo-field"><label>Assunto ${n}</label><select id="elo_${k[1]}">${opt(ASSUNTO_OPCOES, c[k[1]])}</select></div>
+          <div class="elo-field"><label>Resultado ${n}</label><select id="elo_${k[2]}">${opt(RESULTADO_OPCOES, c[k[2]])}</select></div>
+        </div>`;
+      };
+      const atendHtml = `
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;">${blocoTent(1)}${blocoTent(2)}</div>
+        <div class="elo-field" style="margin-top:10px;"><label>O que o cliente disse</label><textarea id="elo_clienteDisse">${esc(c.clienteDisse)}</textarea></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;">
+          <div class="elo-field"><label>Próxima ligação</label><input type="date" id="elo_proxLigacao" value="${esc(c.proxLigacao)}"></div>
+          <div class="elo-field"><label>Encaminhado para</label><select id="elo_encaminhadoPara">${opt(ENCAMINHADO_OPCOES, c.encaminhadoPara)}</select></div>
+        </div>
+        <div class="elo-field" style="margin-top:10px;"><label>O que a próxima ligação trouxe</label><textarea id="elo_trouxe">${esc(c.trouxe)}</textarea></div>
+        ${c.retornoGestao ? `<div class="elo-kv" style="margin-top:10px;">${kv('Retorno da gestão', esc(c.retornoGestao))}</div>` : ''}`;
+
+      const ct = c.contatos;
+      let contatosHtml = '<span style="color:#64748b;font-size:0.82rem;">Sem dados na aba Carteira e Contatos.</span>';
+      if (ct) {
+        const base = listaUnica(ct.telefone, ct.celular);
+        const baseChaves = new Set(base.map(s => s.replace(/\D/g, '').slice(-8)));
+        const novosTel = listaUnica(ct.telefoneSite).filter(s => !baseChaves.has(s.replace(/\D/g, '').slice(-8)));
+        const baseMail = listaUnica(ct.emailCadastro).map(s => s.toLowerCase());
+        const novosMail = listaUnica(ct.emailsSite, ct.emailLogin).map(s => s.toLowerCase()).filter((s, i, a) => !baseMail.includes(s) && a.indexOf(s) === i);
+        contatosHtml = `<div class="elo-kv">
+          ${kv('Telefone(s)', esc(base.join(' · ')))}
+          ${kv('Telefone(s) do site', novosTel.length ? `<span class="elo-novo">${esc(novosTel.join(' · '))}</span>` : '')}
+          ${kv('E-mail do cadastro', esc(baseMail.join(' · ')))}
+          ${kv('E-mail(s) do site', novosMail.length ? `<span class="elo-novo">${esc(novosMail.join(' · '))}</span>` : '')}
+          ${kv('Acesso ao site', esc((ct.ativoSite ? 'Ativo: ' + ct.ativoSite : '') + (ct.ultimoAcesso ? ' · último acesso ' + dataBR(ct.ultimoAcesso) : '')))}
+        </div>`;
       }
 
       modal.innerHTML = `
-        <div style="background:#1e293b;border:1px solid #334155;border-radius:12px;width:100%;max-width:640px;padding:24px;box-shadow:0 20px 25px -5px rgba(0,0,0,0.5);color:#f8fafc;">
+        <div style="background:#1e293b;border:1px solid #334155;border-radius:12px;width:100%;max-width:680px;padding:24px;box-shadow:0 20px 25px -5px rgba(0,0,0,0.5);color:#f8fafc;">
           <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #334155;padding-bottom:12px;margin-bottom:16px;">
             <div>
-              <h3 style="margin:0;font-size:1.1rem;color:#6366f1;">📞 ${c.codigo} - ${c.cliente}</h3>
-              <span style="font-size:0.8rem;color:#94a3b8;">${c.cidade} · ${badgePonto(c.pontoAtencao)}</span>
+              <h3 style="margin:0;font-size:1.1rem;color:#6366f1;">📞 ${c.codigo} - ${esc(c.cliente)}</h3>
+              <span style="font-size:0.8rem;color:#94a3b8;">${esc(c.cidade)} · ${esc(c.cluster)} · ${badgePonto(c.pontoAtencao)}</span>
             </div>
             <button id="eloFechar" style="background:transparent;border:none;color:#94a3b8;font-size:1.5rem;cursor:pointer;">&times;</button>
           </div>
 
-          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;">
-            <div class="elo-modal-month">
-              <h4>Setembro</h4>
-              <div class="elo-field"><label>Contato</label><input type="date" id="eloSetContato" value="${c.setContato}"></div>
-              <div class="elo-field"><label>Assunto</label><select id="eloSetAssunto">${optionsHtml(ASSUNTO_OPCOES, c.setAssunto)}</select></div>
+          <div style="display:flex;flex-direction:column;gap:12px;">
+            <div class="elo-modal-sec">
+              <h4>Resultado</h4>
+              <div class="elo-kv">
+                ${kv(meta.periodoAnt || 'Ano anterior', brl(c.fat25))}
+                ${kv(meta.periodoAtu || 'Ano atual', brl(c.fat26) + (typeof c.varPct === 'number' ? ` (${(c.varPct * 100).toFixed(0)}%)` : ''))}
+                ${kv(meta.mesAnt || 'Mês anterior', brl(c.vendaMesAnt))}
+                ${kv('Pedidos 26', String(c.pedidos26))}
+              </div>
             </div>
-            <div class="elo-modal-month">
-              <h4>Outubro</h4>
-              <div class="elo-field"><label>Contato</label><input type="date" id="eloOutContato" value="${c.outContato}"></div>
-              <div class="elo-field"><label>Assunto</label><select id="eloOutAssunto">${optionsHtml(ASSUNTO_OPCOES, c.outAssunto)}</select></div>
+
+            <div class="elo-modal-sec"><h4>Histórico dos meses</h4>${histHtml}</div>
+
+            <div class="elo-modal-sec">
+              <h4>Atendimento de ${nomeAtual}</h4>
+              ${atendHtml}
             </div>
-            <div class="elo-modal-month">
-              <h4>Novembro</h4>
-              <div class="elo-field"><label>Contato</label><input type="date" id="eloNovContato" value="${c.novContato}"></div>
-              <div class="elo-field"><label>Assunto</label><select id="eloNovAssunto">${optionsHtml(ASSUNTO_OPCOES, c.novAssunto)}</select></div>
-            </div>
+
+            <div class="elo-modal-sec"><h4>Formas de falar com o cliente</h4>${contatosHtml}</div>
           </div>
 
-          <div class="elo-field" style="margin-bottom:12px;">
-            <label>O que o cliente disse</label>
-            <textarea id="eloClienteDisse">${c.clienteDisse}</textarea>
+          <div style="display:${APPS_SCRIPT_URL ? 'none' : 'block'};background:rgba(245,158,11,0.1);border:1px solid #f59e0b;color:#f59e0b;padding:10px;border-radius:8px;font-size:0.8rem;margin-top:14px;">
+            ⚠️ Gravação no Drive ainda não configurada (falta a URL do Apps Script em CONFIG_RCA). Suas edições não serão salvas.
           </div>
-          <div class="elo-field" style="margin-bottom:16px;">
-            <label>Encaminhado para</label>
-            <select id="eloEncaminhado">${optionsHtml(ENCAMINHADO_OPCOES, c.encaminhadoPara)}</select>
-          </div>
-
-          <div id="eloAvisoConfig" style="display:${APPS_SCRIPT_URL ? 'none' : 'block'};background:rgba(245,158,11,0.1);border:1px solid #f59e0b;color:#f59e0b;padding:10px;border-radius:8px;font-size:0.8rem;margin-bottom:12px;">
-            ⚠️ Gravação no Drive ainda não configurada (falta a URL do Apps Script). Suas edições não vão ser salvas até isso ser ligado.
-          </div>
-
-          <div style="display:flex;justify-content:flex-end;gap:10px;">
+          <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:16px;">
+            <a href="${URL_PLANILHA}" target="_blank" rel="noopener" class="btn-upload" style="text-decoration:none;margin-left:0;background:transparent;border:1px solid #334155;color:#94a3b8;">Abrir planilha</a>
             <button id="eloCancelar" style="background:transparent;border:1px solid #334155;color:#94a3b8;padding:10px 18px;border-radius:6px;cursor:pointer;">Cancelar</button>
             <button id="eloSalvar" class="elo-btn-save-modal">Salvar no Drive</button>
           </div>
         </div>`;
-
       modal.style.display = 'flex';
-      document.getElementById('eloFechar').onclick = () => modal.style.display = 'none';
-      document.getElementById('eloCancelar').onclick = () => modal.style.display = 'none';
-      document.getElementById('eloSalvar').onclick = () => salvarAtendimento(c, modal);
+      $('eloFechar').onclick = () => { modal.style.display = 'none'; };
+      $('eloCancelar').onclick = () => { modal.style.display = 'none'; };
+      $('eloSalvar').onclick = () => salvarAtendimento(c, modal);
     }
-
     function igualCampo(a, b) {
       const n = v => String(v === null || v === undefined ? '' : v).replace(/\r\n/g, '\n').trim();
       return n(a) === n(b);
     }
 
     async function salvarAtendimento(c, modal) {
-      const novo = {
-        setContato: document.getElementById('eloSetContato').value,
-        setAssunto: document.getElementById('eloSetAssunto').value,
-        outContato: document.getElementById('eloOutContato').value,
-        outAssunto: document.getElementById('eloOutAssunto').value,
-        novContato: document.getElementById('eloNovContato').value,
-        novAssunto: document.getElementById('eloNovAssunto').value,
-        clienteDisse: document.getElementById('eloClienteDisse').value,
-        encaminhadoPara: document.getElementById('eloEncaminhado').value
-      };
-
-      if (!APPS_SCRIPT_URL) {
-        mostrarToast('Configure a URL do Apps Script antes de salvar (veja o README).', false);
-        return;
-      }
-
-      const mapaColunas = {
-        setContato: 'SET contato', setAssunto: 'SET assunto',
-        outContato: 'OUT contato', outAssunto: 'OUT assunto',
-        novContato: 'NOV contato', novAssunto: 'NOV assunto',
-        clienteDisse: 'O que o cliente disse', encaminhadoPara: 'Encaminhado para'
-      };
+      if (!APPS_SCRIPT_URL) { mostrarToast('Configure a URL do Apps Script em CONFIG_RCA antes de salvar.', false); return; }
+      const novo = {};
+      Object.keys(MAPA_COLUNAS).forEach(k => { novo[k] = $('elo_' + k).value; });
       const mudancas = Object.keys(novo)
-        .filter(k => igualCampo(novo[k], c[k]) === false)
-        .map(k => ({ codigo: c.codigo, coluna: mapaColunas[k], valor: novo[k] }));
+        .filter(k => !igualCampo(novo[k], c[k]))
+        .map(k => ({ codigo: c.codigo, coluna: MAPA_COLUNAS[k], valor: novo[k] }));
+      if (!mudancas.length) { mostrarToast('Nada foi alterado neste cliente.', false); return; }
 
-      if (mudancas.length === 0) {
-        console.log('[ELO] formulário x carregado:', novo, c);
-        mostrarToast('O formulário está idêntico ao que veio da planilha — nada foi enviado. Altere um campo (ex.: data e assunto de um mês) e salve de novo.', false);
-        return;
-      }
-      console.log('[ELO] enviando', mudancas, 'para', APPS_SCRIPT_URL);
-
-      const btn = document.getElementById('eloSalvar');
-      btn.disabled = true;
-      btn.textContent = 'Salvando...';
-
+      const btn = $('eloSalvar');
+      btn.disabled = true; btn.textContent = 'Salvando...';
       try {
-        // Sem headers customizados de propósito: assim o navegador manda
-        // como "text/plain", o que evita o preflight de CORS que o Apps
-        // Script não responde bem.
+        // Sem headers customizados: vai como text/plain e evita o preflight de CORS do Apps Script.
         const res = await fetch(APPS_SCRIPT_URL, { method: 'POST', body: JSON.stringify({ mudancas }) });
         const texto = await res.text();
-        console.log('[ELO] resposta do Apps Script:', texto);
         let json;
         try { json = JSON.parse(texto); }
-        catch (e) { throw new Error('Resposta inválida do Apps Script. URL /exec errada ou acesso diferente de "Qualquer pessoa".'); }
+        catch (e) { throw new Error('Resposta inválida do Apps Script. Confira se a URL termina em /exec e se o acesso é "Qualquer pessoa".'); }
         if (!json.ok) throw new Error(json.erro || (json.erros || []).join(', ') || 'Falha desconhecida');
-        if (json.aplicadas === undefined || json.aplicadas !== mudancas.length) {
-          throw new Error('Script antigo ou incompleto: gravou ' + (json.aplicadas === undefined ? '?' : json.aplicadas) + ' de ' + mudancas.length + ' campos. Publique o script v3.');
-        }
-
+        if (json.aplicadas !== mudancas.length) throw new Error(`Gravou ${json.aplicadas} de ${mudancas.length} campos. ${(json.erros || []).join(', ')}`);
         Object.assign(c, novo);
-        const idx = baseElo.findIndex(x => x.codigo === c.codigo);
-        if (idx > -1) baseElo[idx] = c;
-        renderizarTabela(baseElo);
-        mostrarToast('Gravado em "' + (json.planilha || '?') + '" — células ' + (json.celulas || []).join(', ') + ' (script ' + (json.versao || 'antigo') + ')', true);
+        renderizarTudo();
+        mostrarToast(`Gravado em "${json.planilha || '?'}" — células ${(json.celulas || []).join(', ')}`, true);
         modal.style.display = 'none';
       } catch (err) {
         console.error(err);
         mostrarToast('Não salvou: ' + String(err.message || err).slice(0, 250), false);
-        btn.disabled = false;
-        btn.textContent = 'Salvar no Drive';
+        btn.disabled = false; btn.textContent = 'Salvar no Drive';
       }
     }
 
     function mostrarToast(msg, ok) {
-      const t = document.getElementById('eloToast');
+      const t = $('eloToast');
       t.textContent = msg;
       t.className = 'elo-toast show ' + (ok ? 'ok' : 'err');
       setTimeout(() => { t.className = 'elo-toast'; }, ok ? 6000 : 12000);
     }
 
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') { const m = $('eloModal'); if (m) m.style.display = 'none'; } });
+
     carregarDados();
 
-    // Selo de diagnóstico: qual script/planilha este site está usando
+    // Selo de diagnóstico: qual script/planilha esta página está usando
     (async () => {
+      if (!APPS_SCRIPT_URL) return;
       const el = document.createElement('div');
       el.style.cssText = 'position:fixed;left:12px;bottom:12px;z-index:100000;font-size:11px;padding:6px 10px;border-radius:6px;background:#0f172a;border:1px solid #334155;color:#94a3b8;max-width:80vw;';
-      el.textContent = 'Script: verificando...';
       document.body.appendChild(el);
       try {
         const j = await (await fetch(APPS_SCRIPT_URL)).json();
-        el.style.color = j.versao === 'v3' ? '#10b981' : '#f59e0b';
-        el.textContent = CONFIG_ATUAL.nome + ' · script ' + (j.versao || 'ANTIGO (publique o v3)') + ' → ' + (j.planilha || 'planilha desconhecida');
+        el.style.color = j.versao === 'v4' ? '#10b981' : '#f59e0b';
+        el.textContent = CFG.nome + ' · script ' + (j.versao || 'ANTIGO (publique o v4)') + ' → ' + (j.planilha || 'planilha desconhecida');
       } catch (e) {
         el.style.color = '#ef4444';
-        el.textContent = CONFIG_ATUAL.nome + ' · script inacessível (URL /exec errada ou acesso não é "Qualquer pessoa")';
+        el.textContent = CFG.nome + ' · script inacessível (URL /exec errada ou acesso não é "Qualquer pessoa")';
       }
     })();
   </script>
