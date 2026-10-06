@@ -406,8 +406,8 @@
     // ============================================================
     const CONFIG_RCA = {
       // Cole em appsScriptUrl a URL /exec gerada ao implantar o Apps Script de CADA planilha.
-      '61': { nome: 'RCA 61', sheetId: '1AIAKNYMQbWFFbD1JJTlejK17cfU9T-1uhwr45GOLqyg', snapshot: 'atendimento_elo.json', appsScriptUrl: '' },
-      '66': { nome: 'RCA 66', sheetId: '10AdnLEmOP3q2N7g_8AMTFhaGsq3bjJ2srnYIv0lpVKA', snapshot: 'atendimento_elo.json', appsScriptUrl: '' }
+      '61': { nome: 'RCA 61', sheetId: '1AIAKNYMQbWFFbD1JJTlejK17cfU9T-1uhwr45GOLqyg', snapshot: 'atendimento_elo.json', appsScriptUrl: 'https://script.google.com/macros/s/AKfycbyXSQ7eUc65PkB4rXsTgaA3EUrfDmgZrU0deHQnGcASTd0B1M0hgtFHvqCA1-UvIVQ1/exec' },
+      '66': { nome: 'RCA 66', sheetId: '10AdnLEmOP3q2N7g_8AMTFhaGsq3bjJ2srnYIv0lpVKA', snapshot: 'atendimento_elo.json', appsScriptUrl: 'https://script.google.com/macros/s/AKfycbwe4bsgaBTpkEszThSYbKJk2sQknvGAqvQqVBWm2WwN-vGwHTZhmEb1maLoVrH9IdB2PQ/exec' }
     };
     const rcaDaUrl = new URLSearchParams(window.location.search).get('rca');
     const rcaSalvo = localStorage.getItem('sistemaRCA') || localStorage.getItem('rcaSelecionado');
