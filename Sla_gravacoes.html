@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SLA Gravações - Condições Comerciais 2026</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .sla-search-row { display:flex; gap:10px; flex-wrap:wrap; }
+    .sla-search {
+      flex:1; min-width:260px; background:var(--bg-main); border:1px solid var(--border-color);
+      color:var(--text-primary); padding:14px 16px; border-radius:10px; font-size:1.05rem; outline:none;
+    }
+    .sla-search:focus { border-color: var(--accent-indigo); }
+    .sla-hint { font-size:.78rem; color:var(--text-secondary); margin-top:10px; line-height:1.5; }
+    .sla-hint code { background:var(--bg-main); border:1px solid var(--border-color); padding:1px 6px; border-radius:4px; color:#e2e8f0; }
+    .sla-chips { display:flex; flex-wrap:wrap; gap:8px; margin-top:14px; }
+    .sla-chip {
+      background:var(--bg-main); border:1px solid var(--border-color); color:var(--text-secondary);
+      padding:6px 14px; border-radius:999px; font-size:.8rem; cursor:pointer; font-family:inherit;
+    }
+    .sla-chip.ativo { background:var(--accent-indigo); border-color:var(--accent-indigo); color:#fff; }
+    .sla-count { font-size:.8rem; color:var(--text-secondary); margin-top:12px; }
+
+    .sla-rules summary { cursor:pointer; font-weight:600; }
+    .sla-rule { display:flex; gap:10px; font-size:.86rem; line-height:1.5; margin-top:8px; }
+    .sla-rule .n { color:var(--accent-indigo); font-weight:700; min-width:26px; flex-shrink:0; }
+    .sla-rule.l1 { margin-left:20px; }
+    .sla-rule.l2 { margin-left:44px; }
+    .sla-rule.destaque span { color:#f59e0b; }
+
+    .sla-grid { display:flex; flex-direction:column; gap:16px; }
+    .sla-section-title { font-size:.78rem; text-transform:uppercase; letter-spacing:.05em; color:var(--text-secondary); font-weight:700; margin:6px 0 -6px; }
+    .sla-card { background:var(--bg-card); border:1px solid var(--border-color); border-radius:var(--radius); padding:16px; }
+    .sla-card-head { display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:12px; }
+    .sla-tag { padding:6px 14px; border-radius:8px; font-weight:700; font-size:1rem; color:#fff; }
+    .sla-tag.azul  { background:#2a7fba; }
+    .sla-tag.roxo  { background:#a46aa8; }
+    .sla-unit { font-size:.75rem; color:var(--text-secondary); }
+    .sla-badge48 { font-size:.7rem; font-weight:700; background:rgba(16,185,129,.15); color:var(--accent-green); padding:3px 9px; border-radius:6px; }
+    .sla-obs { font-size:.78rem; color:#94a3b8; margin:-4px 0 10px; line-height:1.5; }
+    .sla-codes { display:flex; flex-wrap:wrap; gap:6px; margin:0 0 12px; }
+    .sla-code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size:.78rem; background:var(--bg-main); border:1px solid var(--border-color); padding:2px 8px; border-radius:6px; }
+    .sla-scroll { overflow-x:auto; }
+    .sla-table { border-collapse:separate; border-spacing:4px; width:100%; min-width:640px; table-layout:fixed; }
+    .sla-table th, .sla-table td { text-align:center; padding:9px 6px; font-size:.8rem; border-radius:6px; border:none; position:static; }
+    .sla-table th.azul { background:rgba(59,130,246,.22); color:#bfdbfe; }
+    .sla-table th.roxo { background:rgba(168,85,247,.22); color:#e9d5ff; }
+    .sla-table td { background:var(--bg-main); color:#e2e8f0; font-weight:600; }
+    .sla-table td.h48 { background:rgba(16,185,129,.28); color:#6ee7b7; }
+    .sla-table td.consulta { color:#64748b; font-weight:500; }
+    .sla-table td.negociar { color:#f59e0b; font-weight:600; }
+    .sla-table .match { outline:2px solid #f59e0b; outline-offset:1px; }
+    .sla-table td.match { background:rgba(245,158,11,.2); color:#fde68a; }
+    .sla-table th.match { background:rgba(245,158,11,.3); color:#fff; }
+    .sla-row-label { text-align:left !important; font-size:.78rem; background:transparent !important; color:var(--text-secondary) !important; width:150px; }
+    mark { background: rgba(245,158,11,.35); color: inherit; border-radius:3px; padding:0 2px; }
+    .sla-empty { text-align:center; color:var(--text-secondary); padding:40px 10px; }
+    .sla-footnote { font-size:.75rem; color:#64748b; margin-top:10px; }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+
+    <header class="main-header">
+      <div class="header-title">
+        <h1>SLA Gravações</h1>
+        <p>Condições comerciais 2026 · prazos de personalização por técnica e quantidade</p>
+      </div>
+      <div class="header-controls">
+        <a href="index.html" id="linkDashboard" class="btn-upload" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
+          <i data-lucide="arrow-left" style="width:16px;height:16px;"></i> Dashboard
+        </a>
+        <a href="clientes.html" id="linkClientes" class="btn-upload" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px; background-color:var(--accent-green);">
+          <i data-lucide="users" style="width:16px;height:16px;"></i> Base & SLAs
+        </a>
+        <a href="atendimento.html" id="linkAtendimento" class="btn-upload" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px; background-color:#f59e0b;">
+          <i data-lucide="phone-call" style="width:16px;height:16px;"></i> Atendimento ELO
+        </a>
+        <a href="retira.html" id="linkRetira" class="btn-upload" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px; background-color:#0ea5e9;">
+          <i data-lucide="package-search" style="width:16px;height:16px;"></i> Retira
+        </a>
+      </div>
+    </header>
+
+    <section class="table-card">
+      <div class="card-header"><h3>Buscar prazo de gravação</h3></div>
+      <div class="sla-search-row">
+        <input type="text" id="sla-busca" class="sla-search" autocomplete="off"
+               placeholder="Digite a técnica, a quantidade, os dias ou o código do produto...">
+      </div>
+      <div class="sla-hint">
+        Exemplos: <code>laser</code> · <code>sublimação</code> · <code>1500</code> (quantidade de gravações) ·
+        <code>5 dias</code> · <code>48h</code> · <code>sob consulta</code> · <code>97399</code> (código de peça delicada).
+        Quando a busca é por quantidade ou prazo, as faixas encontradas ficam destacadas em amarelo.
+      </div>
+      <div class="sla-chips" id="sla-chips"></div>
+      <div class="sla-count" id="sla-count"></div>
+    </section>
+
+    <details class="table-card sla-rules" id="sla-rules">
+      <summary>Regras do serviço de gravação</summary>
+      <div id="sla-rules-body"></div>
+    </details>
+
+    <div class="sla-grid" id="sla-resultado"></div>
+  </div>
+
+  <script>
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+
+    // ---------- Links mantendo o RCA escolhido ----------
+    const rcaLinks = localStorage.getItem('sistemaRCA') || localStorage.getItem('rcaSelecionado') || '61';
+    document.getElementById('linkDashboard').href = `index.html?rca=${rcaLinks}`;
+    document.getElementById('linkClientes').href = `clientes.html?rca=${rcaLinks}`;
+    document.getElementById('linkAtendimento').href = `atendimento.html?rca=${rcaLinks}`;
+    document.getElementById('linkRetira').href = `retira.html?rca=${rcaLinks}`;
+
+    // ============================================================
+    // DADOS (extraídos do PDF "Condições Comerciais 2026")
+    // ============================================================
+    // <pure>
+    const REGRAS = [
+      { n: '1.', t: 'Os produtos podem ser fornecidos gravados conforme sugestão de gravação disponível no site.', nivel: 0 },
+      { n: 'a)', t: 'Preços conforme tabela de gravação vigente (consulte a calculadora do site).', nivel: 1 },
+      { n: 'b)', t: 'Prazos abaixo contam após aprovação da arte final / layout.', nivel: 1 },
+      { n: 'c)', t: 'Prazos não incluem o prazo de transporte de acordo com cada região (consulte comercial).', nivel: 1 },
+      { n: 'd)', t: 'Oferecemos o serviço de gravação em 48h, que deve ser solicitado pelo cliente no ato da compra (e-mail ou site), para este serviço:', nivel: 1 },
+      { n: 'i.', t: 'Para pedidos com prazo de 48h o horário de corte deve ser colocar em site até as 15h.', nivel: 2, destaque: true },
+      { n: 'ii.', t: 'Os prazos de personalização passam a contar do primeiro dia útil após envio do pedido (respeitando horário de corte), se este pedido não tiver nenhuma pendência fruto de arquivos ou informações incompletas.', nivel: 2 },
+      { n: 'iii.', t: 'Consulte a tabela a seguir, para saber quais as técnicas e quantidades de gravação estão disponíveis, para o serviço de 48hs bem como todas as técnicas e prazos disponíveis.', nivel: 2 }
+    ];
+
+    const Q_PADRAO = ['1 a 500', '501 a 1.000', '1.001 a 2.000', '2.001 a 4.000', '4.001 a 6.000', '6.001 a 8.000', '8.001 a 10.000', 'Acima de 10.001'];
+
+    // faixas(qtds, prazos) -> lista de { label, prazo }
+    const F = (qtds, prazos) => qtds.map((label, i) => ({ label, prazo: prazos[i] }));
+
+    const TECNICAS = [
+      { id: 'adesivo', nome: 'Adesivo', cor: 'azul', grupo: 'normal', unidade: 'gravações',
+        faixas: F(Q_PADRAO, ['48h', '48h', '3 dias', '5 dias', '6 dias', '8 dias', '10 dias', 'sob consulta']) },
+      { id: 'bordado', nome: 'Bordado', cor: 'roxo', grupo: 'normal', unidade: 'peças',
+        faixas: F(['1 a 9', '10 a 49', '50 a 99', '100 a 249', '250 a 499', '500 a 999', '1000 a 1499', '1500 a 1999', '2000 a 2749', '2750 a 3499', '3500 a 4999'],
+                  ['3 dias', '3 dias', '4 dias', '4 dias', '5 dias', '6 dias', '8 dias', '13 dias', '14 dias', '17 dias', '22 dias']) },
+      { id: 'hotstamping', nome: 'Hotstamping', cor: 'azul', grupo: 'normal', unidade: 'gravações',
+        faixas: F(Q_PADRAO, ['3 dias', '3 dias', '3 dias', '5 dias', '6 dias', '8 dias', '10 dias', 'sob consulta']) },
+      { id: 'laser', nome: 'Laser', cor: 'roxo', grupo: 'normal', unidade: 'gravações',
+        faixas: F(['1 a 500', '501 a 1.500', '1.501 a 2.000', '2.001 a 2.750', '2.751 a 3.500', '3.501 a 5.000', '5.001 a 10.000', 'Acima de 10.001'],
+                  ['48h', '3 dias', '4 dias', '5 dias', '6 dias', '7 dias', '13 dias', 'sob consulta']) },
+      { id: 'laser-circular', nome: 'Laser Circular', cor: 'roxo', grupo: 'normal', unidade: 'gravações',
+        faixas: F(['1 a 50', '51 a 100', '101 a 200', '201 a 300', '301 a 500', 'Acima de 501'],
+                  ['48h', '3 dias', '4 dias', '5 dias', '6 dias', 'sob consulta']) },
+      { id: 'serigrafia', nome: 'Serigrafia', cor: 'azul', grupo: 'normal', unidade: 'gravações',
+        faixas: F(Q_PADRAO, ['48h', '3 dias', '4 dias', '5 dias', '6 dias', '8 dias', '10 dias', 'sob consulta']) },
+      { id: 'serigrafia-textil', nome: 'Serigrafia Têxtil (Estamparia)', cor: 'azul', grupo: 'normal', unidade: 'gravações',
+        alias: 'serigrafia textil estamparia',
+        faixas: F(['1 a 500', '501 a 1.500', '1.501 a 2.750', '2.751 a 3.500', '3.501 a 5.000', '5.001 a 10.000', 'Acima de 10.001'],
+                  ['48h', '3 dias', '4 dias', '5 dias', '6 dias', '8 dias', 'sob consulta']) },
+      { id: 'sub-localizada', nome: 'Sublimação Localizada (Camisetas)', cor: 'roxo', grupo: 'sublimacao', unidade: 'gravações',
+        faixas: F(['1 a 500', '501 a 1.000', '1.001 a 2.000', '2.001 a 4.000', '4.001 a 6.000', '6.001 a 8.000', '8.001 a 10.000'],
+                  ['48h', '3 dias', '5 dias', '6 dias', '8 dias', '10 dias', 'sob consulta']) },
+      { id: 'sub-total', nome: 'Sublimação Total (Camisetas)', cor: 'roxo', grupo: 'sublimacao', unidade: 'gravações',
+        faixas: F(['1 a 50', '51 a 300', '301 a 600', '601 a 900', 'Acima de 901'],
+                  ['3 dias', '4 dias', '6 dias', '10 dias', 'sob consulta']) },
+      { id: 'sub-squeezes', nome: 'Sublimação de Squeezes e Copos', cor: 'roxo', grupo: 'sublimacao', unidade: 'gravações',
+        faixas: F(['1 a 200', '201 a 400', '401 a 600', '601 a 900', '901 a 1.200', 'Acima de 1.201'],
+                  ['48h', '3 dias', '5 dias', '6 dias', '8 dias', 'sob consulta']) },
+      { id: 'sub-vidro', nome: 'Sublimação para Materiais de Vidro', cor: 'roxo', grupo: 'sublimacao', unidade: 'gravações',
+        faixas: F(['1 a 250', '251 a 500', '501 a 750', '751 a 1000', '1.001 a 1.250', 'Acima de 1.251'],
+                  ['48h', '3 dias', '5 dias', '6 dias', '8 dias', 'sob consulta']) },
+      { id: 'sub-mousepad', nome: 'Sublimação de mouse pad & chinelos', cor: 'roxo', grupo: 'sublimacao', unidade: 'gravações',
+        faixas: F(['1 a 200', '201 a 400', '401 a 600', '601 a 800', '801 a 1.000', 'Acima de 1.001'],
+                  ['48h', '3 dias', '5 dias', '6 dias', '8 dias', 'sob consulta']) },
+      { id: 'tampografia', nome: 'Tampografia', cor: 'azul', grupo: 'normal', unidade: 'gravações',
+        faixas: F(Q_PADRAO, ['48h', '48h', '3 dias', '5 dias', '6 dias', '8 dias', '10 dias', 'sob consulta']) },
+      { id: 'transfer', nome: 'Transfer', cor: 'roxo', grupo: 'normal', unidade: 'gravações',
+        faixas: F(['1 a 500', '501 a 1.000', '1.001 a 1.500', '1.501 a 2.750', '2.751 a 3.500', '3.501 a 5.000', '5.001 a 10.000', 'Acima de 10.001'],
+                  ['48h', '3 dias', '4 dias', '5 dias', '6 dias', '8 dias', '9 dias', 'sob consulta']) },
+      { id: 'transfer-bola', nome: 'Transfer para bola', cor: 'roxo', grupo: 'normal', unidade: 'gravações',
+        obs: 'A faixa 10.01 a 1251 está escrita assim no PDF (provavelmente 1.001 a 1.251).',
+        faixas: F(['1 a 250', '251 a 500', '501 a 750', '751 a 1.000', '10.01 a 1251', 'Acima de 1251'],
+                  ['3 dias', '4 dias', '5 dias', '6 dias', '8 dias', 'sob consulta']) },
+      { id: 'uv-circular', nome: 'UV Circular', cor: 'azul', grupo: 'normal', unidade: 'gravações',
+        faixas: F(['1 a 50', '51 a 100', '101 a 200', '201 a 300', '301 a 500', 'Acima de 501'],
+                  ['48h', '3 dias', '4 dias', '5 dias', '6 dias', 'sob consulta']) },
+      { id: 'uv-digital', nome: 'UV Digital', cor: 'azul', grupo: 'normal', unidade: 'gravações',
+        faixas: F(['1 a 250', '251 a 500', '501 a 1.000', '1.001 a 1.500', '1.501 a 2.000', '2.001 a 3.500', '3.501 a 5.000', '5.001 a 10.000', 'Acima de 10.001'],
+                  ['48h', '3 dias', '4 dias', '5 dias', '6 dias', '7 dias', '8 dias', '12 dias', 'sob consulta']) },
+
+      // SLA | Peças delicadas (maior tempo de secagem / aplicação)
+      { id: 'delic-tampo-seri', nome: 'Tampografia | Serigrafia', cor: 'azul', grupo: 'delicadas', unidade: 'gravações',
+        codigos: ['57340', '57395', '57904', '57398', '57395', '93851', '94447', '94772', '94699', '97396', '97399', '97097', '97176', '97181', '97175', '97399'],
+        faixas: F(Q_PADRAO, ['3 dias', '3 dias', '4 dias', '6 dias', '7 dias', '9 dias', '11 dias', 'A negociar']) },
+      { id: 'delic-estamparia', nome: 'Estamparia', cor: 'azul', grupo: 'delicadas', unidade: 'gravações',
+        codigos: ['99143', '98191', '98192'],
+        faixas: F(Q_PADRAO, ['3 dias', '3 dias', '4 dias', '6 dias', '7 dias', '9 dias', '11 dias', 'A negociar']) },
+      { id: 'delic-uv-digital', nome: 'UV Digital', cor: 'azul', grupo: 'delicadas', unidade: 'gravações',
+        codigos: ['97176', '97399'],
+        faixas: F(Q_PADRAO, ['3 dias', '3 dias', '4 dias', '6 dias', '7 dias', '9 dias', '11 dias', 'A negociar']) }
+    ];
+
+    // ---------- Utilitários ----------
+    function norm(s) {
+      return String(s === null || s === undefined ? '' : s)
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim().toLowerCase();
+    }
+
+    // "1.001 a 2.000" -> {min:1001,max:2000}; "Acima de 10.001" -> {min:10001,max:Infinity}
+    function limitesDaFaixa(label) {
+      const nums = (String(label).match(/[\d.]+/g) || []).map(x => Number(x.replace(/\./g, '')));
+      if (norm(label).startsWith('acima')) return { min: nums[0], max: Infinity };
+      return { min: nums[0], max: nums[1] !== undefined ? nums[1] : nums[0] };
+    }
+
+    function classePrazo(prazo) {
+      const p = norm(prazo);
+      if (p === '48h') return 'h48';
+      if (p === 'sob consulta') return 'consulta';
+      if (p === 'a negociar') return 'negociar';
+      return '';
+    }
+    function diasDoPrazo(prazo) {
+      const m = norm(prazo).match(/^(\d+)\s*dias?$/);
+      return m ? Number(m[1]) : null;
+    }
+
+    function nomeCompleto(t) {
+      const grupo = t.grupo === 'delicadas' ? 'sla pecas delicadas ' : '';
+      return norm(`${grupo}${t.nome} ${t.alias || ''} ${(t.codigos || []).join(' ')} ${t.unidade}`);
+    }
+
+    // Avalia uma técnica contra a busca. Retorna null (não aparece) ou { porNome, faixas:Set }
+    function avaliar(t, consulta, modoCodigo) {
+      const q = norm(consulta);
+      if (!q) return { porNome: true, faixas: new Set() };
+
+      if (modoCodigo) {                       // busca por código de peça delicada
+        return (t.codigos || []).some(c => c.includes(q)) ? { porNome: true, faixas: new Set() } : null;
+      }
+
+      const porNome = nomeCompleto(t).includes(q);
+      const soNumero = /^[\d.,]+$/.test(q);
+      const qNum = soNumero ? Number(q.replace(/[.,]/g, '')) : NaN;
+      const mDias = q.match(/^(\d+)\s*(dias?|d)$/);
+      const faixas = new Set();
+
+      t.faixas.forEach((f, i) => {
+        const p = norm(f.prazo);
+        let achou = false;
+        if (soNumero) {
+          const { min, max } = limitesDaFaixa(f.label);
+          if (qNum >= min && qNum <= max) achou = true;          // quantidade dentro da faixa
+          if (diasDoPrazo(f.prazo) === qNum) achou = true;        // ou prazo em dias igual
+          if ((q === '48') && p === '48h') achou = true;
+        } else if (mDias) {
+          if (diasDoPrazo(f.prazo) === Number(mDias[1])) achou = true;
+        } else {
+          if (p.includes(q) || norm(f.label).includes(q)) achou = true;  // 48h, sob consulta, acima...
+        }
+        if (achou) faixas.add(i);
+      });
+
+      if (porNome) return { porNome: true, faixas: new Set() };
+      return faixas.size ? { porNome: false, faixas } : null;
+    }
+
+    // Se o texto é um código de produto (5+ dígitos) de peça delicada, busca só por código
+    function ehBuscaPorCodigo(consulta) {
+      const q = norm(consulta);
+      return /^\d{4,}$/.test(q) && TECNICAS.some(t => (t.codigos || []).some(c => c.includes(q)));
+    }
+
+    function tem48h(t) { return t.faixas.some(f => norm(f.prazo) === '48h'); }
+
+    function filtrarPorChip(t, chip) {
+      switch (chip) {
+        case '48h': return tem48h(t);
+        case 'sem48h': return !tem48h(t);
+        case 'sublimacao': return t.grupo === 'sublimacao';
+        case 'delicadas': return t.grupo === 'delicadas';
+        default: return true;
+      }
+    }
+
+    function buscarTecnicas(consulta, chip) {
+      const modoCodigo = ehBuscaPorCodigo(consulta);
+      const out = [];
+      TECNICAS.forEach(t => {
+        if (!filtrarPorChip(t, chip)) return;
+        const r = avaliar(t, consulta, modoCodigo);
+        if (r) out.push({ t, ...r });
+      });
+      return out;
+    }
+
+    function regrasEncontradas(consulta) {
+      const q = norm(consulta);
+      if (!q) return REGRAS;
+      return REGRAS.filter(r => norm(r.t).includes(q));
+    }
+    // </pure>
+
+    // ============================================================
+    // INTERFACE
+    // ============================================================
+    const $ = id => document.getElementById(id);
+    const esc = s => String(s === null || s === undefined ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    let chipAtivo = 'todas';
+
+    const CHIPS = [
+      { id: 'todas', rotulo: 'Todas as técnicas' },
+      { id: '48h', rotulo: 'Com opção 48h' },
+      { id: 'sem48h', rotulo: 'Sem 48h' },
+      { id: 'sublimacao', rotulo: 'Sublimação' },
+      { id: 'delicadas', rotulo: 'Peças delicadas' }
+    ];
+
+    function marcar(texto, consulta) {
+      const t = String(texto);
+      const q = String(consulta || '').trim();
+      if (!q) return esc(t);
+      const i = norm(t).indexOf(norm(q));
+      // norm preserva o tamanho na maioria dos textos; se mudar, não marca
+      if (i < 0 || norm(t).length !== t.length) return esc(t);
+      return esc(t.slice(0, i)) + '<mark>' + esc(t.slice(i, i + q.length)) + '</mark>' + esc(t.slice(i + q.length));
+    }
+
+    function cardTecnica(r, consulta) {
+      const { t, porNome, faixas } = r;
+      const destacar = !porNome && faixas.size > 0;
+      const cab = t.faixas.map((f, i) => `<th class="${t.cor} ${destacar && faixas.has(i) ? 'match' : ''}">${esc(f.label)}</th>`).join('');
+      const lin = t.faixas.map((f, i) => `<td class="${classePrazo(f.prazo)} ${destacar && faixas.has(i) ? 'match' : ''}">${esc(f.prazo)}</td>`).join('');
+      const codigos = (t.codigos || []).length
+        ? `<div class="sla-codes">${t.codigos.map(c => `<span class="sla-code">${marcar(c, ehBuscaPorCodigo(consulta) ? consulta : '')}</span>`).join('')}</div>` : '';
+      const tecnicaTitulo = t.grupo === 'delicadas' ? `${esc(t.nome)}` : marcar(t.nome, porNome ? consulta : '');
+      return `
+        <div class="sla-card">
+          <div class="sla-card-head">
+            <span class="sla-tag ${t.cor}">${tecnicaTitulo}</span>
+            <span class="sla-unit">Quantidade de ${esc(t.unidade)}</span>
+            ${tem48h(t) ? '<span class="sla-badge48">Opção 48h</span>' : ''}
+          </div>
+          ${t.obs ? `<div class="sla-obs">${esc(t.obs)}</div>` : ''}
+          ${codigos}
+          <div class="sla-scroll">
+            <table class="sla-table">
+              <thead><tr>${cab}</tr></thead>
+              <tbody><tr>${lin}</tr></tbody>
+            </table>
+          </div>
+        </div>`;
+    }
+
+    function renderizar() {
+      const consulta = $('sla-busca').value;
+      const resultados = buscarTecnicas(consulta, chipAtivo);
+      const regras = regrasEncontradas(consulta);
+
+      // regras
+      $('sla-rules-body').innerHTML = regras.map(r =>
+        `<div class="sla-rule l${r.nivel} ${r.destaque ? 'destaque' : ''}"><span class="n">${esc(r.n)}</span><span>${marcar(r.t, consulta)}</span></div>`).join('');
+      if (consulta.trim() && regras.length && regras.length < REGRAS.length) $('sla-rules').open = true;
+
+      // técnicas
+      const normais = resultados.filter(r => r.t.grupo !== 'delicadas');
+      const delicadas = resultados.filter(r => r.t.grupo === 'delicadas');
+      let html = '';
+      if (normais.length) html += normais.map(r => cardTecnica(r, consulta)).join('');
+      if (delicadas.length) {
+        html += `<div class="sla-section-title">SLA | Peças delicadas (maior tempo de secagem / aplicação)</div>`;
+        html += delicadas.map(r => cardTecnica(r, consulta)).join('');
+        html += `<div class="sla-footnote">Técnicas: Tampografia / Serigrafia / Estamparia / UV Digital. Os códigos listados seguem este SLA diferenciado.</div>`;
+      }
+      $('sla-resultado').innerHTML = html || '<div class="sla-empty">Nada encontrado para essa busca. Tente outra técnica, quantidade ou prazo.</div>';
+
+      const total = resultados.length;
+      $('sla-count').textContent = consulta.trim() || chipAtivo !== 'todas'
+        ? `${total} ${total === 1 ? 'técnica encontrada' : 'técnicas encontradas'} de ${TECNICAS.length}`
+        : `${TECNICAS.length} técnicas e SLAs cadastrados`;
+    }
+
+    function montarChips() {
+      $('sla-chips').innerHTML = CHIPS.map(c => `<button type="button" class="sla-chip ${c.id === chipAtivo ? 'ativo' : ''}" data-chip="${c.id}">${c.rotulo}</button>`).join('');
+      $('sla-chips').querySelectorAll('.sla-chip').forEach(b => b.addEventListener('click', () => {
+        chipAtivo = b.dataset.chip;
+        montarChips();
+        renderizar();
+      }));
+    }
+
+    $('sla-busca').addEventListener('input', renderizar);
+    montarChips();
+    renderizar();
+    $('sla-busca').focus();
+  </script>
+</body>
+</html>
