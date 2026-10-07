@@ -94,11 +94,15 @@
       <div class="sla-search-row">
         <input type="text" id="sla-busca" class="sla-search" autocomplete="off"
                placeholder="Digite a técnica, a quantidade, os dias ou o código do produto...">
+        <input type="text" id="sla-qtd" class="sla-search" style="flex:0 0 220px;min-width:180px;" inputmode="numeric" autocomplete="off"
+               placeholder="Quantidade (ex.: 1500)">
       </div>
       <div class="sla-hint">
         Exemplos: <code>laser</code> · <code>sublimação</code> · <code>1500</code> (quantidade de gravações) ·
         <code>5 dias</code> · <code>48h</code> · <code>sob consulta</code> · <code>97399</code> (código de peça delicada).
-        Quando a busca é por quantidade ou prazo, as faixas encontradas ficam destacadas em amarelo.
+        Um número sozinho procura tanto a quantidade quanto o prazo em dias (ex.: <code>5</code> acha a faixa que contém 5 peças e os prazos de 5 dias).
+        Para ver só o prazo de uma quantidade, use o campo <b>Quantidade</b>; ele mostra, em cada técnica, a faixa e o prazo correspondentes
+        (e pode ser combinado com a técnica, ex.: <code>laser</code> + 1500). As faixas encontradas ficam destacadas em amarelo.
       </div>
       <div class="sla-chips" id="sla-chips"></div>
       <div class="sla-count" id="sla-count"></div>
@@ -288,13 +292,25 @@
       }
     }
 
-    function buscarTecnicas(consulta, chip) {
+    function faixaDaQuantidade(t, qtd) {
+      return t.faixas.findIndex(f => { const { min, max } = limitesDaFaixa(f.label); return qtd >= min && qtd <= max; });
+    }
+
+    // qtd (opcional): mostra só técnicas que atendem essa quantidade e destaca a faixa
+    function buscarTecnicas(consulta, chip, qtd) {
       const modoCodigo = ehBuscaPorCodigo(consulta);
       const out = [];
       TECNICAS.forEach(t => {
         if (!filtrarPorChip(t, chip)) return;
         const r = avaliar(t, consulta, modoCodigo);
-        if (r) out.push({ t, ...r });
+        if (!r) return;
+        if (qtd > 0) {
+          const idx = faixaDaQuantidade(t, qtd);
+          if (idx < 0) return;
+          out.push({ t, porNome: false, faixas: new Set([idx]) });
+        } else {
+          out.push({ t, ...r });
+        }
       });
       return out;
     }
@@ -359,8 +375,9 @@
 
     function renderizar() {
       const consulta = $('sla-busca').value;
-      const resultados = buscarTecnicas(consulta, chipAtivo);
-      const regras = regrasEncontradas(consulta);
+      const qtd = Number(String($('sla-qtd').value).replace(/\D/g, '')) || 0;
+      const resultados = buscarTecnicas(consulta, chipAtivo, qtd);
+      const regras = qtd ? REGRAS : regrasEncontradas(consulta);
 
       // regras
       $('sla-rules-body').innerHTML = regras.map(r =>
@@ -380,7 +397,7 @@
       $('sla-resultado').innerHTML = html || '<div class="sla-empty">Nada encontrado para essa busca. Tente outra técnica, quantidade ou prazo.</div>';
 
       const total = resultados.length;
-      $('sla-count').textContent = consulta.trim() || chipAtivo !== 'todas'
+      $('sla-count').textContent = consulta.trim() || qtd || chipAtivo !== 'todas'
         ? `${total} ${total === 1 ? 'técnica encontrada' : 'técnicas encontradas'} de ${TECNICAS.length}`
         : `${TECNICAS.length} técnicas e SLAs cadastrados`;
     }
@@ -395,6 +412,7 @@
     }
 
     $('sla-busca').addEventListener('input', renderizar);
+    $('sla-qtd').addEventListener('input', renderizar);
     montarChips();
     renderizar();
     $('sla-busca').focus();
