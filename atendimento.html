@@ -28,11 +28,16 @@
     .elo-guide-row { display:flex; gap:10px; margin-top:8px; font-size:0.85rem; }
     .elo-guide-row b { min-width: 170px; color: var(--accent-indigo); flex-shrink:0; }
     .elo-section-title { font-size:0.78rem; text-transform:uppercase; letter-spacing:.05em; color:var(--text-secondary); font-weight:700; margin:4px 0 -4px; }
-    .elo-panel-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(190px,1fr)); gap:14px; }
-    .elo-panel-card { background: var(--bg-card); border:1px solid var(--border-color); border-radius: var(--radius); padding:14px 16px; }
+    .elo-panel-grid { display:grid; grid-template-columns: repeat(var(--cols, 4), minmax(0, 1fr)); gap:14px; }
+    .elo-stack { display:flex; flex-direction:column; gap:14px; }
+    .elo-sub-title { font-size:0.7rem; color:#64748b; text-transform:uppercase; letter-spacing:.05em; font-weight:600; margin-bottom:-6px; }
+    @media (max-width:1000px) { .elo-panel-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width:560px)  { .elo-panel-grid { grid-template-columns: 1fr; } }
+    .elo-panel-card { background: var(--bg-card); border:1px solid var(--border-color); border-radius: var(--radius); padding:14px 16px; min-height:112px; display:flex; flex-direction:column; }
     .elo-panel-card .lbl { font-size:0.7rem; color: var(--text-secondary); text-transform:uppercase; }
     .elo-panel-card .val { font-size:1.3rem; font-weight:700; margin-top:4px; }
-    .elo-panel-card .var { font-size:0.75rem; margin-top:2px; color:#94a3b8; line-height:1.3; }
+    .elo-panel-card .var { font-size:0.75rem; margin-top:auto; padding-top:6px; color:#94a3b8; line-height:1.3; }
+    .elo-panel-card .var .alerta { color:#ef4444; font-weight:700; }
     .elo-progress-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; }
     .elo-progress-card { background:var(--bg-card); border:1px solid var(--border-color); border-radius:var(--radius); padding:16px; }
     .elo-progress-card.atual { border-color:#6366f1; }
@@ -126,7 +131,7 @@
 
     <!-- Resultado da carteira (aba Painel, seção 3) -->
     <div class="elo-section-title">Resultado da carteira</div>
-    <section class="elo-panel-grid" id="painelResultado"></section>
+    <section class="elo-stack" id="painelResultado"></section>
 
     <!-- Composição por cluster (aba Painel, seção 4) -->
     <section class="table-card" id="cardClusters" style="display:none;">
@@ -614,15 +619,19 @@
       const pctEf = tentativas ? (efetivas / tentativas) * 100 : 0;
       const pctPerd = tentativas ? (perdidas / tentativas) * 100 : 0;
 
+      const falei = baseElo.filter(c => statusNoMes(c, mes, dados.meta) === 'teveRetorno').length;
       const card = (lbl, val, sub, cor) => `<div class="elo-panel-card"><div class="lbl">${lbl}</div><div class="val" ${cor ? `style="color:${cor}"` : ''}>${val}</div><div class="var">${sub}</div></div>`;
+      // 8 cards = 4 colunas x 2 linhas: primeiro o funil de contato, depois o que gerou de resultado
+      $('painelMes').style.setProperty('--cols', 4);
       $('painelMes').innerHTML = [
         card('Cobertura da carteira', pctCob.toFixed(1) + '%', `${tent1} de ${total} clientes com 1ª tentativa`, '#10b981'),
+        card('Falei com o cliente', falei, `${total ? ((falei / total) * 100).toFixed(1) : '0.0'}% da carteira teve retorno`, '#10b981'),
         card('2ª tentativa registrada', tent2, 'Quem não atendeu na primeira volta para a fila'),
-        card('Conversas efetivas', efetivas, `Taxa de ${pctEf.toFixed(1)}% das tentativas · ${compras} com Compras · ${decisor} com decisor/comercial`),
+        card('Tentativas perdidas', perdidas, `${pctPerd.toFixed(1)}% das tentativas (sem retorno ou bloqueado)`, pctPerd > 40 ? '#f59e0b' : ''),
+        card('Conversas efetivas', efetivas, `Taxa de ${pctEf.toFixed(1)}% · ${compras} com Compras · ${decisor} com decisor/comercial`),
         card('Cadastros atualizados', cadastros, 'Base correta garante que a próxima ligação chegue'),
         card('Demandas encaminhadas', encaminhadas, 'Oportunidades passadas para dar sequência'),
-        card('Próximas ligações', agendadas, atrasadas ? `${atrasadas} em atraso` : 'Nenhuma em atraso', atrasadas ? '#ef4444' : ''),
-        card('Tentativas perdidas', perdidas, `${pctPerd.toFixed(1)}% das tentativas (sem retorno ou bloqueado)`, pctPerd > 40 ? '#f59e0b' : '')
+        card('Próximas ligações', agendadas, atrasadas ? `<span class="alerta">${atrasadas} em atraso</span>` : 'Nenhuma em atraso')
       ].join('');
     }
 
@@ -634,12 +643,17 @@
 
     function renderizarResultado() {
       const lista = dados.painel.resultado || [];
-      $('painelResultado').innerHTML = lista.map(r => `
+      const cardRes = r => `
         <div class="elo-panel-card">
           <div class="lbl">${esc(r.label)}</div>
           <div class="val">${fmtValorPainel(r.label, r.valor)}</div>
           <div class="var">${esc(r.nota)}</div>
-        </div>`).join('');
+        </div>`;
+      const fin = lista.filter(r => norm(r.label).includes('faturamento'));
+      const cart = lista.filter(r => !norm(r.label).includes('faturamento'));
+      const grupo = (titulo, itens) => itens.length
+        ? `<div class="elo-sub-title">${titulo}</div><div class="elo-panel-grid" style="--cols:${Math.min(itens.length, 4)}">${itens.map(cardRes).join('')}</div>` : '';
+      $('painelResultado').innerHTML = grupo('Faturamento', fin) + grupo('Carteira de clientes', cart);
       $('painelResultado').previousElementSibling.style.display = lista.length ? '' : 'none';
 
       const cl = dados.painel.clusters || [];
