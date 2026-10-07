@@ -104,6 +104,9 @@
         <a href="retira.html" id="linkRetira" class="btn-upload" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px; background-color:#0ea5e9;">
           <i data-lucide="package-search" style="width:16px;height:16px;"></i> Retira
         </a>
+        <a href="sla_gravacoes.html" id="linkSla" class="btn-upload" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px; background-color:#a855f7;">
+          <i data-lucide="timer" style="width:16px;height:16px;"></i> SLA Gravações
+        </a>
         <a href="#" id="linkPlanilha" target="_blank" rel="noopener" class="btn-upload" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px; background-color:#f59e0b;">
           <i data-lucide="table" style="width:16px;height:16px;"></i> Abrir planilha
         </a>
@@ -155,8 +158,9 @@
       <div class="card-header space-between">
         <h3 id="tituloTabela">Minha Carteira</h3>
         <div class="elo-toolbar">
+          <select id="filtroCluster" class="elo-filtro"></select>
           <select id="filtroStatus" class="elo-filtro"></select>
-          <input type="text" id="searchElo" placeholder="Pesquisar por cliente, cidade ou código..." class="table-search" style="width:280px;">
+          <input type="text" id="searchElo" placeholder="Pesquisar por cliente, cidade, cluster ou código..." class="table-search" style="width:280px;">
         </div>
       </div>
       <div class="elo-legend" id="legendaDots">
@@ -715,15 +719,21 @@
         <option value="semRetorno">${nome}: sem retorno</option>
         <option value="naoLigou">${nome}: não liguei</option>
         <option value="atrasada">Próxima ligação em atraso</option>`;
+      const clusters = [...new Set(baseElo.map(c => c.cluster).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'pt-BR'));
+      const contar = cl => baseElo.filter(c => c.cluster === cl).length;
+      $('filtroCluster').innerHTML = '<option value="">Todos os clusters</option>' +
+        clusters.map(cl => `<option value="${esc(cl)}">${esc(cl)} (${contar(cl)})</option>`).join('');
       $('thMeses').textContent = 'Contatos (' + MESES.map(m => nomeDoMes(m).charAt(0)).join('/') + ')';
     }
 
     function filtrarBase() {
       const termo = norm($('searchElo').value);
       const filtro = $('filtroStatus').value;
+      const filtroCluster = $('filtroCluster').value;
       const hoje = isoLocal(dataLocalHoje());
       return baseElo.filter(c => {
-        if (termo && !(norm(c.cliente).includes(termo) || norm(c.cidade).includes(termo) || String(c.codigo).includes(termo))) return false;
+        if (filtroCluster && c.cluster !== filtroCluster) return false;
+        if (termo && !(norm(c.cliente).includes(termo) || norm(c.cidade).includes(termo) || norm(c.cluster).includes(termo) || String(c.codigo).includes(termo))) return false;
         if (filtro === 'atrasada') return c.proxLigacao && c.proxLigacao < hoje;
         if (filtro) return statusNoMes(c, dados.meta.mesAtual, dados.meta) === filtro;
         return true;
@@ -773,6 +783,7 @@
 
     $('searchElo').addEventListener('input', renderizarTabela);
     $('filtroStatus').addEventListener('change', renderizarTabela);
+    $('filtroCluster').addEventListener('change', renderizarTabela);
 
     // ============================================================
     // MODAL (somente leitura — o registro é feito na planilha do Drive)
