@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transportadoras - Redespacho</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .tr-toolbar { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    .tr-search {
+      flex:1; min-width:260px; background:var(--bg-main); border:1px solid var(--border-color);
+      color:var(--text-primary); padding:12px 14px; border-radius:10px; font-size:1rem; outline:none;
+    }
+    .tr-search:focus { border-color: var(--accent-indigo); }
+    .tr-select { background:var(--bg-main); border:1px solid var(--border-color); color:var(--text-primary); padding:11px 12px; border-radius:10px; font-size:.85rem; outline:none; }
+    .tr-btn { border:none; background:var(--accent-indigo); color:#fff; padding:11px 18px; border-radius:10px; font-size:.88rem; font-weight:600; cursor:pointer; font-family:inherit; white-space:nowrap; }
+    .tr-btn.verde { background:var(--accent-green); }
+    .tr-btn.ghost { background:transparent; border:1px solid var(--border-color); color:var(--text-secondary); }
+    .tr-btn.perigo { background:var(--accent-red); }
+    .tr-btn:disabled { opacity:.5; cursor:not-allowed; }
+    .tr-count { font-size:.8rem; color:var(--text-secondary); }
+    .tr-banner { padding:12px 16px; border-radius:10px; font-size:.82rem; line-height:1.5; border:1px solid; }
+    .tr-banner.aviso { background:rgba(245,158,11,.1); border-color:#f59e0b; color:#fbbf24; }
+    .tr-banner.erro  { background:rgba(239,68,68,.1); border-color:var(--accent-red); color:#fca5a5; }
+    .tr-banner.info  { background:rgba(99,102,241,.1); border-color:var(--accent-indigo); color:#c7d2fe; }
+    .tr-banner button { margin-left:10px; }
+    .tr-table-wrap { overflow:auto; max-height:70vh; }
+    .tr-table td { vertical-align:top; }
+    .tr-cod { font-family: ui-monospace, Menlo, Consolas, monospace; font-weight:700; color:#e2e8f0; }
+    .tr-nome { font-weight:600; }
+    .tr-tipo { display:inline-block; font-size:.68rem; padding:2px 8px; border-radius:6px; background:rgba(99,102,241,.18); color:#c7d2fe; margin-top:4px; }
+    .tr-end { color:#cbd5e1; font-size:.85rem; line-height:1.4; max-width:480px; }
+    .tr-obs { color:#94a3b8; font-size:.8rem; max-width:240px; }
+    .tr-rep { display:inline-block; font-size:.65rem; font-weight:700; padding:2px 7px; border-radius:6px; background:rgba(245,158,11,.18); color:#f59e0b; margin-left:6px; }
+    .tr-acoes { white-space:nowrap; }
+    .tr-acoes button { background:transparent; border:1px solid var(--border-color); color:var(--text-secondary); padding:5px 10px; border-radius:6px; font-size:.75rem; cursor:pointer; margin-right:4px; font-family:inherit; }
+    .tr-acoes button:hover { background:var(--bg-hover); color:#fff; }
+    .tr-acoes button.del:hover { background:var(--accent-red); border-color:var(--accent-red); }
+    mark { background: rgba(245,158,11,.35); color: inherit; border-radius:3px; padding:0 2px; }
+    .tr-overlay { position:fixed; inset:0; background:rgba(11,15,25,.85); backdrop-filter:blur(6px); z-index:99999; display:none; align-items:center; justify-content:center; padding:20px; overflow-y:auto; }
+    .tr-overlay.open { display:flex; }
+    .tr-modal { background:#1e293b; border:1px solid #334155; border-radius:12px; width:100%; max-width:560px; padding:24px; color:#f8fafc; box-shadow:0 20px 25px -5px rgba(0,0,0,.5); }
+    .tr-modal h3 { margin:0 0 16px; font-size:1.1rem; }
+    .tr-field { margin-bottom:12px; }
+    .tr-field label { display:block; font-size:.72rem; color:#94a3b8; margin-bottom:4px; text-transform:uppercase; letter-spacing:.03em; }
+    .tr-field input, .tr-field textarea { width:100%; background:#0f172a; border:1px solid #334155; color:#f8fafc; padding:9px 10px; border-radius:8px; font-size:.9rem; font-family:inherit; outline:none; }
+    .tr-field input:focus, .tr-field textarea:focus { border-color:var(--accent-indigo); }
+    .tr-field textarea { resize:vertical; min-height:70px; }
+    .tr-field .erro { color:#fca5a5; font-size:.75rem; margin-top:4px; display:none; }
+    .tr-field.invalido input { border-color:var(--accent-red); }
+    .tr-field.invalido .erro { display:block; }
+    .tr-grid2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .tr-modal-btns { display:flex; justify-content:flex-end; gap:10px; margin-top:18px; }
+    .tr-toast { position:fixed; bottom:20px; right:20px; z-index:100000; padding:12px 18px; border-radius:8px; font-size:.875rem; font-weight:600; color:#fff; opacity:0; transform:translateY(10px); transition:all .25s; max-width:80vw; }
+    .tr-toast.show { opacity:1; transform:translateY(0); }
+    .tr-toast.ok { background:#10b981; }
+    .tr-toast.err { background:#ef4444; }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+
+    <header class="main-header">
+      <div class="header-title">
+        <h1>Transportadoras</h1>
+        <p>Endereços e códigos de redespacho · lista editável</p>
+      </div>
+      <div class="header-controls">
+        <a href="index.html" id="linkDashboard" class="btn-upload" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
+          <i data-lucide="arrow-left" style="width:16px;height:16px;"></i> Dashboard
+        </a>
+        <a href="clientes.html" id="linkClientes" class="btn-upload" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px; background-color:var(--accent-green);">
+          <i data-lucide="users" style="width:16px;height:16px;"></i> Base & SLAs
+        </a>
+        <a href="atendimento.html" id="linkAtendimento" class="btn-upload" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px; background-color:#f59e0b;">
+          <i data-lucide="phone-call" style="width:16px;height:16px;"></i> Atendimento ELO
+        </a>
+        <a href="retira.html" id="linkRetira" class="btn-upload" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px; background-color:#0ea5e9;">
+          <i data-lucide="package-search" style="width:16px;height:16px;"></i> Retira
+        </a>
+        <a href="sla_gravacoes.html" class="btn-upload" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px; background-color:#a855f7;">
+          <i data-lucide="timer" style="width:16px;height:16px;"></i> SLA Gravações
+        </a>
+        <div class="status-badge active" id="statusBadge">
+          <span class="status-dot"></span>
+          <span id="statusText">Carregando...</span>
+        </div>
+      </div>
+    </header>
+
+    <div id="avisos" style="display:flex;flex-direction:column;gap:10px;"></div>
+
+    <section class="table-card">
+      <div class="tr-toolbar">
+        <input type="text" id="busca" class="tr-search" autocomplete="off" placeholder="Pesquisar por nome, código, endereço, CEP ou observação...">
+        <select id="ordem" class="tr-select">
+          <option value="nome">Ordenar: Nome (A-Z)</option>
+          <option value="codigo">Ordenar: Código</option>
+          <option value="original">Ordenar: Ordem do Word</option>
+        </select>
+        <button type="button" class="tr-btn verde" id="btnNovo">+ Nova transportadora</button>
+        <button type="button" class="tr-btn ghost" id="btnCsv">Exportar CSV</button>
+        <button type="button" class="tr-btn ghost" id="btnRestaurar" style="display:none;">Restaurar lista do Word</button>
+      </div>
+      <div class="tr-count" id="contagem"></div>
+
+      <div class="tr-table-wrap">
+        <table class="tr-table">
+          <thead>
+            <tr>
+              <th style="width:90px;">Código</th>
+              <th>Transportadora</th>
+              <th>Endereço</th>
+              <th style="width:110px;">CEP</th>
+              <th>Observações</th>
+              <th style="width:210px;">Ações</th>
+            </tr>
+          </thead>
+          <tbody id="tbody"><tr><td colspan="6" class="empty-row">Carregando...</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <!-- Modal de edição -->
+  <div class="tr-overlay" id="ovEdicao">
+    <div class="tr-modal">
+      <h3 id="tituloModal">Nova transportadora</h3>
+      <div class="tr-grid2">
+        <div class="tr-field" id="f_codigo"><label>Código *</label><input id="in_codigo" inputmode="numeric" maxlength="8"><div class="erro">Informe o código (só números).</div></div>
+        <div class="tr-field"><label>Tipo</label><input id="in_tipo" list="listaTipos" placeholder="Redespacho"><datalist id="listaTipos"><option value="Redespacho"><option value="Transportadora"><option value="Retira"></datalist></div>
+      </div>
+      <div class="tr-field" id="f_nome"><label>Transportadora *</label><input id="in_nome"><div class="erro">Informe o nome da transportadora.</div></div>
+      <div class="tr-field"><label>Endereço</label><textarea id="in_endereco"></textarea></div>
+      <div class="tr-grid2">
+        <div class="tr-field" id="f_cep"><label>CEP</label><input id="in_cep" placeholder="00000-000" maxlength="9"><div class="erro">CEP inválido (use 8 dígitos).</div></div>
+        <div></div>
+      </div>
+      <div class="tr-field"><label>Observações</label><textarea id="in_obs" placeholder="Ex.: telefone, horário de coleta, contato..."></textarea></div>
+      <div class="tr-modal-btns">
+        <button type="button" class="tr-btn ghost" id="btnCancelar">Cancelar</button>
+        <button type="button" class="tr-btn verde" id="btnSalvar">Salvar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de exclusão -->
+  <div class="tr-overlay" id="ovExcluir">
+    <div class="tr-modal" style="max-width:460px;">
+      <h3>Excluir transportadora?</h3>
+      <p id="txtExcluir" style="color:#cbd5e1;font-size:.9rem;line-height:1.5;"></p>
+      <div class="tr-modal-btns">
+        <button type="button" class="tr-btn ghost" id="btnNaoExcluir">Cancelar</button>
+        <button type="button" class="tr-btn perigo" id="btnSimExcluir">Excluir</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="tr-toast" id="toast"></div>
+
+  <script>
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+
+    // ============================================================
+    // CONFIGURAÇÃO
+    // ============================================================
+    // Cole aqui a URL /exec do Apps Script da planilha "Transportadoras" para que a lista
+    // seja COMPARTILHADA entre todos os usuários. Vazio = modo local (só neste navegador).
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyL86NY055i0OtaZ_nW0Nh6u6GvgZVbVyG4RjRHfGlbuzzQJykIZtUjlmkzXr9ntWQhLA/exec';
+    const ARQUIVO_INICIAL = 'transportadoras.json';
+    const STORAGE_KEY = 'transportadoras_v1';
+
+    // ============================================================
+    // FUNÇÕES PURAS
+    // ============================================================
+    // <pure>
+    function norm(s) {
+      return String(s === null || s === undefined ? '' : s)
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim().toLowerCase();
+    }
+
+    function formatarCep(v) {
+      const d = String(v || '').replace(/\D/g, '');
+      return d.length === 8 ? `${d.slice(0, 5)}-${d.slice(5)}` : String(v || '').trim();
+    }
+
+    // Procura um CEP dentro de um texto de endereço
+    function extrairCep(txt) {
+      const m = String(txt || '').match(/(?<!\d)(\d{2})\.?(\d{3})-?(\d{3})(?!\d)/);
+      return m ? `${m[1]}${m[2]}-${m[3]}` : '';
+    }
+
+    function limparRegistro(r) {
+      return {
+        id: r.id || '',
+        codigo: String(r.codigo || '').replace(/\D/g, ''),
+        tipo: String(r.tipo || '').trim() || 'Redespacho',
+        nome: String(r.nome || '').replace(/\s+/g, ' ').trim(),
+        endereco: String(r.endereco || '').replace(/\s+/g, ' ').trim(),
+        cep: formatarCep(r.cep),
+        obs: String(r.obs || '').trim()
+      };
+    }
+
+    // Retorna lista de erros: { campo, msg }
+    function validarRegistro(r) {
+      const erros = [];
+      if (!r.codigo) erros.push({ campo: 'codigo', msg: 'Informe o código.' });
+      if (!r.nome) erros.push({ campo: 'nome', msg: 'Informe o nome.' });
+      if (r.cep && !/^\d{5}-\d{3}$/.test(r.cep)) erros.push({ campo: 'cep', msg: 'CEP inválido.' });
+      return erros;
+    }
+
+    function textoBusca(r) {
+      return norm([r.codigo, r.tipo, r.nome, r.endereco, r.cep, r.cep.replace(/\D/g, ''), r.obs].join(' '));
+    }
+
+    function filtrar(lista, consulta) {
+      const q = norm(consulta);
+      if (!q) return lista.slice();
+      const qDig = q.replace(/\D/g, '');
+      return lista.filter(r => {
+        const t = textoBusca(r);
+        return t.includes(q) || (qDig.length >= 5 && t.includes(qDig));
+      });
+    }
+
+    function ordenar(lista, modo) {
+      const copia = lista.slice();
+      if (modo === 'nome') copia.sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
+      else if (modo === 'codigo') copia.sort((a, b) => Number(a.codigo) - Number(b.codigo) || a.nome.localeCompare(b.nome, 'pt-BR'));
+      return copia; // 'original' mantém a ordem recebida
+    }
+
+    function codigosRepetidos(lista) {
+      const cont = {};
+      lista.forEach(r => { cont[r.codigo] = (cont[r.codigo] || 0) + 1; });
+      return new Set(Object.keys(cont).filter(k => cont[k] > 1));
+    }
+
+    function novoId() { return 'n' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
+
+    // CSV compatível com Excel pt-BR (separador ; e BOM)
+    function paraCsv(lista) {
+      const cel = v => `"${String(v === null || v === undefined ? '' : v).replace(/"/g, '""')}"`;
+      const linhas = [['Código', 'Tipo', 'Transportadora', 'Endereço', 'CEP', 'Observações'].map(cel).join(';')];
+      lista.forEach(r => linhas.push([r.codigo, r.tipo, r.nome, r.endereco, r.cep, r.obs].map(cel).join(';')));
+      return '\ufeff' + linhas.join('\r\n');
+    }
+    // </pure>
+
+    // ============================================================
+    // ESTADO
+    // ============================================================
+    const $ = id => document.getElementById(id);
+    const esc = s => String(s === null || s === undefined ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const MODO = APPS_SCRIPT_URL ? 'planilha' : 'local';
+    let registros = [];
+    let somenteLeitura = false;
+    let editandoId = null;
+    let excluindoId = null;
+
+    const rcaLinks = localStorage.getItem('sistemaRCA') || localStorage.getItem('rcaSelecionado') || '61';
+    $('linkDashboard').href = `index.html?rca=${rcaLinks}`;
+    $('linkClientes').href = `clientes.html?rca=${rcaLinks}`;
+    $('linkAtendimento').href = `atendimento.html?rca=${rcaLinks}`;
+    $('linkRetira').href = `retira.html?rca=${rcaLinks}`;
+
+    function toast(msg, ok) {
+      const t = $('toast');
+      t.textContent = msg;
+      t.className = 'tr-toast show ' + (ok ? 'ok' : 'err');
+      setTimeout(() => { t.className = 'tr-toast'; }, ok ? 4000 : 9000);
+    }
+
+    function setStatus(ok, texto) {
+      $('statusText').textContent = texto;
+      $('statusBadge').classList.toggle('active', ok);
+    }
+
+    function aviso(tipo, html) {
+      return `<div class="tr-banner ${tipo}">${html}</div>`;
+    }
+
+    // ============================================================
+    // PERSISTÊNCIA
+    // ============================================================
+    async function chamarScript(corpo) {
+      const res = await fetch(APPS_SCRIPT_URL, { method: 'POST', body: JSON.stringify(corpo) });
+      const texto = await res.text();
+      let json;
+      try { json = JSON.parse(texto); }
+      catch (e) { throw new Error('Resposta inválida do Apps Script. Confira se a URL termina em /exec e se o acesso é "Qualquer pessoa".'); }
+      if (!json.ok) throw new Error(json.erro || 'Falha desconhecida');
+      return json;
+    }
+
+    function salvarLocal() {
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(registros)); }
+      catch (e) { toast('Não consegui gravar neste navegador (armazenamento cheio ou bloqueado).', false); }
+    }
+
+    async function carregarInicial() {
+      const seed = await (await fetch(ARQUIVO_INICIAL)).json();
+      return seed.map(limparRegistro).map((r, i) => ({ ...r, id: seed[i].id || novoId() }));
+    }
+
+    async function carregar() {
+      const avisos = [];
+      try {
+        if (MODO === 'planilha') {
+          const res = await fetch(`${APPS_SCRIPT_URL}?acao=listar`);
+          const json = await res.json();
+          if (!json.ok) throw new Error(json.erro || 'Falha ao listar');
+          registros = (json.registros || []).map(r => ({ ...limparRegistro(r), id: r.id }));
+          setStatus(true, `Sincronizado com a planilha (${registros.length})`);
+          if (!registros.length) {
+            avisos.push(aviso('info', `A planilha está vazia. <button class="tr-btn" id="btnImportar">Importar as 75 transportadoras do Word</button>`));
+          }
+        } else {
+          const salvo = localStorage.getItem(STORAGE_KEY);
+          registros = salvo ? JSON.parse(salvo) : await carregarInicial();
+          if (!salvo) salvarLocal();
+          setStatus(false, `Modo local (${registros.length}) — salvo só neste navegador`);
+          $('btnRestaurar').style.display = '';
+          avisos.push(aviso('aviso', `<b>Modo local:</b> as alterações ficam salvas apenas neste navegador/computador. Para que todos os usuários vejam a mesma lista, configure a planilha (veja <code>apps_script_transportadoras.gs</code>) e cole a URL em <code>APPS_SCRIPT_URL</code> no topo deste arquivo.`));
+        }
+      } catch (err) {
+        console.error(err);
+        somenteLeitura = true;
+        try { registros = await carregarInicial(); } catch (_) { registros = []; }
+        setStatus(false, 'Planilha indisponível — somente leitura');
+        avisos.push(aviso('erro', `Não consegui carregar a planilha (${esc(err.message)}). Exibindo a lista original do Word <b>somente para consulta</b>; edição desativada para não gerar divergência.`));
+      }
+      $('avisos').innerHTML = avisos.join('');
+      if ($('btnImportar')) $('btnImportar').onclick = importarLista;
+      $('btnNovo').disabled = somenteLeitura;
+      renderizar();
+    }
+
+    async function importarLista() {
+      const btn = $('btnImportar'); btn.disabled = true; btn.textContent = 'Importando...';
+      try {
+        const lista = (await carregarInicial()).map(r => { const { id, ...resto } = r; return resto; });
+        const json = await chamarScript({ acao: 'importar', registros: lista });
+        registros = (json.registros || []).map(r => ({ ...limparRegistro(r), id: r.id }));
+        $('avisos').innerHTML = '';
+        setStatus(true, `Sincronizado com a planilha (${registros.length})`);
+        toast(`${json.importados} transportadoras importadas para a planilha.`, true);
+        renderizar();
+      } catch (err) { toast('Não importou: ' + err.message, false); btn.disabled = false; btn.textContent = 'Tentar novamente'; }
+    }
+
+    // ============================================================
+    // TABELA
+    // ============================================================
+    function marcar(texto, consulta) {
+      const t = String(texto || '');
+      const q = String(consulta || '').trim();
+      if (!q) return esc(t);
+      const i = norm(t).indexOf(norm(q));
+      if (i < 0 || norm(t).length !== t.length) return esc(t);
+      return esc(t.slice(0, i)) + '<mark>' + esc(t.slice(i, i + q.length)) + '</mark>' + esc(t.slice(i + q.length));
+    }
+
+    function renderizar() {
+      const consulta = $('busca').value;
+      const lista = ordenar(filtrar(registros, consulta), $('ordem').value);
+      const rep = codigosRepetidos(registros);
+      $('contagem').textContent = consulta.trim()
+        ? `${lista.length} de ${registros.length} transportadoras`
+        : `${registros.length} transportadoras`;
+
+      if (!lista.length) {
+        $('tbody').innerHTML = `<tr><td colspan="6" class="empty-row">${registros.length ? 'Nenhuma transportadora encontrada.' : 'Nenhuma transportadora cadastrada.'}</td></tr>`;
+        return;
+      }
+      $('tbody').innerHTML = lista.map(r => `
+        <tr>
+          <td><span class="tr-cod">${marcar(r.codigo, consulta)}</span></td>
+          <td>
+            <div class="tr-nome">${marcar(r.nome, consulta)}${rep.has(r.codigo) ? '<span class="tr-rep" title="Este código aparece mais de uma vez na lista">código repetido</span>' : ''}</div>
+            <span class="tr-tipo">${esc(r.tipo)}</span>
+          </td>
+          <td class="tr-end">${marcar(r.endereco, consulta)}</td>
+          <td>${marcar(r.cep, consulta)}</td>
+          <td class="tr-obs">${marcar(r.obs, consulta)}</td>
+          <td class="tr-acoes">
+            <button type="button" data-acao="copiar" data-id="${esc(r.id)}">Copiar</button>
+            ${somenteLeitura ? '' : `<button type="button" data-acao="editar" data-id="${esc(r.id)}">Editar</button><button type="button" class="del" data-acao="excluir" data-id="${esc(r.id)}">Excluir</button>`}
+          </td>
+        </tr>`).join('');
+    }
+
+    $('tbody').addEventListener('click', e => {
+      const b = e.target.closest('button[data-acao]');
+      if (!b) return;
+      const r = registros.find(x => x.id === b.dataset.id);
+      if (!r) return;
+      if (b.dataset.acao === 'copiar') copiar(r);
+      if (b.dataset.acao === 'editar') abrirEdicao(r);
+      if (b.dataset.acao === 'excluir') abrirExclusao(r);
+    });
+
+    async function copiar(r) {
+      const texto = `${r.codigo} - ${r.tipo.toUpperCase()} - ${r.nome}\n${r.endereco}`;
+      try { await navigator.clipboard.writeText(texto); toast('Copiado: ' + r.nome, true); }
+      catch (_) { toast('Não consegui copiar automaticamente.', false); }
+    }
+
+    // ============================================================
+    // EDIÇÃO
+    // ============================================================
+    function abrirEdicao(r) {
+      editandoId = r ? r.id : null;
+      $('tituloModal').textContent = r ? `Editar: ${r.nome}` : 'Nova transportadora';
+      $('in_codigo').value = r ? r.codigo : '';
+      $('in_tipo').value = r ? r.tipo : 'Redespacho';
+      $('in_nome').value = r ? r.nome : '';
+      $('in_endereco').value = r ? r.endereco : '';
+      $('in_cep').value = r ? r.cep : '';
+      $('in_obs').value = r ? r.obs : '';
+      ['f_codigo', 'f_nome', 'f_cep'].forEach(id => $(id).classList.remove('invalido'));
+      $('btnSalvar').disabled = false; $('btnSalvar').textContent = 'Salvar';
+      $('ovEdicao').classList.add('open');
+      $('in_codigo').focus();
+    }
+    function fecharEdicao() { $('ovEdicao').classList.remove('open'); }
+
+    // se o CEP estiver vazio, tenta achar no endereço ao sair do campo
+    $('in_endereco').addEventListener('blur', () => {
+      if (!$('in_cep').value.trim()) $('in_cep').value = extrairCep($('in_endereco').value);
+    });
+    $('in_cep').addEventListener('blur', () => { $('in_cep').value = formatarCep($('in_cep').value); });
+
+    async function salvarEdicao() {
+      const dados = limparRegistro({
+        id: editandoId || '', codigo: $('in_codigo').value, tipo: $('in_tipo').value, nome: $('in_nome').value,
+        endereco: $('in_endereco').value, cep: $('in_cep').value, obs: $('in_obs').value
+      });
+      const erros = validarRegistro(dados);
+      ['codigo', 'nome', 'cep'].forEach(c => $('f_' + c).classList.toggle('invalido', erros.some(e => e.campo === c)));
+      if (erros.length) return;
+
+      // alerta de duplicidade exata (mesmo código e mesmo nome)
+      const dup = registros.find(x => x.id !== editandoId && x.codigo === dados.codigo && norm(x.nome) === norm(dados.nome));
+      if (dup && !confirm('Já existe uma transportadora com este mesmo código e nome. Salvar mesmo assim?')) return;
+
+      const btn = $('btnSalvar'); btn.disabled = true; btn.textContent = 'Salvando...';
+      try {
+        if (MODO === 'planilha') {
+          const json = await chamarScript({ acao: 'salvar', registro: dados });
+          dados.id = json.registro.id;
+        } else if (!dados.id) {
+          dados.id = novoId();
+        }
+        const i = registros.findIndex(x => x.id === dados.id);
+        if (i >= 0) registros[i] = dados; else registros.push(dados);
+        if (MODO === 'local') salvarLocal();
+        fecharEdicao();
+        renderizar();
+        $('contagem').textContent = $('contagem').textContent; // mantém
+        toast(editandoId ? 'Transportadora atualizada.' : 'Transportadora adicionada.', true);
+      } catch (err) {
+        toast('Não salvou: ' + err.message, false);
+        btn.disabled = false; btn.textContent = 'Salvar';
+      }
+    }
+
+    // ============================================================
+    // EXCLUSÃO
+    // ============================================================
+    function abrirExclusao(r) {
+      excluindoId = r.id;
+      $('txtExcluir').innerHTML = `Você vai excluir <b>${esc(r.nome)}</b> (código ${esc(r.codigo)}).` +
+        (MODO === 'planilha' ? ' A linha também será removida da planilha.' : ' Esta ação só vale neste navegador.');
+      $('btnSimExcluir').disabled = false; $('btnSimExcluir').textContent = 'Excluir';
+      $('ovExcluir').classList.add('open');
+    }
+    function fecharExclusao() { $('ovExcluir').classList.remove('open'); }
+
+    async function confirmarExclusao() {
+      const btn = $('btnSimExcluir'); btn.disabled = true; btn.textContent = 'Excluindo...';
+      try {
+        if (MODO === 'planilha') await chamarScript({ acao: 'excluir', id: excluindoId });
+        registros = registros.filter(x => x.id !== excluindoId);
+        if (MODO === 'local') salvarLocal();
+        fecharExclusao();
+        renderizar();
+        toast('Transportadora excluída.', true);
+      } catch (err) {
+        toast('Não excluiu: ' + err.message, false);
+        btn.disabled = false; btn.textContent = 'Excluir';
+      }
+    }
+
+    // ============================================================
+    // OUTRAS AÇÕES
+    // ============================================================
+    function exportarCsv() {
+      const lista = ordenar(filtrar(registros, $('busca').value), $('ordem').value);
+      const blob = new Blob([paraCsv(lista)], { type: 'text/csv;charset=utf-8' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'transportadoras.csv';
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+    }
+
+    async function restaurar() {
+      if (!confirm('Isso apaga TODAS as alterações feitas neste navegador e volta para a lista original do Word. Continuar?')) return;
+      try {
+        registros = await carregarInicial();
+        salvarLocal();
+        renderizar();
+        toast('Lista original restaurada.', true);
+      } catch (e) { toast('Não consegui restaurar a lista.', false); }
+    }
+
+    // Eventos
+    $('busca').addEventListener('input', renderizar);
+    $('ordem').addEventListener('change', renderizar);
+    $('btnNovo').addEventListener('click', () => abrirEdicao(null));
+    $('btnCancelar').addEventListener('click', fecharEdicao);
+    $('btnSalvar').addEventListener('click', salvarEdicao);
+    $('btnNaoExcluir').addEventListener('click', fecharExclusao);
+    $('btnSimExcluir').addEventListener('click', confirmarExclusao);
+    $('btnCsv').addEventListener('click', exportarCsv);
+    $('btnRestaurar').addEventListener('click', restaurar);
+    ['ovEdicao', 'ovExcluir'].forEach(id => $(id).addEventListener('click', e => { if (e.target === $(id)) $(id).classList.remove('open'); }));
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') { fecharEdicao(); fecharExclusao(); }
+      if (e.key === 'Enter' && $('ovEdicao').classList.contains('open') && e.target.tagName === 'INPUT') salvarEdicao();
+    });
+
+    carregar();
+  </script>
+</body>
+</html>
