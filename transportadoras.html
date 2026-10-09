@@ -98,7 +98,7 @@
 
     <section class="table-card">
       <div class="tr-toolbar">
-        <input type="text" id="busca" class="tr-search" autocomplete="off" placeholder="Pesquisar por nome, código, endereço, CEP ou observação...">
+        <input type="text" id="busca" class="tr-search" autocomplete="off" placeholder="Pesquisar por nome, código, CNPJ, endereço, CEP ou observação...">
         <select id="ordem" class="tr-select">
           <option value="nome">Ordenar: Nome (A-Z)</option>
           <option value="codigo">Ordenar: Código</option>
@@ -116,13 +116,14 @@
             <tr>
               <th style="width:90px;">Código</th>
               <th>Transportadora</th>
+              <th style="width:150px;">CNPJ</th>
               <th>Endereço</th>
               <th style="width:110px;">CEP</th>
               <th>Observações</th>
               <th style="width:210px;">Ações</th>
             </tr>
           </thead>
-          <tbody id="tbody"><tr><td colspan="6" class="empty-row">Carregando...</td></tr></tbody>
+          <tbody id="tbody"><tr><td colspan="7" class="empty-row">Carregando...</td></tr></tbody>
         </table>
       </div>
     </section>
@@ -139,8 +140,8 @@
       <div class="tr-field" id="f_nome"><label>Transportadora *</label><input id="in_nome"><div class="erro">Informe o nome da transportadora.</div></div>
       <div class="tr-field"><label>Endereço</label><textarea id="in_endereco"></textarea></div>
       <div class="tr-grid2">
+        <div class="tr-field" id="f_cnpj"><label>CNPJ</label><input id="in_cnpj" inputmode="numeric" placeholder="00.000.000/0000-00" maxlength="18"><div class="erro" id="erroCnpj">CNPJ inválido.</div></div>
         <div class="tr-field" id="f_cep"><label>CEP</label><input id="in_cep" placeholder="00000-000" maxlength="9"><div class="erro">CEP inválido (use 8 dígitos).</div></div>
-        <div></div>
       </div>
       <div class="tr-field"><label>Observações</label><textarea id="in_obs" placeholder="Ex.: telefone, horário de coleta, contato..."></textarea></div>
       <div class="tr-modal-btns">
@@ -196,12 +197,33 @@
       return m ? `${m[1]}${m[2]}-${m[3]}` : '';
     }
 
+    function formatarCnpj(v) {
+      const d = String(v || '').replace(/\D/g, '');
+      return d.length === 14 ? `${d.slice(0, 2)}.${d.slice(2, 5)}.${d.slice(5, 8)}/${d.slice(8, 12)}-${d.slice(12)}` : String(v || '').trim();
+    }
+
+    // Confere os dígitos verificadores do CNPJ
+    function cnpjValido(v) {
+      const d = String(v || '').replace(/\D/g, '');
+      if (d.length !== 14 || /^(\d)\1+$/.test(d)) return false;
+      const dv = (base) => {
+        const pesos = base.length === 12 ? [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2] : [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+        const soma = base.split('').reduce((s, n, i) => s + Number(n) * pesos[i], 0);
+        const r = soma % 11;
+        return r < 2 ? 0 : 11 - r;
+      };
+      const d1 = dv(d.slice(0, 12));
+      const d2 = dv(d.slice(0, 12) + d1);
+      return d1 === Number(d[12]) && d2 === Number(d[13]);
+    }
+
     function limparRegistro(r) {
       return {
         id: r.id || '',
         codigo: String(r.codigo || '').replace(/\D/g, ''),
         tipo: String(r.tipo || '').trim() || 'Redespacho',
         nome: String(r.nome || '').replace(/\s+/g, ' ').trim(),
+        cnpj: formatarCnpj(r.cnpj),
         endereco: String(r.endereco || '').replace(/\s+/g, ' ').trim(),
         cep: formatarCep(r.cep),
         obs: String(r.obs || '').trim()
@@ -214,11 +236,12 @@
       if (!r.codigo) erros.push({ campo: 'codigo', msg: 'Informe o código.' });
       if (!r.nome) erros.push({ campo: 'nome', msg: 'Informe o nome.' });
       if (r.cep && !/^\d{5}-\d{3}$/.test(r.cep)) erros.push({ campo: 'cep', msg: 'CEP inválido.' });
+      if (r.cnpj && !cnpjValido(r.cnpj)) erros.push({ campo: 'cnpj', msg: 'CNPJ inválido.' });
       return erros;
     }
 
     function textoBusca(r) {
-      return norm([r.codigo, r.tipo, r.nome, r.endereco, r.cep, r.cep.replace(/\D/g, ''), r.obs].join(' '));
+      return norm([r.codigo, r.tipo, r.nome, r.cnpj, (r.cnpj || '').replace(/\D/g, ''), r.endereco, r.cep, (r.cep || '').replace(/\D/g, ''), r.obs].join(' '));
     }
 
     function filtrar(lista, consulta) {
@@ -249,8 +272,8 @@
     // CSV compatível com Excel pt-BR (separador ; e BOM)
     function paraCsv(lista) {
       const cel = v => `"${String(v === null || v === undefined ? '' : v).replace(/"/g, '""')}"`;
-      const linhas = [['Código', 'Tipo', 'Transportadora', 'Endereço', 'CEP', 'Observações'].map(cel).join(';')];
-      lista.forEach(r => linhas.push([r.codigo, r.tipo, r.nome, r.endereco, r.cep, r.obs].map(cel).join(';')));
+      const linhas = [['Código', 'Tipo', 'Transportadora', 'CNPJ', 'Endereço', 'CEP', 'Observações'].map(cel).join(';')];
+      lista.forEach(r => linhas.push([r.codigo, r.tipo, r.nome, r.cnpj, r.endereco, r.cep, r.obs].map(cel).join(';')));
       return '\ufeff' + linhas.join('\r\n');
     }
     // </pure>
@@ -378,7 +401,7 @@
         : `${registros.length} transportadoras`;
 
       if (!lista.length) {
-        $('tbody').innerHTML = `<tr><td colspan="6" class="empty-row">${registros.length ? 'Nenhuma transportadora encontrada.' : 'Nenhuma transportadora cadastrada.'}</td></tr>`;
+        $('tbody').innerHTML = `<tr><td colspan="7" class="empty-row">${registros.length ? 'Nenhuma transportadora encontrada.' : 'Nenhuma transportadora cadastrada.'}</td></tr>`;
         return;
       }
       $('tbody').innerHTML = lista.map(r => `
@@ -388,6 +411,7 @@
             <div class="tr-nome">${marcar(r.nome, consulta)}${rep.has(r.codigo) ? '<span class="tr-rep" title="Este código aparece mais de uma vez na lista">código repetido</span>' : ''}</div>
             <span class="tr-tipo">${esc(r.tipo)}</span>
           </td>
+          <td style="white-space:nowrap;">${marcar(r.cnpj, consulta) || '<span style="color:#475569;">—</span>'}</td>
           <td class="tr-end">${marcar(r.endereco, consulta)}</td>
           <td>${marcar(r.cep, consulta)}</td>
           <td class="tr-obs">${marcar(r.obs, consulta)}</td>
@@ -409,7 +433,7 @@
     });
 
     async function copiar(r) {
-      const texto = `${r.codigo} - ${r.tipo.toUpperCase()} - ${r.nome}\n${r.endereco}`;
+      const texto = `${r.codigo} - ${r.tipo.toUpperCase()} - ${r.nome}${r.cnpj ? '\nCNPJ: ' + r.cnpj : ''}\n${r.endereco}`;
       try { await navigator.clipboard.writeText(texto); toast('Copiado: ' + r.nome, true); }
       catch (_) { toast('Não consegui copiar automaticamente.', false); }
     }
@@ -423,10 +447,11 @@
       $('in_codigo').value = r ? r.codigo : '';
       $('in_tipo').value = r ? r.tipo : 'Redespacho';
       $('in_nome').value = r ? r.nome : '';
+      $('in_cnpj').value = r ? (r.cnpj || '') : '';
       $('in_endereco').value = r ? r.endereco : '';
       $('in_cep').value = r ? r.cep : '';
       $('in_obs').value = r ? r.obs : '';
-      ['f_codigo', 'f_nome', 'f_cep'].forEach(id => $(id).classList.remove('invalido'));
+      ['f_codigo', 'f_nome', 'f_cnpj', 'f_cep'].forEach(id => $(id).classList.remove('invalido'));
       $('btnSalvar').disabled = false; $('btnSalvar').textContent = 'Salvar';
       $('ovEdicao').classList.add('open');
       $('in_codigo').focus();
@@ -437,15 +462,17 @@
     $('in_endereco').addEventListener('blur', () => {
       if (!$('in_cep').value.trim()) $('in_cep').value = extrairCep($('in_endereco').value);
     });
+    $('in_cnpj').addEventListener('blur', () => { $('in_cnpj').value = formatarCnpj($('in_cnpj').value); });
     $('in_cep').addEventListener('blur', () => { $('in_cep').value = formatarCep($('in_cep').value); });
 
     async function salvarEdicao() {
       const dados = limparRegistro({
-        id: editandoId || '', codigo: $('in_codigo').value, tipo: $('in_tipo').value, nome: $('in_nome').value,
+        id: editandoId || '', codigo: $('in_codigo').value, tipo: $('in_tipo').value, nome: $('in_nome').value, cnpj: $('in_cnpj').value,
         endereco: $('in_endereco').value, cep: $('in_cep').value, obs: $('in_obs').value
       });
       const erros = validarRegistro(dados);
-      ['codigo', 'nome', 'cep'].forEach(c => $('f_' + c).classList.toggle('invalido', erros.some(e => e.campo === c)));
+      ['codigo', 'nome', 'cnpj', 'cep'].forEach(c => $('f_' + c).classList.toggle('invalido', erros.some(e => e.campo === c)));
+      if (erros.some(e => e.campo === 'cnpj')) $('erroCnpj').textContent = (dados.cnpj.replace(/\D/g, '').length !== 14) ? 'O CNPJ precisa ter 14 dígitos.' : 'CNPJ inválido (os dígitos verificadores não conferem).';
       if (erros.length) return;
 
       // alerta de duplicidade exata (mesmo código e mesmo nome)
