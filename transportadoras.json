@@ -1,4 +1,3 @@
-
 [
  {
   "codigo": "2302",
@@ -7,7 +6,8 @@
   "endereco": "RUA ARARI LEITE, 263 - VILA MARIA - CEP 02123-050 SÃO PAULO",
   "id": "t001",
   "cep": "02123-050",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "49",
@@ -16,7 +16,8 @@
   "endereco": "Domingos Pacheco, 179, quadra 4, box 10 JD Julieta, 02162-020",
   "id": "t002",
   "cep": "02162-020",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "1090",
@@ -25,7 +26,8 @@
   "endereco": "RUA SÃO QUIRINO,862 – VILA GUILHERME CEP: 02056-070 SÃO PAULO-SP",
   "id": "t003",
   "cep": "02056-070",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "58",
@@ -34,7 +36,8 @@
   "endereco": "Rua Nelson Francisco, 66 Bairro do Limão -SP",
   "id": "t004",
   "cep": "",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "525",
@@ -43,7 +46,8 @@
   "endereco": "AV CRUZEIRO DO SUL, 1800 - BOX 01",
   "id": "t005",
   "cep": "",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "41",
@@ -52,7 +56,8 @@
   "endereco": "Av Doutor Alberto Jackson Byington, 2990 – Bairro Industrial Anhanguera – Osasco, Sp – 02675031",
   "id": "t006",
   "cep": "02675-031",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "43",
@@ -61,7 +66,8 @@
   "endereco": "Rua da Congregação, 376 - Gramado, Embu das Artes - SP, 06816005",
   "id": "t007",
   "cep": "06816-005",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "3827",
@@ -70,7 +76,8 @@
   "endereco": "Rua JOAQUINA DE JESUS, 706, PQ. SANTO AGOSTINHO - GUARULHOS – SP - 07140-233",
   "id": "t008",
   "cep": "07140-233",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "61",
@@ -79,7 +86,8 @@
   "endereco": "R. Sd. Benedito Patrício, 100 - Parque Novo Mundo, São Paulo - SP, 02176040",
   "id": "t009",
   "cep": "02176-040",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "3721",
@@ -88,7 +96,8 @@
   "endereco": "R. Maria Prestes Maia, 425 - Vila Guilherme, São Paulo - SP, 02047-000",
   "id": "t010",
   "cep": "02047-000",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "51",
@@ -97,7 +106,8 @@
   "endereco": "R:Doutor Vidal Reis, 515, Parque Novo Mundo - São Paulo - SP, CEP: 02181-00",
   "id": "t011",
   "cep": "",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "1096",
@@ -106,7 +116,8 @@
   "endereco": "AV DO ESTADO, 2000 – LUZ – SP – CEP: 01108-000",
   "id": "t012",
   "cep": "01108-000",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "1514",
@@ -115,7 +126,8 @@
   "endereco": "Estrada municipal, 205, gl 03. Jardim Santo Afonso, 07215040, Guarulhos, SP",
   "id": "t013",
   "cep": "07215-040",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "1090",
@@ -124,7 +136,8 @@
   "endereco": "RUA SÃO QUIRINO,862 – VILA GUILHERME CEP: 02056-070 SÃO PAULO-SP",
   "id": "t014",
   "cep": "02056-070",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "63",
@@ -133,7 +146,8 @@
   "endereco": "Rua Eduardo Froner, 814 - Bairro Parque das Nações - Guarulhos – SP - CEP: 07243-590",
   "id": "t015",
   "cep": "07243-590",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "594",
@@ -142,7 +156,8 @@
   "endereco": "Rua Domingos Pacheco, Quadra 5, Boxes 12,13,14,15, s/n - Vila Sabrina, São Paulo - SP, 02162-020",
   "id": "t016",
   "cep": "02162-020",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "192",
@@ -151,7 +166,8 @@
   "endereco": "Rua Soldado Antônio Aparecido, 20 Pq Novo Mundo CEP: 02187-020",
   "id": "t017",
   "cep": "02187-020",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "1775",
@@ -160,7 +176,8 @@
   "endereco": "Rua São Quirino, 1090 - Parque Veloso, São Paulo - SP, 02064-100",
   "id": "t018",
   "cep": "02064-100",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "119",
@@ -169,7 +186,8 @@
   "endereco": "Rua Estela Borges Morato, 106 – Bairro do Limão",
   "id": "t019",
   "cep": "",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "249",
@@ -178,7 +196,8 @@
   "endereco": "Av. do Rio Bonito, 2345 – Socorro – São Paulo/SP – CEP: 04.776-003",
   "id": "t020",
   "cep": "04776-003",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "3257",
@@ -187,7 +206,8 @@
   "endereco": "José Gomes Falcão, 111 - Barra Funda, São Paulo - SP, 01139-010",
   "id": "t021",
   "cep": "01139-010",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "352",
@@ -196,7 +216,8 @@
   "endereco": "Av. Patos, (antigo 36/42) - Cidade Industrial Satélite de São Paulo, Guarulhos - SP, 07222-010",
   "id": "t022",
   "cep": "07222-010",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "323",
@@ -205,7 +226,8 @@
   "endereco": "Rua dona Estela Borges Morato, 106 - vila Siqueira, 02722-000",
   "id": "t023",
   "cep": "02722-000",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "53",
@@ -214,7 +236,8 @@
   "endereco": "RUA CORONEL MARQUES RIBEIRO, 325 VILA GUILHERME",
   "id": "t024",
   "cep": "",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "409",
@@ -223,7 +246,8 @@
   "endereco": "Av. Jaraguá, 1 - Cidade Industrial, Guarulhos - SP, 07221-050",
   "id": "t025",
   "cep": "07221-050",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "47",
@@ -232,7 +256,8 @@
   "endereco": "RUA MAJOR MARCELINO, 200",
   "id": "t026",
   "cep": "",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "516",
@@ -241,7 +266,8 @@
   "endereco": "Av. Natália Zarif. 660 – Jardim São Geraldo Galpão 11 – Centro Empresarial Aeroporto - Guarulhos/SP",
   "id": "t027",
   "cep": "",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "546",
@@ -250,7 +276,8 @@
   "endereco": "RUA COSTANTE PIOVAN, 1361 - INDUSTRIAL ANHANGÜER – OSASCO",
   "id": "t028",
   "cep": "",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "707",
@@ -259,7 +286,8 @@
   "endereco": "R. EMILIO LANG JUNIOR, 38 - CEP: 07031-260 - PONTE GRANDE – GUARULHOS – SP",
   "id": "t029",
   "cep": "07031-260",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "243",
@@ -268,7 +296,8 @@
   "endereco": "RUA SANTA VITÓRIA, 522 – CIDADE INDUSTRIAL SATÉLITE",
   "id": "t030",
   "cep": "",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "1733",
@@ -277,7 +306,8 @@
   "endereco": "Avenida Justino de maio 628/640 Bairro: Cid. Indl. Satélite",
   "id": "t031",
   "cep": "",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "3792",
@@ -286,7 +316,8 @@
   "endereco": "R HEROI DA FORCA EXPEDICIONARIA BRASILEIRA, 24 – Parque Novo Mundo - 02.188-040",
   "id": "t032",
   "cep": "02188-040",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "1261",
@@ -295,7 +326,8 @@
   "endereco": "Rua João Ranieri, 365 - Jardim Pres. Dutra, Guarulhos - SP, 07177-120",
   "id": "t033",
   "cep": "07177-120",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "1428",
@@ -304,7 +336,8 @@
   "endereco": "R SANTANA DE IPANEMA 1175, CIDADE INDUSTRIAL – GUARULHOS – SP - 07220-010",
   "id": "t034",
   "cep": "07220-010",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "1705",
@@ -313,7 +346,8 @@
   "endereco": "R. Dr. Moacir Antônio de Morães, 283 - Parque Santo Agostinho, Guarulhos - SP, 07140-285",
   "id": "t035",
   "cep": "07140-285",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "1246",
@@ -322,7 +356,8 @@
   "endereco": "AV Honório alvares penteado, 3330 - Cid. Tamboré, Santana de Parnaíba-SP - CEP 06543-320",
   "id": "t036",
   "cep": "06543-320",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "690",
@@ -331,7 +366,8 @@
   "endereco": "RUA: MARIA PRESTES MAIA, 475, VILA GUILHERME,01001000",
   "id": "t037",
   "cep": "01001-000",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "1667",
@@ -340,7 +376,8 @@
   "endereco": "R. Iapó, 40 - Casa Verde, São Paulo - SP, 02512-020",
   "id": "t038",
   "cep": "02512-020",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "1372",
@@ -349,7 +386,8 @@
   "endereco": "RUA VIELA URGA, 231 - 07175332 – GUARULHOS",
   "id": "t039",
   "cep": "07175-332",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "708",
@@ -358,7 +396,8 @@
   "endereco": "Rua Sisa 611, Cumbica - Guarulhos - SP Cep - 07221-030",
   "id": "t040",
   "cep": "07221-030",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "553",
@@ -367,7 +406,8 @@
   "endereco": "R. Colônia Leopoldina, 160 - Cidade Ind. Satélite de, Guarulhos - SP, 07220-040",
   "id": "t041",
   "cep": "07220-040",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "2376",
@@ -376,7 +416,8 @@
   "endereco": "Av Guilherme, 1160 – Vila Guilherme, São Paulo – SP, 02053002",
   "id": "t042",
   "cep": "02053-002",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "1269",
@@ -385,7 +426,8 @@
   "endereco": "Av. João Bassi, 153 - Jardim Pres. Dutra, Guarulhos - SP, 07172-440",
   "id": "t043",
   "cep": "07172-440",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "45",
@@ -394,7 +436,8 @@
   "endereco": "RUA DOS ITALIANOS,1218 – BOM RETIRO – São Paulo, 01131-000",
   "id": "t044",
   "cep": "01131-000",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "1680",
@@ -403,7 +446,8 @@
   "endereco": "R. da Despedida, 111 - Vila dos Remédios, São Paulo - SP, 05102-050",
   "id": "t045",
   "cep": "05102-050",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "2279",
@@ -412,7 +456,8 @@
   "endereco": "Av. Papa João Paulo I, 687 - Res. Pq Cumbica - Galpão 14, 07174-005",
   "id": "t046",
   "cep": "07174-005",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "2164",
@@ -421,7 +466,8 @@
   "endereco": "Avenida Papa João Paulo I, 7840 - Bonsucesso. – Guarulhos - CEP: 07177-025.",
   "id": "t047",
   "cep": "07177-025",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "117",
@@ -430,7 +476,8 @@
   "endereco": "Av. Pres. Tancredo de Almeida Neves, 759 - Macedo, Guarulhos - SP, 07112-070",
   "id": "t048",
   "cep": "07112-070",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "2228",
@@ -439,7 +486,8 @@
   "endereco": "Av. Monteiro, 370 - Cidade Industrial Satélite de São Paulo, Guarulhos - SP, 07224-000",
   "id": "t049",
   "cep": "07224-000",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "45",
@@ -448,7 +496,8 @@
   "endereco": "R. dos Italianos, 1218 - Bom Retiro, São Paulo - SP, 01131-000",
   "id": "t050",
   "cep": "01131-000",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "2221",
@@ -457,7 +506,8 @@
   "endereco": "Av. Projecta, 434 - Cidade Industrial Satélite de São Paulo, Guarulhos - SP, 07222-130",
   "id": "t051",
   "cep": "07222-130",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "851",
@@ -466,7 +516,8 @@
   "endereco": "Prudente de Morais, 101 - Brás, São Paulo - SP, 03043-040",
   "id": "t052",
   "cep": "03043-040",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "1140",
@@ -475,7 +526,8 @@
   "endereco": "AV GENERAL VALDOMIRO DE LIMA, 857 - JABAQUARA - CEP 04344-07",
   "id": "t053",
   "cep": "",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "2243",
@@ -484,7 +536,8 @@
   "endereco": "R MAGARINOS TORRES, 1016 – VILA MARIA - SÃO PAULO – CEP 02119-001",
   "id": "t054",
   "cep": "02119-001",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "1382",
@@ -493,7 +546,8 @@
   "endereco": "Rua Panambi, nº 191 - Cidade Industrial Satélite de São Paulo, São Paulo - SP, 07224-130",
   "id": "t055",
   "cep": "07224-130",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "1215",
@@ -502,7 +556,8 @@
   "endereco": "Rua Joaquim Carlos, 748 - Brás",
   "id": "t056",
   "cep": "",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "472",
@@ -511,7 +566,8 @@
   "endereco": "Rua Coronel Marques Ribeiro, 325 - Vila Guilherme, São Paulo - SP, 02068-050",
   "id": "t057",
   "cep": "02068-050",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "918",
@@ -520,7 +576,8 @@
   "endereco": "RUA CABO OSCAR ROSSINI, 642 - PQ NOVO MUNDO - CEP: 02.186-030",
   "id": "t058",
   "cep": "02186-030",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "3711",
@@ -529,7 +586,8 @@
   "endereco": "R. Sergio Potulski, 275 - Jardim Aclimação, Sumaré - SP, 13180-623",
   "id": "t059",
   "cep": "13180-623",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "1236",
@@ -538,7 +596,8 @@
   "endereco": "R. Antônio Utrilla, 349 - Cumbica, Guarulhos - SP, 07230-650",
   "id": "t060",
   "cep": "07230-650",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "1536",
@@ -547,7 +606,8 @@
   "endereco": "R. Júlio Conceição, 638 - Bom Retiro - São Paulo - SP, 01126-000",
   "id": "t061",
   "cep": "01126-000",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "969",
@@ -556,7 +616,8 @@
   "endereco": "Av. Narain Singh, 1300 - Cidade Aracília, Guarulhos - SP, 07250-000",
   "id": "t062",
   "cep": "07250-000",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "3864",
@@ -565,7 +626,8 @@
   "endereco": "R PROFESSORA MARIA JOSE BARONE FERNANDES, 1071 - VILA MARIA",
   "id": "t063",
   "cep": "",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "423",
@@ -574,7 +636,8 @@
   "endereco": "Rua Paulo Emilio, n° 157, Qd. 06 Jardim Julieta - Vila Sabrina, São Paulo - SP, 02162-040",
   "id": "t064",
   "cep": "02162-040",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "851",
@@ -583,7 +646,8 @@
   "endereco": "RUA CRUZEIRO, 927 - BARRA FUNDA - CEP: 01137-000 - SÃO PAULO",
   "id": "t065",
   "cep": "01137-000",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "1261",
@@ -592,7 +656,8 @@
   "endereco": "Av. Papa João Paulo I, 687 - Galpão 8 - Aeroporto, Guarulhos - SP, 07170350",
   "id": "t066",
   "cep": "07170-350",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "710",
@@ -601,7 +666,8 @@
   "endereco": "Rua Bentópolis, 3 - Parque Novo Mundo, São Paulo - SP, 02181-080",
   "id": "t067",
   "cep": "02181-080",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "1209",
@@ -610,7 +676,8 @@
   "endereco": "Rua Dona Maria Quedas, 329-B - Jardim Andaraí, São Paulo - SP, 02175-010",
   "id": "t068",
   "cep": "02175-010",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "2158",
@@ -619,7 +686,8 @@
   "endereco": "R. Galatea, 1205 - Carandiru, São Paulo - SP, 02068-000",
   "id": "t069",
   "cep": "02068-000",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "71",
@@ -628,7 +696,8 @@
   "endereco": "R. Joaquim Carlos, 748 - Brás, São Paulo - SP, 03019-000",
   "id": "t070",
   "cep": "03019-000",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "2532",
@@ -637,7 +706,8 @@
   "endereco": "Rua Queluz, 211 – Cidade Industrial Satélite – Guarulhos, 07220-050",
   "id": "t071",
   "cep": "07220-050",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "1667",
@@ -646,7 +716,8 @@
   "endereco": "R. Iapó, 40 - Casa Verde, São Paulo - SP, 02512-020",
   "id": "t072",
   "cep": "02512-020",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "3908",
@@ -655,7 +726,8 @@
   "endereco": "Av. Guilherme, 1335 - Vila Guilherme, São Paulo - SP, 02053-003",
   "id": "t073",
   "cep": "02053-003",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "1046",
@@ -664,7 +736,8 @@
   "endereco": "Rua Carmine Gaeta, 92 - Vila Guilherme, São Paulo - SP, 02060-100",
   "id": "t074",
   "cep": "02060-100",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  },
  {
   "codigo": "3485",
@@ -673,6 +746,7 @@
   "endereco": "Av. Ten. Amaro Felicíssimo da Silveira, 1873 - Parque Novo Mundo, São Paulo - SP, 02177-010",
   "id": "t075",
   "cep": "02177-010",
-  "obs": ""
+  "obs": "",
+  "cnpj": ""
  }
 ]
