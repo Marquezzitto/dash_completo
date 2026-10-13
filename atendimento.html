@@ -67,6 +67,15 @@
     .elo-kv .k { color:#64748b; }
     .elo-kv .v { color:#e2e8f0; word-break:break-word; white-space:pre-wrap; }
     .elo-novo { color:#10b981; }
+    .elo-voz-wrap { position:relative; }
+    .elo-voz-wrap textarea { padding-right:44px; }
+    .elo-voz-btn { position:absolute; right:8px; bottom:8px; width:30px; height:30px; border-radius:50%; border:none; cursor:pointer;
+      background:#6366f1; color:#fff; font-size:0.95rem; display:flex; align-items:center; justify-content:center; }
+    .elo-voz-btn:hover { background:#4f46e5; }
+    .elo-voz-btn.gravando { background:#ef4444; animation:eloPulse 1.2s infinite; }
+    @keyframes eloPulse { 0% { box-shadow:0 0 0 0 rgba(239,68,68,.6); } 70% { box-shadow:0 0 0 10px rgba(239,68,68,0); } 100% { box-shadow:0 0 0 0 rgba(239,68,68,0); } }
+    .elo-voz-dica { font-size:0.68rem; color:#64748b; margin-top:3px; min-height:1em; }
+    .elo-voz-dica.on { color:#f87171; }
     .elo-mail { display:flex; flex-wrap:wrap; gap:6px 12px; align-items:center; }
     .elo-mail-item { display:inline-flex; align-items:center; gap:6px; }
     .elo-mail-btn { display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px; border-radius:6px;
@@ -815,7 +824,68 @@
       return out;
     }
 
+    // ---------- Ditado por voz (Web Speech API: Chrome / Edge) ----------
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    let vozAtiva = null;   // { rec, btn, dica, area, base, final, parar }
+
+    function campoVoz(id, valor) {
+      const btn = SR ? `<button type="button" class="elo-voz-btn" data-alvo="${id}" title="Clique para falar e transcrever" aria-label="Ditar por voz">&#127908;</button>` : '';
+      const dica = SR ? `<div class="elo-voz-dica" id="${id}_dica"></div>` : '<div class="elo-voz-dica">Ditado por voz indisponível neste navegador (use Chrome ou Edge).</div>';
+      return `<div class="elo-voz-wrap"><textarea id="${id}">${esc(valor)}</textarea>${btn}</div>${dica}`;
+    }
+
+    function pararVoz() {
+      if (!vozAtiva) return;
+      const v = vozAtiva; vozAtiva = null;
+      try { v.rec.stop(); } catch (_) {}
+      v.btn.classList.remove('gravando');
+      v.dica.textContent = ''; v.dica.classList.remove('on');
+      v.area.value = v.area.value.replace(/\s+$/, '');
+    }
+
+    function alternarVoz(btn) {
+      const jaEra = vozAtiva && vozAtiva.btn === btn;
+      pararVoz();
+      if (jaEra) return;
+      const area = document.getElementById(btn.dataset.alvo);
+      const dica = document.getElementById(btn.dataset.alvo + '_dica');
+      const rec = new SR();
+      rec.lang = 'pt-BR'; rec.continuous = true; rec.interimResults = true;
+      const base = area.value.trim() ? area.value.replace(/\s+$/, '') + ' ' : '';
+      const v = { rec, btn, dica, area, base, final: '' };
+      vozAtiva = v;
+      rec.onresult = e => {
+        let parcial = '';
+        for (let i = e.resultIndex; i < e.results.length; i++) {
+          const t = e.results[i][0].transcript;
+          if (e.results[i].isFinal) v.final += t.trim() + ' '; else parcial += t;
+        }
+        area.value = v.base + v.final + parcial;
+        area.scrollTop = area.scrollHeight;
+      };
+      rec.onerror = e => {
+        if (e.error === 'no-speech' || e.error === 'aborted') return;
+        const msgs = { 'not-allowed': 'Microfone bloqueado. Libere o microfone para este site (cadeado na barra de endereço).',
+          'service-not-allowed': 'Microfone bloqueado. Libere o microfone para este site (cadeado na barra de endereço).',
+          'audio-capture': 'Nenhum microfone encontrado.', 'network': 'Sem internet para o reconhecimento de voz.' };
+        mostrarToast(msgs[e.error] || 'Erro no reconhecimento de voz: ' + e.error, false);
+        if (vozAtiva === v) pararVoz();
+      };
+      rec.onend = () => {                       // o Chrome encerra após alguns segundos de silêncio: reinicia enquanto ativo
+        if (vozAtiva === v) { v.base = area.value.trim() ? area.value.replace(/\s+$/, '') + ' ' : ''; v.final = ''; try { rec.start(); } catch (_) { pararVoz(); } }
+      };
+      try { rec.start(); } catch (err) { vozAtiva = null; mostrarToast('Não consegui iniciar o microfone.', false); return; }
+      btn.classList.add('gravando');
+      dica.textContent = '🔴 Gravando... fale e clique no microfone de novo para parar.'; dica.classList.add('on');
+    }
+
+    document.addEventListener('click', e => {
+      const b = e.target.closest && e.target.closest('.elo-voz-btn');
+      if (b) { e.preventDefault(); alternarVoz(b); }
+    });
+
     function abrirModal(c) {
+      pararVoz();
       let modal = $('eloModal');
       if (!modal) {
         modal = document.createElement('div');
@@ -848,12 +918,12 @@
       };
       const atendHtml = `
         <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;">${blocoTent(1)}${blocoTent(2)}</div>
-        <div class="elo-field" style="margin-top:10px;"><label>O que o cliente disse</label><textarea id="elo_clienteDisse">${esc(c.clienteDisse)}</textarea></div>
+        <div class="elo-field" style="margin-top:10px;"><label>O que o cliente disse</label>${campoVoz('elo_clienteDisse', c.clienteDisse)}</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;">
           <div class="elo-field"><label>Próxima ligação</label><input type="date" id="elo_proxLigacao" value="${esc(c.proxLigacao)}"></div>
           <div class="elo-field"><label>Encaminhado para</label><select id="elo_encaminhadoPara">${opt(ENCAMINHADO_OPCOES, c.encaminhadoPara)}</select></div>
         </div>
-        <div class="elo-field" style="margin-top:10px;"><label>O que a próxima ligação trouxe</label><textarea id="elo_trouxe">${esc(c.trouxe)}</textarea></div>
+        <div class="elo-field" style="margin-top:10px;"><label>O que a próxima ligação trouxe</label>${campoVoz('elo_trouxe', c.trouxe)}</div>
         ${c.retornoGestao ? `<div class="elo-kv" style="margin-top:10px;">${kv('Retorno da gestão', esc(c.retornoGestao))}</div>` : ''}`;
 
       const emailsHtml = lista => lista.map(m =>
@@ -916,8 +986,8 @@
           </div>
         </div>`;
       modal.style.display = 'flex';
-      $('eloFechar').onclick = () => { modal.style.display = 'none'; };
-      $('eloCancelar').onclick = () => { modal.style.display = 'none'; };
+      $('eloFechar').onclick = () => { pararVoz(); modal.style.display = 'none'; };
+      $('eloCancelar').onclick = () => { pararVoz(); modal.style.display = 'none'; };
       $('eloSalvar').onclick = () => salvarAtendimento(c, modal);
     }
     function igualCampo(a, b) {
@@ -927,6 +997,7 @@
 
     async function salvarAtendimento(c, modal) {
       if (!APPS_SCRIPT_URL) { mostrarToast('Configure a URL do Apps Script em CONFIG_RCA antes de salvar.', false); return; }
+      pararVoz();
       const novo = {};
       Object.keys(MAPA_COLUNAS).forEach(k => { novo[k] = $('elo_' + k).value; });
       const mudancas = Object.keys(novo)
@@ -963,7 +1034,7 @@
       setTimeout(() => { t.className = 'elo-toast'; }, ok ? 6000 : 12000);
     }
 
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') { const m = $('eloModal'); if (m) m.style.display = 'none'; } });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') { pararVoz(); const m = $('eloModal'); if (m) m.style.display = 'none'; } });
 
     carregarDados();
 
