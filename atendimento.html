@@ -95,6 +95,14 @@
     .elo-mail-btn { display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px; border-radius:6px;
       background:#0ea5e9; color:#fff; text-decoration:none; font-size:0.8rem; line-height:1; flex-shrink:0; }
     .elo-mail-btn:hover { background:#0284c7; }
+    button.elo-mail-btn { border:none; cursor:pointer; padding:0; font-family:inherit; }
+    .elo-mail-menu { position:fixed; z-index:100001; background:#0f172a; border:1px solid #334155; border-radius:10px; padding:6px;
+      box-shadow:0 10px 25px rgba(0,0,0,.5); min-width:260px; display:none; }
+    .elo-mail-menu .tit { font-size:0.68rem; color:#64748b; padding:4px 8px 6px; word-break:break-all; }
+    .elo-mail-menu button { display:block; width:100%; text-align:left; background:transparent; border:none; color:#e2e8f0; cursor:pointer;
+      padding:8px 10px; border-radius:6px; font-family:inherit; font-size:0.8rem; line-height:1.3; }
+    .elo-mail-menu button:hover { background:#1e293b; }
+    .elo-mail-menu button small { display:block; color:#64748b; font-size:0.68rem; margin-top:1px; }
     .elo-modal-card { background:#1e293b; border:1px solid #334155; border-radius:12px; width:100%; max-width:680px; padding:24px;
       box-shadow:0 20px 25px -5px rgba(0,0,0,0.5); color:#f8fafc; display:flex; flex-direction:column; max-height:calc(100vh - 40px); }
     .elo-modal-body { display:flex; flex-direction:column; gap:12px; overflow-y:auto; flex:1 1 auto; min-height:0; padding-right:8px; }
@@ -838,6 +846,76 @@
       return out;
     }
 
+    // ---------- Modelos de e-mail (botão de carta) ----------
+    // <mail-pure>
+    const ASSUNTO_EMAIL = 'STRICKER - CONTATO';
+    const MODELOS_EMAIL = [
+      { id: 'op1', rotulo: 'Enviar e-mail personalização', sub: 'Cliente que compra sem personalização',
+        assunto: ASSUNTO_EMAIL,
+        corpo: (ultimoDia) => [
+          'Tentei falar com você por telefone, mas não consegui contato.',
+          '',
+          'Estou acompanhando sua conta aqui na SPOT e percebi que vocês já realizam pedidos conosco, mas sem personalização. ' +
+            (ultimoDia ? 'Como hoje é o último dia do mês, queria aproveitar para te apresentar' : 'Queria aproveitar para te apresentar') +
+            ' algumas possibilidades de gravação que podemos incluir nos próximos pedidos.',
+          '',
+          'Temos diferentes opções de personalização e podemos avaliar juntos qual faz mais sentido para o perfil dos seus produtos e clientes.',
+          '',
+          'Se tiver algum pedido em andamento ou uma nova demanda, me chama que verifico as possibilidades para você.',
+          '',
+          'Fico à disposição!'
+        ].join('\n') },
+      { id: 'op2', rotulo: 'Enviar e-mail contato', sub: 'Entender as demandas e como apoiar',
+        assunto: ASSUNTO_EMAIL,
+        corpo: () => [
+          'Tentei falar com você por telefone, mas não consegui contato.',
+          '',
+          'Estou acompanhando sua conta aqui na SPOT e gostaria de entender um pouco melhor como estão as demandas de vocês e se existe algo em que possamos apoiar para novas oportunidades.',
+          '',
+          'Quando tiver um momento, me retorne por aqui ou, se preferir, me indique um melhor horário para conversarmos.',
+          'Fico à disposição!'
+        ].join('\n') }
+    ];
+
+    function ehUltimoDiaDoMes(d) { return new Date(d.getFullYear(), d.getMonth(), d.getDate() + 1).getDate() === 1; }
+
+    function montarMailto(modelo, email, hoje) {
+      const partes = [];
+      const assunto = modelo.assunto, corpo = modelo.corpo(ehUltimoDiaDoMes(hoje));
+      if (assunto) partes.push('subject=' + encodeURIComponent(assunto));
+      if (corpo) partes.push('body=' + encodeURIComponent(corpo).replace(/%0A/g, '%0D%0A'));
+      return 'mailto:' + encodeURIComponent(email).replace(/%40/g, '@') + (partes.length ? '?' + partes.join('&') : '');
+    }
+    // </mail-pure>
+
+    let menuMail = null;
+    function fecharMenuMail() { if (menuMail) menuMail.style.display = 'none'; }
+
+    function abrirMenuMail(btn) {
+      const email = btn.dataset.email;
+      if (!menuMail) { menuMail = document.createElement('div'); menuMail.className = 'elo-mail-menu'; document.body.appendChild(menuMail); }
+      menuMail.innerHTML = `<div class="tit">Para: ${esc(email)}</div>` + MODELOS_EMAIL.map(m =>
+        `<button type="button" data-modelo="${m.id}">${esc(m.rotulo)}<small>${esc(m.sub)}</small></button>`).join('');
+      menuMail.style.display = 'block';
+      const r = btn.getBoundingClientRect();
+      const larg = menuMail.offsetWidth, alt = menuMail.offsetHeight;
+      menuMail.style.left = Math.max(8, Math.min(r.left, window.innerWidth - larg - 8)) + 'px';
+      menuMail.style.top = (r.bottom + alt + 8 > window.innerHeight ? Math.max(8, r.top - alt - 6) : r.bottom + 6) + 'px';
+      menuMail.onclick = e => {
+        const b = e.target.closest('button[data-modelo]');
+        if (!b) return;
+        const modelo = MODELOS_EMAIL.find(x => x.id === b.dataset.modelo);
+        fecharMenuMail();
+        window.location.href = montarMailto(modelo, email, new Date());
+      };
+    }
+
+    document.addEventListener('click', e => {
+      const b = e.target.closest && e.target.closest('.elo-mail-btn');
+      if (b) { e.preventDefault(); e.stopPropagation(); abrirMenuMail(b); return; }
+      if (menuMail && !e.target.closest('.elo-mail-menu')) fecharMenuMail();
+    });
+
     // ---------- Ditado por voz (Web Speech API: Chrome / Edge) ----------
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
     let vozAtiva = null;   // { rec, btn, dica, area, base, final, parar }
@@ -967,7 +1045,7 @@
         const k = n === 1 ? ['t1', 'a1', 'r1'] : ['t2', 'a2', 'r2'];
         return `<div style="background:#1e293b;border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:8px;">
           <div style="font-size:0.75rem;color:#94a3b8;text-transform:uppercase;">${n}ª tentativa</div>
-          <div class="elo-field"><label>Data</label><input type="date" id="elo_${k[0]}" value="${esc(c[k[0]])}" min="${dMin}" max="${dMax}"></div>
+          <div class="elo-field"><label>Data</label><input type="date" id="elo_${k[0]}" value="${esc(c[k[0]])}"></div>
           <div class="elo-field"><label>Assunto ${n}</label><select id="elo_${k[1]}">${opt(ASSUNTO_OPCOES, c[k[1]])}</select></div>
           <div class="elo-field"><label>Resultado ${n}</label><select id="elo_${k[2]}">${opt(RESULTADO_OPCOES, c[k[2]])}</select></div>
         </div>`;
@@ -983,7 +1061,7 @@
         ${c.retornoGestao ? `<div class="elo-kv" style="margin-top:10px;">${kv('Retorno da gestão', esc(c.retornoGestao))}</div>` : ''}`;
 
       const emailsHtml = lista => lista.map(m =>
-        `<span class="elo-mail-item"><span>${esc(m)}</span><a class="elo-mail-btn" href="mailto:${esc(m)}" title="Enviar e-mail para ${esc(m)} (abre o Outlook)" onclick="event.stopPropagation()">&#9993;</a></span>`).join('');
+        `<span class="elo-mail-item"><span>${esc(m)}</span><button type="button" class="elo-mail-btn" data-email="${esc(m)}" title="Enviar e-mail para ${esc(m)} (abre o Outlook)">&#9993;</button></span>`).join('');
       const ct = c.contatos;
       let contatosHtml = '<span style="color:#64748b;font-size:0.82rem;">Sem dados na aba Carteira e Contatos.</span>';
       if (ct) {
@@ -1090,7 +1168,7 @@
       setTimeout(() => { t.className = 'elo-toast'; }, ok ? 6000 : 12000);
     }
 
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') { pararVoz(); const m = $('eloModal'); if (m) m.style.display = 'none'; } });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') { fecharMenuMail(); pararVoz(); const m = $('eloModal'); if (m) m.style.display = 'none'; } });
 
     carregarDados();
 
