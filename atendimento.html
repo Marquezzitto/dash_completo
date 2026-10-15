@@ -852,7 +852,9 @@
     const MODELOS_EMAIL = [
       { id: 'op1', rotulo: 'Enviar e-mail personalização', sub: 'Cliente que compra sem personalização',
         assunto: ASSUNTO_EMAIL,
-        corpo: (ultimoDia) => [
+        corpo: (ultimoDia, saudacao) => [
+          saudacao + ', tudo bem?',
+          '',
           'Tentei falar com você por telefone, mas não consegui contato.',
           '',
           'Estou acompanhando sua conta aqui na SPOT e percebi que vocês já realizam pedidos conosco, mas sem personalização. ' +
@@ -863,25 +865,36 @@
           '',
           'Se tiver algum pedido em andamento ou uma nova demanda, me chama que verifico as possibilidades para você.',
           '',
-          'Fico à disposição!'
+          'Fico à disposição!',
+          '',
+          'OBS.: Enfatizo a importância de fazer pelo menos 1 pedido por mês, para assim o cadastro não ficar inativo.'
         ].join('\n') },
       { id: 'op2', rotulo: 'Enviar e-mail contato', sub: 'Entender as demandas e como apoiar',
         assunto: ASSUNTO_EMAIL,
-        corpo: () => [
+        corpo: (ultimoDia, saudacao) => [
+          saudacao + ', tudo bem?',
+          '',
           'Tentei falar com você por telefone, mas não consegui contato.',
           '',
           'Estou acompanhando sua conta aqui na SPOT e gostaria de entender um pouco melhor como estão as demandas de vocês e se existe algo em que possamos apoiar para novas oportunidades.',
           '',
           'Quando tiver um momento, me retorne por aqui ou, se preferir, me indique um melhor horário para conversarmos.',
-          'Fico à disposição!'
+          'Fico à disposição!',
+          '',
+          'OBS.: Enfatizo a importância de fazer pelo menos 1 pedido por mês, para assim o cadastro não ficar inativo.'
         ].join('\n') }
     ];
+
+    function saudacaoDoHorario(d) {
+      const hr = d.getHours();
+      return hr < 12 ? 'Bom dia' : hr < 18 ? 'Boa tarde' : 'Boa noite';
+    }
 
     function ehUltimoDiaDoMes(d) { return new Date(d.getFullYear(), d.getMonth(), d.getDate() + 1).getDate() === 1; }
 
     function montarMailto(modelo, email, hoje) {
       const partes = [];
-      const assunto = modelo.assunto, corpo = modelo.corpo(ehUltimoDiaDoMes(hoje));
+      const assunto = modelo.assunto, corpo = modelo.corpo(ehUltimoDiaDoMes(hoje), saudacaoDoHorario(hoje));
       if (assunto) partes.push('subject=' + encodeURIComponent(assunto));
       if (corpo) partes.push('body=' + encodeURIComponent(corpo).replace(/%0A/g, '%0D%0A'));
       return 'mailto:' + encodeURIComponent(email).replace(/%40/g, '@') + (partes.length ? '?' + partes.join('&') : '');
