@@ -11,6 +11,46 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   
   <link rel="stylesheet" href="style.css">
+  <script src="clientes-base.js"></script>
+  <style>
+    .cb-toolbar { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+    .cb-btn { border:none; background:var(--accent-indigo); color:#fff; padding:9px 16px; border-radius:8px; font-size:.85rem; font-weight:600; cursor:pointer; font-family:inherit; white-space:nowrap; }
+    .cb-btn.verde { background:var(--accent-green); }
+    .cb-btn.ghost { background:transparent; border:1px solid var(--border-color); color:var(--text-secondary); }
+    .cb-btn:disabled { opacity:.5; cursor:not-allowed; }
+    .cb-banner { padding:12px 16px; border-radius:10px; font-size:.82rem; line-height:1.5; border:1px solid; }
+    .cb-banner.aviso { background:rgba(245,158,11,.1); border-color:#f59e0b; color:#fbbf24; }
+    .cb-banner.erro  { background:rgba(239,68,68,.1); border-color:var(--accent-red); color:#fca5a5; }
+    .cb-banner code { background:rgba(0,0,0,.25); padding:1px 5px; border-radius:4px; }
+    .cb-selo { display:inline-block; font-size:.62rem; font-weight:700; padding:2px 7px; border-radius:6px; margin-left:6px; vertical-align:middle; }
+    .cb-selo.novo { background:rgba(16,185,129,.18); color:#10b981; }
+    .cb-selo.editado { background:rgba(99,102,241,.2); color:#c7d2fe; }
+    .cb-acoes { display:flex; gap:6px; justify-content:center; }
+    .cb-flash { animation: cbFlash 2.4s ease-out; }
+    @keyframes cbFlash { 0%,35% { background:rgba(16,185,129,.28); } 100% { background:transparent; } }
+    .cb-overlay { position:fixed; inset:0; background:rgba(11,15,25,.85); backdrop-filter:blur(6px); z-index:100000; display:none; align-items:flex-start; justify-content:center; padding:20px; overflow-y:auto; }
+    .cb-overlay.open { display:flex; }
+    .cb-modal { background:#1e293b; border:1px solid #334155; border-radius:12px; width:100%; max-width:640px; padding:24px; color:#f8fafc; box-shadow:0 20px 25px -5px rgba(0,0,0,.5); margin:auto; }
+    .cb-modal h3 { margin:0 0 16px; font-size:1.1rem; color:#c7d2fe; }
+    .cb-field { margin-bottom:12px; }
+    .cb-field label { display:block; font-size:.72rem; color:#94a3b8; margin-bottom:4px; text-transform:uppercase; letter-spacing:.03em; }
+    .cb-field input, .cb-field textarea { width:100%; background:#0f172a; border:1px solid #334155; color:#f8fafc; padding:9px 10px; border-radius:8px; font-size:.9rem; font-family:inherit; outline:none; }
+    .cb-field input:focus, .cb-field textarea:focus { border-color:var(--accent-indigo); }
+    .cb-field input[readonly] { opacity:.6; cursor:not-allowed; }
+    .cb-field textarea { resize:vertical; min-height:64px; }
+    .cb-field .erro { color:#fca5a5; font-size:.75rem; margin-top:4px; display:none; }
+    .cb-field.invalido input { border-color:var(--accent-red); }
+    .cb-field.invalido .erro { display:block; }
+    .cb-grid2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .cb-grid3 { display:grid; grid-template-columns:1fr 100px; gap:12px; }
+    @media (max-width:560px) { .cb-grid2, .cb-grid3 { grid-template-columns:1fr; } }
+    .cb-hint { font-size:.75rem; color:#94a3b8; line-height:1.5; margin:-4px 0 12px; }
+    .cb-modal-btns { display:flex; justify-content:flex-end; gap:10px; margin-top:18px; }
+    .cb-toast { position:fixed; bottom:20px; right:20px; z-index:100001; padding:12px 18px; border-radius:8px; font-size:.875rem; font-weight:600; color:#fff; opacity:0; transform:translateY(10px); transition:all .25s; max-width:80vw; pointer-events:none; }
+    .cb-toast.show { opacity:1; transform:translateY(0); }
+    .cb-toast.ok { background:#10b981; }
+    .cb-toast.err { background:#ef4444; }
+  </style>
 </head>
 <body>
 
@@ -45,11 +85,16 @@
       </div>
     </header>
 
+    <div id="avisos" style="display:flex;flex-direction:column;gap:10px;"></div>
+
     <!-- Tabela Geral de Clientes e SLAs -->
     <section class="table-card" style="margin-top: 10px;">
       <div class="card-header space-between">
         <h3>Lista de Clientes, Cidades & Prazos de SLA</h3>
-        <input type="text" id="searchClientGlobal" placeholder="Pesquisar por cliente, cidade ou código..." class="table-search" style="width: 300px;">
+        <div class="cb-toolbar">
+          <input type="text" id="searchClientGlobal" placeholder="Pesquisar cliente, cidade, código ou CNPJ" class="table-search" style="width: 340px;">
+          <button type="button" class="cb-btn verde" id="btnNovoCliente" disabled>+ Novo cliente</button>
+        </div>
       </div>
       <div class="table-wrapper" style="max-height: 600px;">
         <table>
@@ -73,6 +118,41 @@
     </section>
 
   </div>
+
+  <!-- Modal: novo / editar cliente -->
+  <div class="cb-overlay" id="ovCliente">
+    <div class="cb-modal">
+      <h3 id="tituloModalCliente">Novo cliente</h3>
+      <div class="cb-grid2">
+        <div class="cb-field" id="f_codigo"><label>Código *</label><input id="in_codigo" inputmode="numeric" maxlength="9" autocomplete="off"><div class="erro" id="erroCodigo">Informe o código (só números).</div></div>
+        <div class="cb-field"><label>Carteira</label><input id="in_rca" readonly></div>
+      </div>
+      <div class="cb-field" id="f_cliente"><label>Cliente / Razão social *</label><input id="in_cliente" autocomplete="off"><div class="erro">Informe o nome do cliente.</div></div>
+      <div class="cb-field"><label>Fantasia</label><input id="in_fantasia" autocomplete="off"></div>
+      <div class="cb-field" id="f_cnpj"><label>CNPJ</label><input id="in_cnpj" inputmode="numeric" placeholder="00.000.000/0000-00" maxlength="18" autocomplete="off"><div class="erro" id="erroCnpj">CNPJ inválido.</div></div>
+      <div class="cb-grid3">
+        <div class="cb-field" id="f_cidade"><label>Cidade *</label><input id="in_cidade" autocomplete="off"><div class="erro">Informe a cidade.</div></div>
+        <div class="cb-field" id="f_uf"><label>UF *</label><input id="in_uf" maxlength="3" style="text-transform:uppercase;" autocomplete="off"><div class="erro">Informe a UF.</div></div>
+      </div>
+      <div class="cb-hint">A cidade e a UF definem a transportadora e o prazo (SLA) do cliente.</div>
+      <div class="cb-grid2">
+        <div class="cb-field"><label>Telefone</label><input id="in_telefone" autocomplete="off"></div>
+        <div class="cb-field"><label>Celular</label><input id="in_celular" autocomplete="off"></div>
+        <div class="cb-field"><label>Telefone 2</label><input id="in_telefone2" autocomplete="off"></div>
+      </div>
+      <div class="cb-grid2">
+        <div class="cb-field" id="f_email"><label>E-mail</label><input id="in_email" type="text" autocomplete="off"><div class="erro">E-mail inválido.</div></div>
+        <div class="cb-field" id="f_email2"><label>E-mail 2</label><input id="in_email2" type="text" autocomplete="off"><div class="erro">E-mail inválido.</div></div>
+      </div>
+      <div class="cb-field"><label>Observações</label><textarea id="in_obs" placeholder="Ex.: contato, horário de recebimento..."></textarea></div>
+      <div class="cb-hint" id="dicaSalvar"></div>
+      <div class="cb-modal-btns">
+        <button type="button" class="cb-btn ghost" id="btnCancelarCliente">Cancelar</button>
+        <button type="button" class="cb-btn verde" id="btnSalvarCliente">Salvar</button>
+      </div>
+    </div>
+  </div>
+  <div class="cb-toast" id="toastCb"></div>
 
 <script>
     if (typeof lucide !== 'undefined') lucide.createIcons();
@@ -1376,7 +1456,16 @@
 };
 
     let baseClientesGlobal = [];
+    let baseOriginalRca = [];          // lista crua do .json (sem as alterações)
+    let editadosCb = new Set();
+    let novosCb = new Set();
+    let somenteLeitura = true;
+    let ultimoSalvo = null;
     let dadosVivosGlobal = null;
+
+    const esc = s => String(s === null || s === undefined ? '' : s)
+      .replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
+    const vazioSeTraco = v => (String(v === null || v === undefined ? '' : v).trim() === '-' ? '' : String(v === null || v === undefined ? '' : v));
 
     function normalizarNome(str) {
       return String(str || '')
@@ -1578,16 +1667,37 @@
         const response = await fetch(arquivoBase);
         if (!response.ok) throw new Error(`Não foi possível carregar ${arquivoBase}.`);
 
-        const data = await response.json();
-        baseClientesGlobal = data;
-        renderizarTabelaClientes(baseClientesGlobal);
-        document.getElementById('contadorClientes').innerText = `Base Completa (${baseClientesGlobal.length} Clientes)`;
+        baseOriginalRca = await response.json();
+        await recarregarBase();
       } catch (error) {
         console.error(error);
         document.getElementById('tbClientesSLA').innerHTML = `<tr><td colspan="6" class="empty-row" style="color:#ef4444;">Erro ao carregar a base da RCA ${rcaBaseAtual}. Verifique o arquivo correspondente.</td></tr>`;
         document.getElementById('contadorClientes').innerText = 'Erro na base';
       }
     });
+
+    // Junta o .json original com a base compartilhada (alterações e clientes novos)
+    async function recarregarBase() {
+      const r = await ClientesBase.aplicar(baseOriginalRca, rcaBaseAtual);
+      baseClientesGlobal = r.lista;
+      editadosCb = r.editados;
+      novosCb = r.novos;
+      somenteLeitura = r.origem === 'erro' || r.origem === 'cache';
+
+      const avisos = [];
+      if (r.origem === 'local') {
+        avisos.push(`<div class="cb-banner aviso"><b>Modo local:</b> o que você criar ou alterar aqui fica salvo só neste navegador (as outras pessoas e computadores não veem). Para compartilhar com todos, siga o passo a passo no começo do arquivo <code>apps_script_clientes.gs</code> e cole a URL em <code>URL_BASE</code> no arquivo <code>clientes-base.js</code>.</div>`);
+      } else if (r.origem === 'cache') {
+        avisos.push(`<div class="cb-banner erro">Não consegui ler a base compartilhada (${esc(r.erro)}). Mostrando a última cópia salva neste computador. <b>Criar e alterar clientes está desativado</b> para não gerar divergência. Recarregue a página para tentar de novo.</div>`);
+      } else if (r.origem === 'erro') {
+        avisos.push(`<div class="cb-banner erro">Não consegui ler a base compartilhada (${esc(r.erro)}). Exibindo a base original <b>sem as alterações</b>; criar e alterar clientes está desativado. Recarregue a página para tentar de novo.</div>`);
+      }
+      document.getElementById('avisos').innerHTML = avisos.join('');
+      document.getElementById('btnNovoCliente').disabled = somenteLeitura;
+
+      aplicarBusca();
+      document.getElementById('contadorClientes').innerText = `Base Completa (${baseClientesGlobal.length} Clientes)`;
+    }
 
     function renderizarTabelaClientes(dados) {
       const tbody = document.getElementById('tbClientesSLA');
@@ -1617,15 +1727,15 @@
           <td>${c.codigo}</td>
 
           <td>
-            <strong>${c.cliente}</strong>
+            <strong>${esc(c.cliente)}</strong>${novosCb.has(Number(c.codigo)) ? '<span class="cb-selo novo">NOVO</span>' : (editadosCb.has(Number(c.codigo)) ? '<span class="cb-selo editado">EDITADO</span>' : '')}
           </td>
 
           <td>
-            ${c.fantasia || '-'}
+            ${esc(c.fantasia) || '-'}
           </td>
 
           <td>
-            ${c.cidade} - ${c.uf}
+            ${esc(c.cidade)} - ${esc(c.uf)}
           </td>
 
           <td>
@@ -1662,45 +1772,79 @@
           </td>
 
           <td style="text-align:center;">
-            <button
-              class="btn-upload"
-              style="
-                padding:4px 10px;
-                font-size:.75rem;
-                margin:0 auto;
-              "
-            >
-              Ver Detalhes
-            </button>
+            <div class="cb-acoes">
+              <button
+                class="btn-upload"
+                data-acao="detalhes"
+                style="
+                  padding:4px 10px;
+                  font-size:.75rem;
+                  margin:0;
+                "
+              >
+                Ver Detalhes
+              </button>
+              ${somenteLeitura ? '' : `<button
+                class="btn-upload"
+                data-acao="editar"
+                style="
+                  padding:4px 10px;
+                  font-size:.75rem;
+                  margin:0;
+                  background:transparent;
+                  border:1px solid #334155;
+                  color:#cbd5e1;
+                "
+              >
+                Editar
+              </button>`}
+            </div>
           </td>
         `;
 
-        tr.querySelector('button').addEventListener(
+        tr.dataset.codigo = c.codigo;
+        tr.querySelector('[data-acao="detalhes"]').addEventListener(
           'click',
           () => abrirModalCliente(c, infoSLA)
         );
+        const btnEd = tr.querySelector('[data-acao="editar"]');
+        if (btnEd) btnEd.addEventListener('click', () => abrirEdicao(c));
 
         fragment.appendChild(tr);
       });
 
       tbody.appendChild(fragment);
+
+      if (ultimoSalvo !== null) {
+        const alvo = tbody.querySelector(`tr[data-codigo="${ultimoSalvo}"]`);
+        ultimoSalvo = null;
+        if (alvo) {
+          alvo.classList.add('cb-flash');
+          alvo.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        }
+      }
+    }
+
+    function aplicarBusca() {
+      const termo = document.getElementById('searchClientGlobal').value.toLowerCase().trim();
+      const termoDig = termo.replace(/\D/g, '');
+
+      const filtrados =
+        baseClientesGlobal.filter(c =>
+          !termo ||
+          String(c.cliente).toLowerCase().includes(termo) ||
+          String(c.cidade).toLowerCase().includes(termo) ||
+          String(c.codigo).toLowerCase().includes(termo) ||
+          String(c.fantasia).toLowerCase().includes(termo) ||
+          (termoDig.length >= 4 && String(c.cnpj || '').replace(/\D/g, '').includes(termoDig))
+        );
+
+      renderizarTabelaClientes(filtrados);
     }
 
     document
       .getElementById('searchClientGlobal')
-      .addEventListener('input', function(e) {
-        const termo = e.target.value.toLowerCase().trim();
-
-        const filtrados =
-          baseClientesGlobal.filter(c =>
-            String(c.cliente).toLowerCase().includes(termo) ||
-            String(c.cidade).toLowerCase().includes(termo) ||
-            String(c.codigo).toLowerCase().includes(termo) ||
-            String(c.fantasia).toLowerCase().includes(termo)
-          );
-
-        renderizarTabelaClientes(filtrados);
-      });
+      .addEventListener('input', aplicarBusca);
 
     function abrirModalCliente(c, infoSLA) {
       let modalContainer =
@@ -1958,9 +2102,11 @@
                   color:#ffffff;
                 "
               >
-                ${c.cliente}
+                ${esc(c.cliente)}
               </strong>
+              ${c.fantasia ? `<span style="display:block;margin-top:2px;color:#94a3b8;font-size:.8rem;">${esc(c.fantasia)}</span>` : ''}
             </div>
+            ${c.obs ? `<div style="background:#0f172a;padding:12px;border-radius:8px;border-left:4px solid #94a3b8;"><span style="color:#94a3b8;font-size:.75rem;text-transform:uppercase;display:block;">Observações</span><span style="white-space:pre-wrap;font-size:.85rem;">${esc(c.obs)}</span></div>` : ''}
 
             <div
               style="
@@ -1971,37 +2117,37 @@
             >
               <div style="background:#0f172a;padding:10px;border-radius:8px;">
                 <span style="color:#94a3b8;font-size:.75rem;text-transform:uppercase;display:block;">CNPJ</span>
-                <strong style="color:#38bdf8;font-size:.85rem;">${c.cnpj}</strong>
+                <strong style="color:#38bdf8;font-size:.85rem;">${esc(c.cnpj || '-')}</strong>
               </div>
 
               <div style="background:#0f172a;padding:10px;border-radius:8px;">
                 <span style="color:#94a3b8;font-size:.75rem;text-transform:uppercase;display:block;">Cidade / UF</span>
-                <strong style="color:#e2e8f0;">${c.cidade} - ${c.uf}</strong>
+                <strong style="color:#e2e8f0;">${esc(c.cidade)} - ${esc(c.uf)}</strong>
               </div>
 
               <div style="background:#0f172a;padding:10px;border-radius:8px;">
                 <span style="color:#94a3b8;font-size:.75rem;text-transform:uppercase;display:block;">Telefone</span>
                 <strong style="color:#e2e8f0;">
-                  ${c.telefone && c.telefone !== '-' ? c.telefone : (c.celular && c.celular !== '-' ? c.celular : '-')}
+                  ${esc(c.telefone && c.telefone !== '-' ? c.telefone : (c.celular && c.celular !== '-' ? c.celular : '-'))}
                 </strong>
               </div>
 
               <div style="background:#0f172a;padding:10px;border-radius:8px;">
                 <span style="color:#94a3b8;font-size:.75rem;text-transform:uppercase;display:block;">E-mail</span>
-                <strong style="color:#e2e8f0;font-size:.85rem;word-break:break-all;">${c.email || '-'}</strong>
+                <strong style="color:#e2e8f0;font-size:.85rem;word-break:break-all;">${esc(c.email || '-')}</strong>
               </div>
 
               ${c.telefone2 || c.email2 ? `
               <div style="background:#0f172a;padding:10px;border-radius:8px;">
                 <span style="color:#94a3b8;font-size:.75rem;text-transform:uppercase;display:block;">Telefone 2</span>
-                <strong style="color:#e2e8f0;">${c.telefone2 || '-'}</strong>
-                ${(c.telefonesExtras || []).length > 1 ? `<span style="color:#64748b;font-size:.7rem;display:block;margin-top:2px;">+ ${(c.telefonesExtras || []).slice(1).join(' · ')}</span>` : ''}
+                <strong style="color:#e2e8f0;">${esc(c.telefone2 || '-')}</strong>
+                ${(c.telefonesExtras || []).length > 1 ? `<span style="color:#64748b;font-size:.7rem;display:block;margin-top:2px;">+ ${esc((c.telefonesExtras || []).slice(1).join(' · '))}</span>` : ''}
               </div>
 
               <div style="background:#0f172a;padding:10px;border-radius:8px;">
                 <span style="color:#94a3b8;font-size:.75rem;text-transform:uppercase;display:block;">E-mail 2</span>
-                <strong style="color:#e2e8f0;font-size:.85rem;word-break:break-all;">${c.email2 || '-'}</strong>
-                ${(c.emailsExtras || []).length > 1 ? `<span style="color:#64748b;font-size:.7rem;display:block;margin-top:2px;word-break:break-all;">+ ${(c.emailsExtras || []).slice(1).join(' · ')}</span>` : ''}
+                <strong style="color:#e2e8f0;font-size:.85rem;word-break:break-all;">${esc(c.email2 || '-')}</strong>
+                ${(c.emailsExtras || []).length > 1 ? `<span style="color:#64748b;font-size:.7rem;display:block;margin-top:2px;word-break:break-all;">+ ${esc((c.emailsExtras || []).slice(1).join(' · '))}</span>` : ''}
               </div>` : ''}
 
               <div style="background:#0f172a;padding:10px;border-radius:8px;">
@@ -2011,7 +2157,7 @@
 
               <div style="background:#0f172a;padding:10px;border-radius:8px;">
                 <span style="color:#94a3b8;font-size:.75rem;text-transform:uppercase;display:block;">Última Venda</span>
-                <strong style="color:#e2e8f0;">${c.ultimaVenda}</strong>
+                <strong style="color:#e2e8f0;">${esc(c.ultimaVenda)}</strong>
               </div>
 
               ${blocoVivo}
@@ -2098,8 +2244,25 @@
             style="
               margin-top:20px;
               text-align:right;
+              display:flex;
+              gap:10px;
+              justify-content:flex-end;
             "
           >
+            ${somenteLeitura ? '' : `<button
+              id="btnEditarDoModal"
+              style="
+                background:transparent;
+                color:#cbd5e1;
+                border:1px solid #334155;
+                padding:8px 18px;
+                border-radius:6px;
+                font-weight:600;
+                cursor:pointer;
+              "
+            >
+              Editar
+            </button>`}
             <button
               onclick="fecharModalCliente()"
               style="
@@ -2120,7 +2283,143 @@
       `;
 
       modalContainer.style.display = 'flex';
+
+      const btnEd = document.getElementById('btnEditarDoModal');
+      if (btnEd) btnEd.onclick = () => { fecharModalCliente(); abrirEdicao(c); };
     }
+
+    // ============================================================
+    // NOVO / EDITAR CLIENTE
+    // ============================================================
+    const $cb = id => document.getElementById(id);
+    let editandoCodigo = null;   // null = novo cliente
+
+    function toastCb(msg, ok) {
+      const t = $cb('toastCb');
+      t.textContent = msg;
+      t.className = 'cb-toast show ' + (ok ? 'ok' : 'err');
+      setTimeout(() => { t.className = 'cb-toast'; }, ok ? 4000 : 9000);
+    }
+
+    function abrirEdicao(c) {
+      if (somenteLeitura) return;
+      editandoCodigo = c ? String(c.codigo) : null;
+      $cb('tituloModalCliente').textContent = c ? `Editar cliente ${c.codigo}` : `Novo cliente (RCA ${rcaBaseAtual})`;
+      $cb('in_codigo').value = c ? c.codigo : '';
+      $cb('in_codigo').readOnly = !!c;
+      $cb('in_rca').value = `RCA ${rcaBaseAtual}`;
+      const v = k => (c ? vazioSeTraco(c[k]) : '');
+      $cb('in_cliente').value = v('cliente');
+      $cb('in_fantasia').value = v('fantasia');
+      $cb('in_cnpj').value = v('cnpj');
+      $cb('in_cidade').value = v('cidade');
+      $cb('in_uf').value = v('uf');
+      $cb('in_telefone').value = v('telefone');
+      $cb('in_celular').value = v('celular');
+      $cb('in_telefone2').value = v('telefone2');
+      $cb('in_email').value = v('email');
+      $cb('in_email2').value = v('email2');
+      $cb('in_obs').value = c ? (c.obs || '') : '';
+      ['f_codigo', 'f_cliente', 'f_cnpj', 'f_cidade', 'f_uf', 'f_email', 'f_email2'].forEach(id => $cb(id).classList.remove('invalido'));
+      $cb('dicaSalvar').textContent = ClientesBase.modo === 'planilha'
+        ? 'Ao salvar, a alteração vale para todos os usuários da Base & SLAs.'
+        : 'Modo local: ao salvar, a alteração fica salva só neste navegador.';
+      $cb('btnSalvarCliente').disabled = false;
+      $cb('btnSalvarCliente').textContent = 'Salvar';
+      $cb('ovCliente').classList.add('open');
+      (c ? $cb('in_cliente') : $cb('in_codigo')).focus();
+    }
+
+    function fecharEdicao() { $cb('ovCliente').classList.remove('open'); }
+
+    // procura o código na outra RCA (os códigos são únicos entre as duas carteiras)
+    async function codigoExisteNaOutraRca(codigo) {
+      try {
+        const outro = rcaBaseAtual === '66' ? 'clientes.json' : 'rca66_clientes.json';
+        const res = await fetch(outro, { cache: 'no-store' });
+        if (!res.ok) return false;
+        return (await res.json()).some(x => String(x.codigo) === String(codigo));
+      } catch (_) { return false; }
+    }
+
+    async function salvarCliente() {
+      const lido = {
+        cliente: $cb('in_cliente').value, fantasia: $cb('in_fantasia').value, cnpj: $cb('in_cnpj').value,
+        cidade: $cb('in_cidade').value, uf: $cb('in_uf').value, telefone: $cb('in_telefone').value,
+        celular: $cb('in_celular').value, telefone2: $cb('in_telefone2').value,
+        email: $cb('in_email').value, email2: $cb('in_email2').value
+      };
+      const reg = ClientesBase.limparRegistro(Object.assign({
+        rca: rcaBaseAtual,
+        codigo: editandoCodigo !== null ? editandoCodigo : $cb('in_codigo').value,
+        obs: $cb('in_obs').value
+      }, lido));
+
+      const original = baseOriginalRca.find(x => String(x.codigo) === reg.codigo) || null;
+      const ehNovo = !original;
+      const alterados = ehNovo ? ClientesBase.CAMPOS.slice() : ClientesBase.diferencas(original, reg);
+
+      // validação
+      const invalido = {
+        f_codigo: !reg.codigo,
+        f_cliente: !reg.cliente,
+        f_cidade: !reg.cidade,
+        f_uf: !reg.uf,
+        f_cnpj: !!reg.cnpj && (ehNovo || alterados.includes('cnpj')) && !ClientesBase.cnpjValido(reg.cnpj),
+        f_email: !!reg.email && (ehNovo || alterados.includes('email')) && !ClientesBase.emailValido(reg.email),
+        f_email2: !!reg.email2 && (ehNovo || alterados.includes('email2')) && !ClientesBase.emailValido(reg.email2)
+      };
+      Object.keys(invalido).forEach(id => $cb(id).classList.toggle('invalido', invalido[id]));
+      $cb('erroCnpj').textContent = ClientesBase.apenasDigitos(reg.cnpj).length !== 14
+        ? 'O CNPJ precisa ter 14 dígitos.' : 'CNPJ inválido (os dígitos verificadores não conferem).';
+      if (Object.values(invalido).some(Boolean)) return;
+
+      if (editandoCodigo !== null) {
+        const atual = baseClientesGlobal.find(x => String(x.codigo) === editandoCodigo);
+        const obsAtual = atual ? String(atual.obs || '').trim() : '';
+        if (atual && !ClientesBase.diferencas(atual, reg).length && reg.obs === obsAtual) { toastCb('Nada foi alterado neste cliente.', false); return; }
+      }
+
+      const btn = $cb('btnSalvarCliente');
+      btn.disabled = true; btn.textContent = 'Salvando...';
+      try {
+        if (editandoCodigo === null) {
+          const jaExiste = baseClientesGlobal.some(x => String(x.codigo) === reg.codigo) ||
+            ClientesBase.registroDo(reg.codigo) || await codigoExisteNaOutraRca(reg.codigo);
+          if (jaExiste) {
+            $cb('erroCodigo').textContent = 'Este código já existe na base (RCA 61 ou RCA 66).';
+            $cb('f_codigo').classList.add('invalido');
+            btn.disabled = false; btn.textContent = 'Salvar';
+            return;
+          }
+        }
+        reg.alterados = alterados;
+        await ClientesBase.salvar(reg);
+        fecharEdicao();
+        document.getElementById('searchClientGlobal').value = '';
+        ultimoSalvo = Number(reg.codigo);
+        await recarregarBase();
+        toastCb(editandoCodigo === null ? `Cliente ${reg.codigo} criado.` : `Cliente ${reg.codigo} atualizado.`, true);
+      } catch (err) {
+        console.error(err);
+        toastCb('Não salvou: ' + String((err && err.message) || err).slice(0, 250), false);
+        btn.disabled = false; btn.textContent = 'Salvar';
+      }
+    }
+
+    document.getElementById('btnNovoCliente').addEventListener('click', () => abrirEdicao(null));
+    $cb('btnCancelarCliente').addEventListener('click', fecharEdicao);
+    $cb('btnSalvarCliente').addEventListener('click', salvarCliente);
+    $cb('in_cnpj').addEventListener('blur', () => { $cb('in_cnpj').value = ClientesBase.formatarCnpj($cb('in_cnpj').value); });
+    $cb('in_codigo').addEventListener('input', () => { $cb('in_codigo').value = $cb('in_codigo').value.replace(/\D/g, ''); $cb('erroCodigo').textContent = 'Informe o código (só números).'; });
+    $cb('ovCliente').addEventListener('click', e => { if (e.target === $cb('ovCliente')) fecharEdicao(); });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') { fecharEdicao(); fecharModalCliente(); }
+      if (e.key === 'Enter' && $cb('ovCliente').classList.contains('open') && e.target.tagName === 'INPUT') salvarCliente();
+    });
+
+    // voltar com o botão do navegador: recarrega para pegar alterações feitas em outras páginas
+    window.addEventListener('pageshow', e => { if (e.persisted) location.reload(); });
 
     function fecharModalCliente() {
       const modalContainer =
