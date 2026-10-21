@@ -177,6 +177,8 @@
   }
 
   const unicos = lista => lista.filter((v, i, a) => v && a.indexOf(v) === i);
+  // vários telefones/e-mails extras ficam num só campo, separados por " | "
+  const dividir = v => unicos(String(v === null || v === undefined ? '' : v).split('|').map(x => x.replace(/\s+/g, ' ').trim()).filter(x => x && x !== '-'));
 
   function clienteNovoDoRegistro(reg) {
     const hoje = new Date().toLocaleDateString('pt-BR');
@@ -185,8 +187,8 @@
       cnpj: reg.cnpj, valor: 0, ultimaVenda: '-', status: 'NOVO', rank: 0, qtdNotas: 0, dataCadastro: hoje,
       cluster: 'Novo cadastro', ativoSite: '', ultimoAcessoSite: '',
       telefone: reg.telefone, celular: reg.celular, telefone2: reg.telefone2, email: reg.email, email2: reg.email2,
-      telefones: unicos([reg.telefone, reg.celular, reg.telefone2]), telefonesExtras: reg.telefone2 ? [reg.telefone2] : [],
-      emails: unicos([reg.email, reg.email2]), emailsExtras: reg.email2 ? [reg.email2] : [],
+      telefones: unicos([reg.telefone, reg.celular, ...dividir(reg.telefone2)]), telefonesExtras: dividir(reg.telefone2),
+      emails: unicos([reg.email, ...dividir(reg.email2)]), emailsExtras: dividir(reg.email2),
       obs: reg.obs, _novo: true
     };
   }
@@ -204,7 +206,14 @@
       const reg = mapa.get(String(c.codigo));
       vistos.add(String(c.codigo));
       if (!reg) return c;
-      const clone = Object.assign({}, c, camposAplicaveis(reg));
+      const ap = camposAplicaveis(reg);
+      const clone = Object.assign({}, c, ap);
+      if ('telefone2' in ap) { clone.telefonesExtras = dividir(ap.telefone2); clone.telefone2 = clone.telefonesExtras[0] || ''; }
+      if ('email2' in ap) { clone.emailsExtras = dividir(ap.email2); clone.email2 = clone.emailsExtras[0] || ''; }
+      if ('telefone' in ap || 'celular' in ap || 'telefone2' in ap)
+        clone.telefones = unicos([clone.telefone, clone.celular].concat(clone.telefonesExtras || dividir(clone.telefone2)).map(x => String(x || '').trim()).filter(x => x !== '-'));
+      if ('email' in ap || 'email2' in ap)
+        clone.emails = unicos([clone.email].concat(clone.emailsExtras || dividir(clone.email2)).map(x => String(x || '').trim()).filter(x => x !== '-'));
       if (reg.obs) clone.obs = reg.obs;
       clone._editado = true;
       editados.add(Number(c.codigo));
@@ -226,7 +235,7 @@
   global.ClientesBase = {
     get modo() { return URL_BASE ? 'planilha' : 'local'; },
     get estado() { return estado; },
-    CAMPOS, carregar, salvar, aplicar, mesclarLista, registroDo, diferencas,
+    CAMPOS, dividir, carregar, salvar, aplicar, mesclarLista, registroDo, diferencas,
     limparRegistro, formatarCnpj, cnpjValido, emailValido, apenasDigitos, norm
   };
 })(window);
