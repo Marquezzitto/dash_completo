@@ -1678,7 +1678,9 @@
 
     // Junta o .json original com a base compartilhada (alterações e clientes novos)
     async function recarregarBase() {
-      const r = await ClientesBase.aplicar(baseOriginalRca, rcaBaseAtual);
+      const r = (typeof ClientesBase === 'undefined')
+        ? { lista: baseOriginalRca, editados: new Set(), novos: new Set(), origem: 'erro', erro: 'o arquivo clientes-base.js não foi encontrado no site (erro 404) — suba-o na mesma pasta do clientes.html' }
+        : await ClientesBase.aplicar(baseOriginalRca, rcaBaseAtual);
       baseClientesGlobal = r.lista;
       editadosCb = r.editados;
       novosCb = r.novos;
