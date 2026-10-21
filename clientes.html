@@ -41,6 +41,14 @@
     .cb-field .erro { color:#fca5a5; font-size:.75rem; margin-top:4px; display:none; }
     .cb-field.invalido input { border-color:var(--accent-red); }
     .cb-field.invalido .erro { display:block; }
+    .cb-extras { display:flex; flex-direction:column; gap:8px; }
+    .cb-extras:not(:empty) { margin-bottom:8px; }
+    .cb-extras .lin { display:flex; gap:8px; }
+    .cb-extras .lin input { flex:1; }
+    .cb-extras .lin input.ruim { border-color:#ef4444; }
+    .cb-extras .lin button { background:#1e293b; border:1px solid #475569; color:#fca5a5; border-radius:8px; width:38px; cursor:pointer; font-size:1.1rem; }
+    .cb-add { background:none; border:1px dashed #475569; color:#93c5fd; border-radius:8px; padding:7px 12px; cursor:pointer; font-size:.85rem; }
+    .cb-add:hover { border-color:#93c5fd; }
     .cb-grid2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
     .cb-grid3 { display:grid; grid-template-columns:1fr 100px; gap:12px; }
     @media (max-width:560px) { .cb-grid2, .cb-grid3 { grid-template-columns:1fr; } }
@@ -138,12 +146,10 @@
       <div class="cb-grid2">
         <div class="cb-field"><label>Telefone</label><input id="in_telefone" autocomplete="off"></div>
         <div class="cb-field"><label>Celular</label><input id="in_celular" autocomplete="off"></div>
-        <div class="cb-field"><label>Telefone 2</label><input id="in_telefone2" autocomplete="off"></div>
       </div>
-      <div class="cb-grid2">
-        <div class="cb-field" id="f_email"><label>E-mail</label><input id="in_email" type="text" autocomplete="off"><div class="erro">E-mail inválido.</div></div>
-        <div class="cb-field" id="f_email2"><label>E-mail 2</label><input id="in_email2" type="text" autocomplete="off"><div class="erro">E-mail inválido.</div></div>
-      </div>
+      <div class="cb-field"><label>Outros telefones</label><div class="cb-extras" id="extraTel"></div><button type="button" class="cb-add" id="btnAddTel">+ Adicionar outro telefone</button></div>
+      <div class="cb-field" id="f_email"><label>E-mail</label><input id="in_email" type="text" autocomplete="off"><div class="erro">E-mail inválido.</div></div>
+      <div class="cb-field" id="f_email2"><label>Outros e-mails</label><div class="cb-extras" id="extraEmail"></div><button type="button" class="cb-add" id="btnAddEmail">+ Adicionar outro e-mail</button><div class="erro">Há um e-mail inválido na lista.</div></div>
       <div class="cb-field"><label>Observações</label><textarea id="in_obs" placeholder="Ex.: contato, horário de recebimento..."></textarea></div>
       <div class="cb-hint" id="dicaSalvar"></div>
       <div class="cb-modal-btns">
@@ -2139,17 +2145,15 @@
                 <strong style="color:#e2e8f0;font-size:.85rem;word-break:break-all;">${esc(c.email || '-')}</strong>
               </div>
 
-              ${c.telefone2 || c.email2 ? `
+              ${extrasDe(c, 'tel').length || extrasDe(c, 'email').length ? `
               <div style="background:#0f172a;padding:10px;border-radius:8px;">
-                <span style="color:#94a3b8;font-size:.75rem;text-transform:uppercase;display:block;">Telefone 2</span>
-                <strong style="color:#e2e8f0;">${esc(c.telefone2 || '-')}</strong>
-                ${(c.telefonesExtras || []).length > 1 ? `<span style="color:#64748b;font-size:.7rem;display:block;margin-top:2px;">+ ${esc((c.telefonesExtras || []).slice(1).join(' · '))}</span>` : ''}
+                <span style="color:#94a3b8;font-size:.75rem;text-transform:uppercase;display:block;">Outros telefones</span>
+                <strong style="color:#e2e8f0;">${esc(extrasDe(c, 'tel').join(' · ') || '-')}</strong>
               </div>
 
               <div style="background:#0f172a;padding:10px;border-radius:8px;">
-                <span style="color:#94a3b8;font-size:.75rem;text-transform:uppercase;display:block;">E-mail 2</span>
-                <strong style="color:#e2e8f0;font-size:.85rem;word-break:break-all;">${esc(c.email2 || '-')}</strong>
-                ${(c.emailsExtras || []).length > 1 ? `<span style="color:#64748b;font-size:.7rem;display:block;margin-top:2px;word-break:break-all;">+ ${esc((c.emailsExtras || []).slice(1).join(' · '))}</span>` : ''}
+                <span style="color:#94a3b8;font-size:.75rem;text-transform:uppercase;display:block;">Outros e-mails</span>
+                <strong style="color:#e2e8f0;font-size:.85rem;word-break:break-all;">${esc(extrasDe(c, 'email').join(' · ') || '-')}</strong>
               </div>` : ''}
 
               <div style="background:#0f172a;padding:10px;border-radius:8px;">
@@ -2303,6 +2307,35 @@
       setTimeout(() => { t.className = 'cb-toast'; }, ok ? 4000 : 9000);
     }
 
+    // telefones / e-mails além dos campos principais (lista, sem limite)
+    function extrasDe(c, tipo) {
+      if (!c) return [];
+      const ext = tipo === 'tel' ? c.telefonesExtras : c.emailsExtras;
+      const bruto = (Array.isArray(ext) && ext.length) ? ext : ClientesBase.dividir(tipo === 'tel' ? c.telefone2 : c.email2);
+      return bruto.map(x => String(x || '').trim()).filter((x, i, a) => x && x !== '-' && a.indexOf(x) === i);
+    }
+    // cópia do cliente com os extras num só texto (como é gravado), para comparar com o formulário
+    function comExtras(c) {
+      return Object.assign({}, c, { telefone2: extrasDe(c, 'tel').join(' | '), email2: extrasDe(c, 'email').join(' | ') });
+    }
+    function addExtra(idCont, valor, placeholder) {
+      const lin = document.createElement('div'); lin.className = 'lin';
+      const inp = document.createElement('input'); inp.autocomplete = 'off'; inp.placeholder = placeholder; inp.value = valor || '';
+      const rem = document.createElement('button'); rem.type = 'button'; rem.title = 'Remover'; rem.textContent = '×';
+      rem.onclick = () => lin.remove();
+      lin.append(inp, rem); $cb(idCont).appendChild(lin);
+      return inp;
+    }
+    function setExtras(idCont, lista, placeholder) {
+      $cb(idCont).innerHTML = '';
+      lista.forEach(v => addExtra(idCont, v, placeholder));
+    }
+    function lerExtras(idCont) {
+      return [...$cb(idCont).querySelectorAll('input')]
+        .map(i => i.value.replace(/\s+/g, ' ').trim().replace(/\|/g, ''))
+        .filter(Boolean).filter((x, i, a) => a.indexOf(x) === i);
+    }
+
     function abrirEdicao(c) {
       if (somenteLeitura) return;
       editandoCodigo = c ? String(c.codigo) : null;
@@ -2318,9 +2351,9 @@
       $cb('in_uf').value = v('uf');
       $cb('in_telefone').value = v('telefone');
       $cb('in_celular').value = v('celular');
-      $cb('in_telefone2').value = v('telefone2');
+      setExtras('extraTel', extrasDe(c, 'tel'), 'Outro telefone');
       $cb('in_email').value = v('email');
-      $cb('in_email2').value = v('email2');
+      setExtras('extraEmail', extrasDe(c, 'email'), 'outro@email.com');
       $cb('in_obs').value = c ? (c.obs || '') : '';
       ['f_codigo', 'f_cliente', 'f_cnpj', 'f_cidade', 'f_uf', 'f_email', 'f_email2'].forEach(id => $cb(id).classList.remove('invalido'));
       $cb('dicaSalvar').textContent = ClientesBase.modo === 'planilha'
@@ -2331,6 +2364,9 @@
       $cb('ovCliente').classList.add('open');
       (c ? $cb('in_cliente') : $cb('in_codigo')).focus();
     }
+
+    $cb('btnAddTel').onclick = () => addExtra('extraTel', '', 'Outro telefone').focus();
+    $cb('btnAddEmail').onclick = () => addExtra('extraEmail', '', 'outro@email.com').focus();
 
     function fecharEdicao() { $cb('ovCliente').classList.remove('open'); }
 
@@ -2348,8 +2384,8 @@
       const lido = {
         cliente: $cb('in_cliente').value, fantasia: $cb('in_fantasia').value, cnpj: $cb('in_cnpj').value,
         cidade: $cb('in_cidade').value, uf: $cb('in_uf').value, telefone: $cb('in_telefone').value,
-        celular: $cb('in_celular').value, telefone2: $cb('in_telefone2').value,
-        email: $cb('in_email').value, email2: $cb('in_email2').value
+        celular: $cb('in_celular').value, telefone2: lerExtras('extraTel').join(' | '),
+        email: $cb('in_email').value, email2: lerExtras('extraEmail').join(' | ')
       };
       const reg = ClientesBase.limparRegistro(Object.assign({
         rca: rcaBaseAtual,
@@ -2357,7 +2393,8 @@
         obs: $cb('in_obs').value
       }, lido));
 
-      const original = baseOriginalRca.find(x => String(x.codigo) === reg.codigo) || null;
+      const origBruto = baseOriginalRca.find(x => String(x.codigo) === reg.codigo) || null;
+      const original = origBruto ? comExtras(origBruto) : null;
       const ehNovo = !original;
       const alterados = ehNovo ? ClientesBase.CAMPOS.slice() : ClientesBase.diferencas(original, reg);
 
@@ -2369,9 +2406,10 @@
         f_uf: !reg.uf,
         f_cnpj: !!reg.cnpj && (ehNovo || alterados.includes('cnpj')) && !ClientesBase.cnpjValido(reg.cnpj),
         f_email: !!reg.email && (ehNovo || alterados.includes('email')) && !ClientesBase.emailValido(reg.email),
-        f_email2: !!reg.email2 && (ehNovo || alterados.includes('email2')) && !ClientesBase.emailValido(reg.email2)
+        f_email2: ClientesBase.dividir(reg.email2).some(e => !ClientesBase.emailValido(e) && !extrasDe(origBruto, 'email').includes(e))
       };
       Object.keys(invalido).forEach(id => $cb(id).classList.toggle('invalido', invalido[id]));
+      $cb('extraEmail').querySelectorAll('input').forEach(i => { const t = i.value.trim(); i.classList.toggle('ruim', !!t && !ClientesBase.emailValido(t) && !extrasDe(origBruto, 'email').includes(t)); });
       $cb('erroCnpj').textContent = ClientesBase.apenasDigitos(reg.cnpj).length !== 14
         ? 'O CNPJ precisa ter 14 dígitos.' : 'CNPJ inválido (os dígitos verificadores não conferem).';
       if (Object.values(invalido).some(Boolean)) return;
@@ -2379,7 +2417,7 @@
       if (editandoCodigo !== null) {
         const atual = baseClientesGlobal.find(x => String(x.codigo) === editandoCodigo);
         const obsAtual = atual ? String(atual.obs || '').trim() : '';
-        if (atual && !ClientesBase.diferencas(atual, reg).length && reg.obs === obsAtual) { toastCb('Nada foi alterado neste cliente.', false); return; }
+        if (atual && !ClientesBase.diferencas(comExtras(atual), reg).length && reg.obs === obsAtual) { toastCb('Nada foi alterado neste cliente.', false); return; }
       }
 
       const btn = $cb('btnSalvarCliente');
