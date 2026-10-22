@@ -100,7 +100,7 @@
       <div class="card-header space-between">
         <h3>Lista de Clientes, Cidades & Prazos de SLA</h3>
         <div class="cb-toolbar">
-          <input type="text" id="searchClientGlobal" placeholder="Pesquisar cliente, cidade, código ou CNPJ" class="table-search" style="width: 340px;">
+          <input type="text" id="searchClientGlobal" placeholder="Pesquisar nome, cidade, código, CNPJ, e-mail ou telefone" class="table-search" style="width: 430px; max-width: 100%;">
           <button type="button" class="cb-btn verde" id="btnNovoCliente" disabled>+ Novo cliente</button>
         </div>
       </div>
@@ -1834,18 +1834,21 @@
     }
 
     function aplicarBusca() {
-      const termo = document.getElementById('searchClientGlobal').value.toLowerCase().trim();
+      const semAcento = t => String(t === null || t === undefined ? '' : t).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+      const termo = semAcento(document.getElementById('searchClientGlobal').value).trim();
       const termoDig = termo.replace(/\D/g, '');
 
-      const filtrados =
-        baseClientesGlobal.filter(c =>
-          !termo ||
-          String(c.cliente).toLowerCase().includes(termo) ||
-          String(c.cidade).toLowerCase().includes(termo) ||
-          String(c.codigo).toLowerCase().includes(termo) ||
-          String(c.fantasia).toLowerCase().includes(termo) ||
-          (termoDig.length >= 4 && String(c.cnpj || '').replace(/\D/g, '').includes(termoDig))
-        );
+      // tudo o que dá para buscar em um cliente: nome, cidade, código, e-mails e telefones
+      const telefonesDe = c => [c.telefone, c.celular, c.telefone2].concat(c.telefones || [], c.telefonesExtras || [], extrasDe(c, 'tel'));
+      const emailsDe = c => [c.email, c.email2].concat(c.emails || [], c.emailsExtras || [], extrasDe(c, 'email'));
+      const casa = c => {
+        const texto = semAcento([c.cliente, c.fantasia, c.cidade, c.codigo, c.cnpj].concat(emailsDe(c)).join(' | '));
+        if (texto.includes(termo)) return true;
+        if (termoDig.length < 4) return false;
+        const numeros = [c.cnpj].concat(telefonesDe(c)).map(v => String(v || '').replace(/\D/g, ''));
+        return numeros.some(n => n && n.includes(termoDig));
+      };
+      const filtrados = termo ? baseClientesGlobal.filter(casa) : baseClientesGlobal;
 
       renderizarTabelaClientes(filtrados);
     }
