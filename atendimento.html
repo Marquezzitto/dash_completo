@@ -177,6 +177,28 @@
     <div class="elo-section-title" id="tituloPainelMes">O trabalho do mês</div>
     <section class="elo-panel-grid" id="painelMes"></section>
 
+    <!-- BLACK 2026 (temporário): calculado da coluna "Contato Black 2026" -->
+    <div id="secaoBlack" style="display:none;">
+      <div class="elo-section-title" id="tituloBlack" style="margin-bottom:10px;">Black 2026</div>
+      <section class="elo-panel-grid" id="painelBlack" style="--cols:4;"></section>
+      <div class="elo-progress-bar" style="margin-top:14px;"><div class="elo-progress-fill" id="barraBlack" style="width:0%;background:#a855f7;"></div></div>
+      <div class="elo-sub-title" id="textoBarraBlack" style="margin-top:8px;"></div>
+      <section class="tables-grid" style="margin-top:14px;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));">
+        <div class="table-card">
+          <div class="card-header"><h3>A corrida do dia a dia</h3></div>
+          <div class="table-wrapper" style="max-height:340px;"><table>
+            <thead><tr><th>Data</th><th>Falados</th><th>Acumulado</th><th>Meta do dia</th><th>Como foi</th></tr></thead>
+            <tbody id="tbBlackDias"></tbody></table></div>
+        </div>
+        <div class="table-card">
+          <div class="card-header"><h3>Por cluster · onde a campanha já chegou</h3></div>
+          <div class="table-wrapper" style="max-height:340px;"><table>
+            <thead><tr><th>Cluster</th><th>Clientes</th><th>Falados na Black</th><th>%</th></tr></thead>
+            <tbody id="tbBlackCluster"></tbody></table></div>
+        </div>
+      </section>
+    </div>
+
     <!-- Resultado da carteira (aba Painel, seção 3) -->
     <div class="elo-section-title">Resultado da carteira</div>
     <section class="elo-stack" id="painelResultado"></section>
@@ -315,8 +337,11 @@
         t2: f(x => /^2.\s*tentativa/.test(x)), a2: f(x => x === 'assunto 2'), r2: f(x => x === 'resultado 2'),
         disse: f(x => x.startsWith('o que o cliente disse')), prox: f(x => x === 'proxima ligacao'),
         trouxe: f(x => x.startsWith('o que a proxima')), enc: f(x => x.startsWith('encaminhado')),
-        gestao: f(x => x.startsWith('retorno da gestao'))
+        gestao: f(x => x.startsWith('retorno da gestao')),
+        black: f(x => x.startsWith('contato black')), motivo: f(x => x === 'motivo do contato'),
+        r3: f(x => x.startsWith('resultado da proxima'))
       };
+      const temBlack = col.black >= 0;
       const hist = h.map((x, i) => x.startsWith('historico') ? { i, mes: mesDoTexto(x.split('·').pop()) } : null).filter(Boolean);
 
       // aba Carteira e Contatos
@@ -353,6 +378,8 @@
           t2: paraISO(r[col.t2]), a2: txt(r[col.a2]), r2: txt(r[col.r2]),
           clienteDisse: txt(r[col.disse]), proxLigacao: paraISO(r[col.prox]), trouxe: txt(r[col.trouxe]),
           encaminhadoPara: txt(r[col.enc]), retornoGestao: txt(r[col.gestao]),
+          black: temBlack ? paraISO(r[col.black]) : '', motivo: col.motivo >= 0 ? txt(r[col.motivo]) : '',
+          r3: col.r3 >= 0 ? txt(r[col.r3]) : '',
           contatos: contatos[cod] || null
         });
       });
@@ -378,6 +405,17 @@
         }
       } catch (e) { /* painel opcional */ }
 
+      // aba Painel Black (temporária): só a meta é digitada; o resto o sistema calcula
+      let black = null;
+      if (temBlack) {
+        black = { meta: null };
+        try {
+          const pb = wb.Sheets['Painel Black'] ? lerAba('Painel Black') : [];
+          const lm = pb.find(r => r && norm(r[0]) === 'minha meta de clientes falados');
+          if (lm && typeof lm[2] === 'number') black.meta = lm[2];
+        } catch (e) { /* painel black opcional */ }
+      }
+
       // aba Regras do Piloto
       const guia = [];
       if (wb.Sheets['Regras do Piloto']) {
@@ -393,20 +431,20 @@
           rca, titulo, responsavel, mesAtual, ano, historicos: hist.map(x => x.mes),
           periodoAnt: txt(rows[hi][col.p25]), periodoAtu: txt(rows[hi][col.p26]), mesAnt: txt(rows[hi][col.mesant]), clusterCols
         },
-        clientes, painel: { resultado, clusters }, guia
+        clientes, painel: { resultado, clusters }, guia, black
       };
     }
 
     // ---------- Classificação ----------
     const ASSUNTOS_CONHECIDOS = [
-      'apresentacao da carteira', 'oferta de gravacao', 'acompanhamento de pedido', 'ocorrencia ou devolucao',
+      'apresentacao da carteira', 'oferta de gravacao', 'acompanhamento de pedido', 'ocorrencia ou devolucao', 'credito/limite',
       'cliente sem compra', 'entender queda nas compras', 'entender motivo', 'duvida de produto ou processo',
       'atualizacao de cadastro', 'cliente nao localizado', 'sem retorno'
     ];
     const ASSUNTO_SEM_CONTATO = new Set(['sem retorno', 'cliente nao localizado']);
     const RESULTADO_SEM_CONTATO = new Set(['sem retorno', 'cliente bloqueado']);
     const RESULTADOS_EFETIVOS = new Set([
-      'contato com compras', 'alinhamento com comercial', 'falou com decisor', 'agendou visita showroom', 'pedido gerado'
+      'contato com compras', 'alinhamento com comercial', 'falou com decisor', 'agendou visita showroom', 'pedido gerado', 'road show curitiba'
     ]);
 
     // Status possíveis de um cliente em um mês:
@@ -440,7 +478,9 @@
     function classificarMesAtual(c, mes, ano) {
       const tentativas = [
         { t: c.t1, a: norm(c.a1), r: norm(c.r1) },
-        { t: c.t2, a: norm(c.a2), r: norm(c.r2) }
+        { t: c.t2, a: norm(c.a2), r: norm(c.r2) },
+        { t: c.proxLigacao, a: '', r: norm(c.r3) },                 // 3ª tentativa (Próxima ligação + resultado)
+        { t: c.black, a: c.black ? 'black 2026' : '', r: '' }       // contato da Black conta como falado
       ].filter(x => dataValidaNoMes(x.t, mes, ano) && (x.a || x.r));
       if (!tentativas.length) return 'naoLigou';
       const houveContato = tentativas.some(x =>
@@ -488,13 +528,17 @@
     });
 
     const FERIADOS = new Set(['2026-10-12', '2026-11-02', '2026-11-20', '2026-12-25']);
-    const ASSUNTO_OPCOES = ['Apresentação da carteira','Oferta de gravação','Acompanhamento de pedido','Ocorrência ou devolução','Cliente sem compra','Entender queda nas compras','Dúvida de produto ou processo','Atualização de cadastro','Cliente não localizado','Sem retorno'];
-    const RESULTADO_OPCOES = ['Contato com Compras','Alinhamento com Comercial','Falou com decisor','Agendou Visita Showroom','Pedido gerado','Retorno agendado','Sem retorno','Cadastro atualizado','Cliente bloqueado'];
+    const ASSUNTO_OPCOES = ['Apresentação da carteira','Oferta de gravação','Acompanhamento de pedido','Ocorrência ou devolução','Crédito/Limite','Cliente sem compra','Entender queda nas compras','Dúvida de produto ou processo','Atualização de cadastro','Cliente não localizado','Sem retorno'];
+    const RESULTADO_OPCOES = ['Contato com Compras','Alinhamento com Comercial','Falou com decisor','Agendou Visita Showroom','Pedido gerado','Road Show Curitiba','Retorno agendado','Sem retorno','Cadastro atualizado','Cliente bloqueado'];
+    const MOTIVO_OPCOES = ['BLACK 2026','Road Show Curitiba','Road Show Campinas','Rotina de carteira','Retorno de cliente','Outro'];
+    // CAMPANHA BLACK 2026 (temporária): apagar este bloco e os marcados com "BLACK" quando a campanha acabar
+    const BLACK_INI = '2026-10-27', BLACK_FIM = '2026-11-30';
     const ENCAMINHADO_OPCOES = ['Não precisou encaminhar','Comercial - Aline','Mesa de negociação','Financeiro','Logística','Gravação','Cadastro'];
     const MAPA_COLUNAS = {
       t1: '1ª tentativa', a1: 'Assunto 1', r1: 'Resultado 1',
       t2: '2ª tentativa', a2: 'Assunto 2', r2: 'Resultado 2',
-      clienteDisse: 'O que o cliente disse', proxLigacao: 'Próxima ligação',
+      clienteDisse: 'O que o cliente disse', proxLigacao: 'Próxima ligação', r3: 'Resultado da próxima ligação',
+      black: 'Contato Black 2026', motivo: 'Motivo do contato',
       trouxe: 'O que a próxima ligação trouxe', encaminhadoPara: 'Encaminhado para'
     };
     const ASSUNTO_RESULTADO_ATENCAO = new Set(['falou com decisor', 'alinhamento com comercial']);
@@ -654,17 +698,20 @@
 
       const tent1 = baseElo.filter(c => c.t1).length;
       const tent2 = baseElo.filter(c => c.t2).length;
-      const resultados = baseElo.flatMap(c => [norm(c.r1), norm(c.r2)]).filter(Boolean);
+      const tent3 = baseElo.filter(c => c.r3).length;
+      const tentBlack = baseElo.filter(c => c.black).length;
+      const tocados = baseElo.filter(c => c.t1 || c.t2 || c.r3 || c.black).length;
+      const resultados = baseElo.flatMap(c => [norm(c.r1), norm(c.r2), norm(c.r3)]).filter(Boolean);
       const efetivas = resultados.filter(r => RESULTADOS_EFETIVOS.has(r)).length;
       const decisor = resultados.filter(r => ASSUNTO_RESULTADO_ATENCAO.has(r)).length;
       const compras = resultados.filter(r => r === 'contato com compras').length;
       const cadastros = resultados.filter(r => r === 'cadastro atualizado').length;
       const perdidas = resultados.filter(r => RESULTADO_SEM_CONTATO.has(r)).length;
-      const tentativas = tent1 + tent2;
+      const tentativas = tent1 + tent2 + tent3 + tentBlack;
       const encaminhadas = baseElo.filter(c => c.encaminhadoPara && norm(c.encaminhadoPara) !== 'nao precisou encaminhar').length;
       const agendadas = baseElo.filter(c => c.proxLigacao).length;
       const atrasadas = baseElo.filter(c => c.proxLigacao && c.proxLigacao < hoje).length;
-      const pctCob = total ? (tent1 / total) * 100 : 0;
+      const pctCob = total ? (tocados / total) * 100 : 0;
       const pctEf = tentativas ? (efetivas / tentativas) * 100 : 0;
       const pctPerd = tentativas ? (perdidas / tentativas) * 100 : 0;
 
@@ -673,15 +720,81 @@
       // 8 cards = 4 colunas x 2 linhas: primeiro o funil de contato, depois o que gerou de resultado
       $('painelMes').style.setProperty('--cols', 4);
       $('painelMes').innerHTML = [
-        card('Cobertura da carteira', pctCob.toFixed(1) + '%', `${tent1} de ${total} clientes com 1ª tentativa`, '#10b981'),
+        card('Cobertura da carteira', pctCob.toFixed(1) + '%', `${tocados} de ${total} clientes tocados` + (tentBlack ? ' (Black incluída)' : ''), '#10b981'),
         card('Falei com o cliente', falei, `${total ? ((falei / total) * 100).toFixed(1) : '0.0'}% da carteira teve retorno`, '#10b981'),
-        card('2ª tentativa registrada', tent2, 'Quem não atendeu na primeira volta para a fila'),
+        card('2ª tentativa registrada', tent2, `Quem não atendeu na primeira volta para a fila · 3ª: ${tent3}`),
         card('Tentativas perdidas', perdidas, `${pctPerd.toFixed(1)}% das tentativas (sem retorno ou bloqueado)`, pctPerd > 40 ? '#f59e0b' : ''),
         card('Conversas efetivas', efetivas, `Taxa de ${pctEf.toFixed(1)}% · ${compras} com Compras · ${decisor} com decisor/comercial`),
         card('Cadastros atualizados', cadastros, 'Base correta garante que a próxima ligação chegue'),
         card('Demandas encaminhadas', encaminhadas, 'Oportunidades passadas para dar sequência'),
         card('Próximas ligações', agendadas, atrasadas ? `<span class="alerta">${atrasadas} em atraso</span>` : 'Nenhuma em atraso')
       ].join('');
+    }
+
+    // ============================================================
+    // BLACK 2026 (temporário) — mesmas regras da aba "Painel Black"
+    // ============================================================
+    function diasUteisBlack(deISO, ateISO) {
+      const [a1, m1, d1] = deISO.split('-').map(Number), [a2, m2, d2] = ateISO.split('-').map(Number);
+      const cur = new Date(a1, m1 - 1, d1), fim = new Date(a2, m2 - 1, d2);
+      const lista = [];
+      while (cur <= fim) { if (ehDiaUtil(cur)) lista.push(isoLocal(cur)); cur.setDate(cur.getDate() + 1); }
+      return lista;
+    }
+
+    function renderizarBlack() {
+      const sec = $('secaoBlack');
+      if (!dados.black) { sec.style.display = 'none'; return; }
+      sec.style.display = '';
+      const total = baseElo.length;
+      const meta = (typeof dados.black.meta === 'number' && dados.black.meta > 0) ? dados.black.meta : total;
+      const hoje = isoLocal(dataLocalHoje());
+      const diasCamp = diasUteisBlack(BLACK_INI, BLACK_FIM);
+      const nDias = diasCamp.length;
+      const falados = baseElo.filter(c => c.black);
+      const nFalei = falados.length;
+      const restantes = diasCamp.filter(d => d >= hoje).length;
+      const pct = meta ? nFalei / meta : 0;
+      const faltam = Math.max(0, meta - nFalei);
+      const ritmo = restantes > 0 ? Math.ceil(faltam / restantes) : 0;
+      let como = 'PRECISO ACELERAR', cor = '#ef4444';
+      if (nFalei >= meta) { como = 'META BATIDA'; cor = '#10b981'; }
+      else if (restantes <= 0) { como = 'CAMPANHA ENCERRADA'; cor = '#94a3b8'; }
+      else if (nFalei >= Math.round(meta * (nDias - restantes) / nDias)) { como = 'EM DIA'; cor = '#10b981'; }
+      const soBlack = baseElo.filter(c => c.black && !c.t1 && !c.t2).length;
+      const retomados = nFalei - soBlack;
+
+      $('tituloBlack').textContent = `Black 2026 · ${fmtDM(BLACK_INI)} a ${fmtDM(BLACK_FIM)} · ${nDias} dias úteis`;
+      const card = (lbl, val, sub, c) => `<div class="elo-panel-card"><div class="lbl">${lbl}</div><div class="val" ${c ? `style="color:${c}"` : ''}>${val}</div><div class="var">${sub}</div></div>`;
+      $('painelBlack').innerHTML = [
+        card('Minha meta', meta, 'Clientes a falar na campanha (meta digitada na aba Painel Black)'),
+        card('Já falei com', nFalei, `${(pct * 100).toFixed(1)}% da meta`, '#a855f7'),
+        card('Faltam', faltam, 'Clientes que ainda não ouviram falar da Black por você'),
+        card('Como estou', como, `${restantes} dias úteis restantes`, cor),
+        card('Preciso falar por dia', ritmo, 'Ritmo necessário daqui para a frente'),
+        card('Alcance novo', soBlack, 'Falados só na Black (sem 1ª nem 2ª tentativa em outubro)'),
+        card('Retomados', retomados, 'Já falados em outubro e procurados de novo pela Black'),
+        card('Sem contato na Black', Math.max(0, total - nFalei), 'Quem a campanha ainda não alcançou')
+      ].join('');
+      $('barraBlack').style.width = Math.min(100, pct * 100) + '%';
+      $('textoBarraBlack').textContent = `${nFalei} de ${meta} · ${(pct * 100).toFixed(0)}% da meta`;
+
+      const metaDia = Math.ceil(meta / nDias);
+      let acum = 0;
+      $('tbBlackDias').innerHTML = diasCamp.map(d => {
+        const n = falados.filter(c => c.black === d).length;
+        acum += n;
+        let como = '';
+        if (d <= hoje) como = n >= metaDia ? '<span style="color:#10b981;">Bateu</span>' : `<span style="color:#f59e0b;">Faltou ${metaDia - n}</span>`;
+        return `<tr><td>${fmtDM(d)}</td><td>${d > hoje ? '' : n}</td><td>${d > hoje ? '' : acum}</td><td>${metaDia}</td><td>${como}</td></tr>`;
+      }).join('');
+
+      const clusters = [...new Set(baseElo.map(c => c.cluster).filter(Boolean))];
+      $('tbBlackCluster').innerHTML = clusters.map(cl => {
+        const doCl = baseElo.filter(c => c.cluster === cl);
+        const f = doCl.filter(c => c.black).length;
+        return `<tr><td><strong>${esc(cl)}</strong></td><td>${doCl.length}</td><td>${f}</td><td>${doCl.length ? ((f / doCl.length) * 100).toFixed(0) + '%' : '-'}</td></tr>`;
+      }).join('');
     }
 
     function fmtValorPainel(label, v) {
@@ -763,7 +876,8 @@
         <option value="teveRetorno">${nome}: tive retorno</option>
         <option value="semRetorno">${nome}: sem retorno</option>
         <option value="naoLigou">${nome}: não liguei</option>
-        <option value="atrasada">Próxima ligação em atraso</option>`;
+        <option value="atrasada">Próxima ligação em atraso</option>`
+        + (dados.black ? '<option value="blackSim">Black: já falei</option><option value="blackNao">Black: ainda não falei</option>' : '');
       const clusters = [...new Set(baseElo.map(c => c.cluster).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'pt-BR'));
       const contar = cl => baseElo.filter(c => c.cluster === cl).length;
       $('filtroCluster').innerHTML = '<option value="">Todos os clusters</option>' +
@@ -780,6 +894,8 @@
         if (filtroCluster && c.cluster !== filtroCluster) return false;
         if (termo && !(norm(c.cliente).includes(termo) || norm(c.cidade).includes(termo) || norm(c.cluster).includes(termo) || String(c.codigo).includes(termo))) return false;
         if (filtro === 'atrasada') return c.proxLigacao && c.proxLigacao < hoje;
+        if (filtro === 'blackSim') return !!c.black;
+        if (filtro === 'blackNao') return !c.black;
         if (filtro) return statusNoMes(c, dados.meta.mesAtual, dados.meta) === filtro;
         return true;
       });
@@ -803,7 +919,7 @@
         tr.className = 'clickable-row';
         tr.innerHTML = `
           <td>${c.codigo}</td>
-          <td><strong>${esc(c.cliente)}</strong></td>
+          <td><strong>${esc(c.cliente)}</strong>${c.black ? ` <span class="elo-badge" style="background:#a855f722;color:#a855f7;" title="Contato Black 2026">Black ${fmtDM(c.black)}</span>` : ''}</td>
           <td>${esc(c.cidade)}</td>
           <td>${esc(c.cluster) || '-'}</td>
           <td style="color:${corVar}; font-weight:600;">${varTxt}</td>
@@ -821,6 +937,7 @@
     function renderizarTudo() {
       renderizarProgresso();
       renderizarPainelMes();
+      renderizarBlack();
       renderizarResultado();
       renderizarGuia();
       renderizarTabela();
@@ -1065,9 +1182,18 @@
       };
       const atendHtml = `
         <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;">${blocoTent(1)}${blocoTent(2)}</div>
+        ${dados.black ? `<div style="background:#1e293b;border:1px solid #a855f755;border-radius:8px;padding:10px;margin-top:10px;display:flex;flex-direction:column;gap:8px;">
+          <div style="font-size:0.75rem;color:#a855f7;text-transform:uppercase;font-weight:700;">Black 2026</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end;">
+            <div class="elo-field"><label>Contato Black 2026</label><input type="date" id="elo_black" min="${BLACK_INI}" max="${BLACK_FIM}" value="${esc(c.black)}"></div>
+            <div class="elo-field"><label>Motivo do contato</label><select id="elo_motivo">${opt(MOTIVO_OPCOES, c.motivo)}</select></div>
+            <button type="button" id="eloBlackHoje" class="btn-upload" style="margin-left:0;background:#a855f7;white-space:nowrap;">Falei hoje</button>
+          </div>
+        </div>` : ''}
         <div class="elo-field" style="margin-top:10px;"><label>O que o cliente disse</label>${campoVoz('elo_clienteDisse', c.clienteDisse)}</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;">
-          <div class="elo-field"><label>Próxima ligação</label><input type="date" id="elo_proxLigacao" value="${esc(c.proxLigacao)}"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:10px;">
+          <div class="elo-field"><label>Próxima ligação (3ª tentativa)</label><input type="date" id="elo_proxLigacao" value="${esc(c.proxLigacao)}"></div>
+          <div class="elo-field"><label>Resultado da próxima ligação</label><select id="elo_r3">${opt(RESULTADO_OPCOES, c.r3)}</select></div>
           <div class="elo-field"><label>Encaminhado para</label><select id="elo_encaminhadoPara">${opt(ENCAMINHADO_OPCOES, c.encaminhadoPara)}</select></div>
         </div>
         <div class="elo-field" style="margin-top:10px;"><label>O que a próxima ligação trouxe</label>${campoVoz('elo_trouxe', c.trouxe)}</div>
@@ -1136,6 +1262,11 @@
       $('eloFechar').onclick = () => { pararVoz(); modal.style.display = 'none'; };
       $('eloCancelar').onclick = () => { pararVoz(); modal.style.display = 'none'; };
       $('eloSalvar').onclick = () => salvarAtendimento(c, modal);
+      if ($('eloBlackHoje')) $('eloBlackHoje').onclick = () => {
+        const hojeISO = isoLocal(dataLocalHoje());
+        $('elo_black').value = (hojeISO < BLACK_INI ? BLACK_INI : hojeISO > BLACK_FIM ? BLACK_FIM : hojeISO);
+        if (!$('elo_motivo').value) $('elo_motivo').value = 'BLACK 2026';
+      };
     }
     function igualCampo(a, b) {
       const n = v => String(v === null || v === undefined ? '' : v).replace(/\r\n/g, '\n').trim();
@@ -1146,7 +1277,7 @@
       if (!APPS_SCRIPT_URL) { mostrarToast('Configure a URL do Apps Script em CONFIG_RCA antes de salvar.', false); return; }
       pararVoz();
       const novo = {};
-      Object.keys(MAPA_COLUNAS).forEach(k => { novo[k] = $('elo_' + k).value; });
+      Object.keys(MAPA_COLUNAS).forEach(k => { const el = $('elo_' + k); if (el) novo[k] = el.value; });
       const mudancas = Object.keys(novo)
         .filter(k => !igualCampo(novo[k], c[k]))
         .map(k => ({ codigo: c.codigo, coluna: MAPA_COLUNAS[k], valor: novo[k] }));
@@ -1193,8 +1324,9 @@
       document.body.appendChild(el);
       try {
         const j = await (await fetch(APPS_SCRIPT_URL)).json();
-        el.style.color = j.versao === 'v4' ? '#10b981' : '#f59e0b';
-        el.textContent = CFG.nome + ' · script ' + (j.versao || 'ANTIGO (publique o v4)') + ' → ' + (j.planilha || 'planilha desconhecida');
+        const esperada = rcaSelecionado === '61' ? 'v5' : 'v4';
+        el.style.color = (j.versao === 'v5' || j.versao === esperada) ? '#10b981' : '#f59e0b';
+        el.textContent = CFG.nome + ' · script ' + (j.versao || 'ANTIGO (publique o v5)') + ((j.versao === 'v5' || rcaSelecionado !== '61') ? '' : ' (sem Black — publique o v5)') + ' → ' + (j.planilha || 'planilha desconhecida');
       } catch (e) {
         el.style.color = '#ef4444';
         el.textContent = CFG.nome + ' · script inacessível (URL /exec errada ou acesso não é "Qualquer pessoa")';
