@@ -4,9 +4,9 @@ const RCA_CONFIG = {
     nome: "RCA 61",
     clientesUrl: "clientes.json",
     atendimentoSnapshotUrl: "atendimento_elo.json",
-    atendimentoSheetId: "1AIAKNYMQbWFFbD1JJTlejK17cfU9T-1uhwr45GOLqyg",
-    driveSpreadsheetId: "1yr12JeKO-5ipBrzbqrcWFnYXhkfkQvH7tkRicbcogps",
-    appsScriptUrl: "https://script.google.com/macros/s/AKfycbw-s10eMg-8ajimxH3lK1vwo5dK_o43SLHtQa4H0sN5oHQ8VrewthA-iBxx32_RVfns/exec",
+    atendimentoSheetId: "1tSFUsmjxtrAd2gwQX1ecuiYvybOSTujYQe2TjmnpDYM",
+    driveSpreadsheetId: "1tSFUsmjxtrAd2gwQX1ecuiYvybOSTujYQe2TjmnpDYM",
+    appsScriptUrl: "https://script.google.com/macros/s/AKfycbxNm9Jmj-MtH1w3NMUGxzdN_6upYKABw3jfqRd2J634Yoizz8sbdU5H6NEs-6guoRyj/exec",
     mensalDrive: true
   },
   "66": {
